@@ -46,14 +46,25 @@ const Universal: React.FC = () => {
     const sxControlLabel: SxProps<Theme> = {
         margin: 0,
         "& .MuiFormControlLabel-label": {
-            fontSize: 'var(--text-lg) !important',
+            fontSize: 'var(--text-sm) !important',
         },
         ":hover": {
             color: 'var(--color-cyan-300)'
         }
     }
 
-    const { icons, imgs } = useGlobal()
+    const sxCheckBoxMinate: SxProps<Theme> = {
+        color: 'white',
+        '&.Mui-checked': { color: 'var(--color-cyan-300)' },
+        '&.MuiCheckbox-indeterminate': { color: 'var(--color-cyan-300)' },
+    }
+
+    const sxCheckBox: SxProps<Theme> = {
+        color: 'white',
+        '&.Mui-checked': { color: 'var(--color-cyan-300)' },
+    }
+
+    const { icons, imgs, contentType, serviceType } = useGlobal()
     const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
     const { resRegions, setResRegions } = useResRegionState()
@@ -101,23 +112,34 @@ const Universal: React.FC = () => {
     }
 
     useEffect(() => {
-        getApiGenres()
-        getApiSources()
-        getApiRegion()
-        getApiResStreamingRelease()
+        // getApiGenres()
+        // getApiSources()
+        // getApiRegion()
+        // getApiResStreamingRelease()
         setSelectNav(1)
     }, [])
 
     const [showGenres, setShowGenres] = useState<boolean>(true)
     const [showStreaming, setShowStreaming] = useState<boolean>(true)
     const [showRegions, setShowRegions] = useState<boolean>(true)
+    const [showContentType, setShowContentType] = useState<boolean>(true)
+    const [showServiceType, setShowServiceType] = useState<boolean>(true)
 
     const [checkedItemsGenres, setCheckedItemsGenres] = useState<number[]>([])
+    const [checkedItemsContentType, setCheckedItemsContentType] = useState<number[]>([])
+    const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
 
-    useEffect(() => {
+
+    const handleClearFilter = () => {
         if (resGenres.length > 0) {
             setCheckedItemsGenres(resGenres.map((res) => res.id))
         }
+        setCheckedItemsContentType(contentType.map((type) => type.id))
+        setCheckedItemsServiceType(serviceType.map((type) => type.id))
+    }
+
+    useEffect(() => {
+        handleClearFilter()
     }, [resGenres])
 
     const allCheckedGenres = checkedItemsGenres.length === resGenres.length
@@ -126,11 +148,10 @@ const Universal: React.FC = () => {
 
     // Khi click vào "All"
     const handleCheckAllGenres = () => {
-        if (allCheckedGenres) {
+        allCheckedGenres ?
             setCheckedItemsGenres([])
-        } else {
+            :
             setCheckedItemsGenres(resGenres.map((res) => res.id))
-        }
     }
 
     // Khi click vào từng item
@@ -142,10 +163,41 @@ const Universal: React.FC = () => {
         }
     }
 
-    const handleClearFilter = () => {
-        if (resGenres.length > 0) {
-            setCheckedItemsGenres(resGenres.map((res) => res.id))
-        }
+    const allCheckedContentType = checkedItemsContentType.length === contentType.length
+    const isIndeterminateContentType =
+        checkedItemsContentType.length > 0 && checkedItemsContentType.length < contentType.length
+
+    // Khi click vào "All"
+    const handleCheckAllContentType = () => {
+        allCheckedContentType ?
+            setCheckedItemsContentType([])
+            :
+            setCheckedItemsContentType(contentType.map((type) => type.id))
+    }
+
+    // Khi click vào từng item
+    const handleCheckItemContentType = (id: number) => {
+        checkedItemsContentType.includes(id) ?
+            setCheckedItemsContentType(checkedItemsContentType.filter((itemId) => itemId !== id))
+            :
+            setCheckedItemsContentType([...checkedItemsContentType, id])
+    }
+
+    const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
+    const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
+
+    const handleCheckAllServiceType = () => {
+        allCheckedServiceType ?
+            setCheckedItemsServiceType([])
+            :
+            setCheckedItemsServiceType(serviceType.map((type) => type.id))
+    }
+
+    const handleCheckItemServiceType = (id: number) => {
+        checkedItemsServiceType.includes(id) ?
+            setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
+            :
+            setCheckedItemsServiceType([...checkedItemsServiceType, id])
     }
 
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
@@ -183,7 +235,7 @@ const Universal: React.FC = () => {
 
     const getYear = (date: string) => {
         const convertDate = new Date(date)
-        return convertDate.getFullYear()
+        return convertDate.toLocaleDateString('en-US')
     }
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -191,10 +243,140 @@ const Universal: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
 
+    const styleColor = (source_id: number) => {
+        switch (source_id) {
+            case 203:
+            case 440:
+            case 269: return { backgroundColor: "rgb(229, 9, 20)" }
+            case 157: return { backgroundColor: "#01BE74" }
+            case 387:
+            case 454: return { backgroundColor: "#0137FB" }
+            case 26: return { backgroundColor: "#10A3DA" }
+            case 372: return { backgroundColor: "#0E1D52" }
+            case 371: return { backgroundColor: "#6F7378" }
+            case 444: return { backgroundColor: "#065FFB" }
+            case 455: return { backgroundColor: "#0269FB" }
+            case 365: return { backgroundColor: "#38135F" }
+            case 108: return { backgroundColor: "#604D22" }
+            case 367: return { backgroundColor: "#757575" }
+            case 192: return { backgroundColor: "#E76728" }
+            case 464: return { backgroundColor: "#971B84" }
+            case 299:
+            case 369:
+            case 252:
+            case 318:
+            case 344:
+            case 345:
+            case 368: return { backgroundColor: "#D91E25" }
+            case 80: return { backgroundColor: "#F78B24" }
+            case 456: return { backgroundColor: "#009BF4" }
+            case 457: return { backgroundColor: "#04FFA8" }
+            case 140: return { backgroundColor: "#52D8CA" }
+            case 24:
+            case 68:
+            case 81:
+            case 253:
+            case 234: return { backgroundColor: "#8DB449" }
+            case 307: return { backgroundColor: "#3578BC" }
+            case 270:
+            case 271: return { backgroundColor: "#E0FF35" }
+            case 18: return { backgroundColor: "#892526" }
+            default: return { backgroundColor: "var(--color-cyan-600)" }
+        }
+    }
+
     return (
         <>
             <div className="max-w-[1535px] mx-auto grid lg:grid-cols-[1fr_4fr] gap-6">
                 <aside className="grid h-fit sticky top-[105px] gap-6 ">
+                    <div className="flex flex-col gap-4">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                            <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
+                                onClick={() => {
+                                    setShowContentType(!showContentType)
+                                }}
+                            >
+                                <h3 className="text-xl ">Content Type</h3>
+                                <span>{showContentType ? icons.iconUp : icons.iconDown}</span>
+                            </button>
+                            {showContentType && (
+                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                    <FormControlLabel control={
+                                        <Checkbox
+                                            indeterminate={isIndeterminateContentType}
+                                            checked={allCheckedContentType}
+                                            onChange={handleCheckAllContentType}
+                                            icon={icons.iconUncheck}
+                                            indeterminateIcon={icons.iconMinus}
+                                            checkedIcon={icons.iconCheck}
+                                            sx={sxCheckBoxMinate}
+                                        />
+                                    }
+                                        label="All"
+                                        sx={sxControlLabel}
+                                    />
+                                    {contentType.map((type) => (
+                                        <FormControlLabel key={type.id} control={
+                                            <Checkbox
+                                                checked={checkedItemsContentType.includes(type.id)}
+                                                onChange={() => handleCheckItemContentType(type.id)}
+                                                icon={icons.iconUncheck}
+                                                checkedIcon={icons.iconCheck}
+                                                sx={sxCheckBox}
+                                            />
+                                        }
+                                            label={type.title}
+                                            sx={sxControlLabel}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                            <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
+                                onClick={() => {
+                                    setShowServiceType(!showServiceType)
+                                }}
+                            >
+                                <h3 className="text-xl ">Service Types</h3>
+                                <span>{showServiceType ? icons.iconUp : icons.iconDown}</span>
+                            </button>
+                            {showServiceType && (
+                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                    <FormControlLabel control={
+                                        <Checkbox
+                                            indeterminate={isIndeterminateServiceType}
+                                            checked={allCheckedServiceType}
+                                            onChange={handleCheckAllServiceType}
+                                            icon={icons.iconUncheck}
+                                            indeterminateIcon={icons.iconMinus}
+                                            checkedIcon={icons.iconCheck}
+                                            sx={sxCheckBoxMinate}
+                                        />
+                                    }
+                                        label="All Services"
+                                        sx={sxControlLabel}
+                                    />
+                                    {serviceType.map((type) => (
+                                        <FormControlLabel key={type.id} control={
+                                            <Checkbox
+                                                checked={checkedItemsServiceType.includes(type.id)}
+                                                onChange={() => handleCheckItemServiceType(type.id)}
+                                                icon={icons.iconUncheck}
+                                                checkedIcon={icons.iconCheck}
+                                                sx={sxCheckBox}
+                                            />
+                                        }
+                                            label={type.title}
+                                            sx={sxControlLabel}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
@@ -209,8 +391,8 @@ const Universal: React.FC = () => {
                                 <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
                                     {resRegions.map((res) => (
                                         <button className="flex items-center gap-4 group">
-                                            <img src={res.flag} alt={res.name} className="h-[35px] w-[50px]" />
-                                            <p className="text-lg group-hover:text-cyan-300">{res.name}</p>
+                                            <img src={res.flag} alt={res.name} className="h-[25px] w-[40px]" />
+                                            <p className="text-sm group-hover:text-cyan-300">{res.name}</p>
                                         </button>
                                     ))}
                                 </div>
@@ -233,7 +415,7 @@ const Universal: React.FC = () => {
                                         <button className="flex items-center justify-between gap-4 group">
                                             <div className="flex items-center gap-4">
                                                 <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
-                                                <p className="text-lg group-hover:text-cyan-300">{res.name}</p>
+                                                <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
                                             </div>
                                             <span className="text-sm px-2 py-1 rounded-full bg-cyan-300/10 border-[1px] border-cyan-300/10 mr-2 group-hover:text-cyan-300">{res.type}</span>
                                         </button>
@@ -263,27 +445,20 @@ const Universal: React.FC = () => {
                                             icon={icons.iconUncheck}
                                             indeterminateIcon={icons.iconMinus}
                                             checkedIcon={icons.iconCheck}
-                                            sx={{
-                                                color: 'white',
-                                                '&.Mui-checked': { color: 'var(--color-cyan-300)' },
-                                                '&.MuiCheckbox-indeterminate': { color: 'var(--color-cyan-300)' },
-                                            }}
+                                            sx={sxCheckBoxMinate}
                                         />
                                     }
                                         label="All"
                                         sx={sxControlLabel}
                                     />
                                     {resGenres.map((res) => (
-                                        <FormControlLabel control={
+                                        <FormControlLabel key={res.id} control={
                                             <Checkbox
                                                 checked={checkedItemsGenres.includes(res.id)}
                                                 onChange={() => handleCheckItemGenres(res.id)}
                                                 icon={icons.iconUncheck}
                                                 checkedIcon={icons.iconCheck}
-                                                sx={{
-                                                    color: 'white',
-                                                    '&.Mui-checked': { color: 'var(--color-cyan-300)' },
-                                                }}
+                                                sx={sxCheckBox}
                                             />
                                         }
                                             label={res.name}
@@ -305,7 +480,7 @@ const Universal: React.FC = () => {
                     <div className="flex justify-between items-center">
                         <p className="text-white text-xl">Results</p>
                         <div>
-                            <button className={`${openSortBy ? "border-gray-700 shadow-xl" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px]  border-gray-800 h-[40px] shadow-lg hover:border-gray-700`}
+                            <button className={`${openSortBy ? "shadow-xl border-cyan-300" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px] transition-all duration-300 ease border-gray-800 h-[40px] shadow-lg hover:border-cyan-300`}
                                 onClick={handleClickSortBy}
                             >
                                 <p className="text-white/70 text-sm">Sort by:</p>
@@ -343,16 +518,21 @@ const Universal: React.FC = () => {
                         :
                         <div className={`grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6`}>
                             {resStreamingRelease.map((res) => (
-                                <button key={res.id} className="group flex flex-col gap-2 ">
-                                    <div className="relative">
-                                        <img src={res.poster_url} alt={res.source_name}
-                                            onError={handleImgError}
-                                            className="w-full h-[300px] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                        <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-cyan-300">{icons.iconPlayCircle}</span>
+                                <button key={res.id} className="group grid gap-2 ">
+                                    <div className="flex flex-col gap-2">
+                                        <div className="relative">
+                                            <img src={res.poster_url} alt={res.source_name}
+                                                onError={handleImgError}
+                                                className="w-full h-[300px] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
+                                            <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
+                                            {res.is_original === 1 && (
+                                                <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
+                                            )}
+                                        </div>
+                                        <h3 className="text-white/80 text-lg font-bold text-start">{res.title}</h3>
+                                        <div className="flex gap-1 text-white/70 text-sm">{res.type} <span>•</span> {getYear(res.source_release_date)}</div>
                                     </div>
-                                    <h3 className="text-white/80 text-lg font-bold text-start">{res.title}</h3>
-                                    <div className="flex gap-1 text-white/70 text-sm">{res.type} {getYear(res.source_release_date)}</div>
-                                    <span className="flex gap-2 text-sm text-white text-start items-center">{icons.iconPlay}{res.source_name}</span>
+                                    <span className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px]`} style={styleColor(res.source_id)}>{icons.iconPlay}{res.source_name}</span>
                                 </button>
                             ))}
                         </div>

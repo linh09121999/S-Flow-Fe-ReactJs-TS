@@ -171,12 +171,57 @@ const defaultPages: Pages[] = [
     }
 ]
 
+interface Type {
+    id: number;
+    title: string
+}
+
+const defaultContentType: Type[] = [
+    {
+        id: 0,
+        title: "Movies"
+    },
+    {
+        id: 1,
+        title: "TV Shows"
+    },
+    {
+        id: 2,
+        title: "Miniseries"
+    },
+    {
+        id: 3,
+        title: "TV Specials"
+    }
+]
+
+const defaultServiceType: Type[] = [
+    {
+        id: 0,
+        title: "Free"
+    },
+    {
+        id: 1,
+        title: "My Services"
+    },
+    {
+        id: 2,
+        title: "Miniseries"
+    },
+    {
+        id: 3,
+        title: "TV Specials"
+    }
+]
+
 export interface GlobalState {
     icons: Icons;
     isMobile: boolean;
     isTable: boolean;
     imgs: Imgs;
-    pages: Pages[]
+    pages: Pages[];
+    contentType: Type[];
+    serviceType: Type[]
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -189,7 +234,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         icons: defaultIcons,
         isMobile, isTable,
         imgs: defaultImgs,
-        pages: defaultPages
+        pages: defaultPages,
+        contentType: defaultContentType,
+        serviceType: defaultServiceType
     }
 
     return (
