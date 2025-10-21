@@ -68,9 +68,9 @@ export const getListTitles = (
 ) => api.get(`/v1/list-titles/?apiKey=${apiKey}&source_ids=${sourceIds}&types=${types}&sortBy=${sortBy}`)
 
 export const getStreamingReleases = (
-    startDate: number | undefined,
-    endDate: number | undefined,
-    limit: number | undefined
+    startDate?: number,
+    endDate?: number,
+    limit?: number
 ) => api.get(`/v1/releases/?apiKey=${apiKey}`)
 
 export const getPerson = (

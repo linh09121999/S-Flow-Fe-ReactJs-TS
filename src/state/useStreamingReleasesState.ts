@@ -15,24 +15,16 @@ interface Release {
     is_original: number;
 }
 
-interface ResStreamingRelease {
-    releases: Release[]
-}
-
 interface ResStreamingReleaseState {
-    resStreamingRelease: ResStreamingRelease;
-    setResStreamingRelease: (data: ResStreamingRelease) => void;
+    resStreamingRelease: Release[];
+    setResStreamingRelease: (data: Release[]) => void;
     clearResStreamingRelease: () => void;
 }
 
 export const useResStreamingReleaseState = create<ResStreamingReleaseState>((set) => ({
-    resStreamingRelease: {
-        releases: [],
-    },
+    resStreamingRelease: [],
     setResStreamingRelease: (data) => set({ resStreamingRelease: data }),
     clearResStreamingRelease: () => set({
-        resStreamingRelease: {
-            releases: [],
-        }
+        resStreamingRelease: []
     })
 }))

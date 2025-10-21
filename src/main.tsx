@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
+import './assets/css/index.css'
 import { GlobalProvider } from "./context/GlobalContext";
 
 const initializeApp = async (): Promise<void> => {

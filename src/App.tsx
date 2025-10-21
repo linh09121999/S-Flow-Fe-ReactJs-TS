@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes, Navigate, Outlet, BrowserRouter } from 'reac
 import { Footer, Header, BackToTop } from './components';
 
 const Home = React.lazy(() => import('./view/home'));
+const Universal = React.lazy(() => import('./view/universal'));
 
 const ProtectedRoute: React.FC = () => {
   // const { isMobile } = useGlobalContext();
@@ -12,9 +13,9 @@ const ProtectedRoute: React.FC = () => {
       {/* <!-- Header --> */}
       <BackToTop />
       <Header />
-      <div className='min-h-[80vh]'>
+      <main className='min-h-[80vh] p-5'>
         <Outlet />
-      </div>
+      </main>
       <Footer />
     </div>
 
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route path="/" element={<ProtectedRoute />}>
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
+            <Route path='/universal' element={<Universal/>}/>
           </Route>
         </Routes>
       </Suspense>

@@ -17,7 +17,12 @@ import {
     FaTag,
     FaFileExcel,
     FaUserTie,
-    FaCalendarAlt
+    FaCalendarAlt,
+    FaCheckCircle,
+    FaRegCircle,
+    FaMinusCircle,
+    FaPlay,
+    FaPlayCircle
 } from "react-icons/fa";
 import { FaCalendarDays, FaCartShopping, FaArrowDownLong, FaArrowUpLong, FaSackDollar } from "react-icons/fa6";
 import { CgMenu } from "react-icons/cg";
@@ -38,13 +43,16 @@ import { IoMdSearch, IoMdMail, IoMdAdd } from "react-icons/io";
 import { RiAddFill, RiUserSettingsFill } from "react-icons/ri";
 
 import logo from "../assets/logo.png"
+import imgDefault from "../assets/img/no_img.png"
 
 interface Imgs {
     imgLogo: string;
+    imgDefault: string;
 }
 
 const defaultImgs: Imgs = {
-    imgLogo: logo
+    imgLogo: logo,
+    imgDefault: imgDefault,
 }
 
 interface Icons {
@@ -87,6 +95,11 @@ interface Icons {
     iconClock: JSX.Element;
     iconDashboard: JSX.Element;
     iconPackage: JSX.Element;
+    iconCheck: JSX.Element;
+    iconUncheck: JSX.Element;
+    iconMinus: JSX.Element;
+    iconPlay: JSX.Element;
+    iconPlayCircle: JSX.Element;
 }
 
 const defaultIcons: Icons = {
@@ -128,7 +141,12 @@ const defaultIcons: Icons = {
     iconRole: <FaUserTie />,
     iconClock: <FaCalendarAlt />,
     iconDashboard: <MdDashboard />,
-    iconPackage: <BiSolidPackage className="mx-auto" />
+    iconPackage: <BiSolidPackage className="mx-auto" />,
+    iconCheck: <FaCheckCircle />,
+    iconUncheck: <FaRegCircle />,
+    iconMinus: <FaMinusCircle />,
+    iconPlay: <FaPlay />,
+    iconPlayCircle: <FaPlayCircle />
 }
 
 interface Pages {
