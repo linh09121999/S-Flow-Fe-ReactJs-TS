@@ -23,27 +23,27 @@ export const getAutocomplete = (
 ) => api.get(`/v1/autocomplete-search/?apiKey=${apiKey}&search_value=${encodeURIComponent(searchValue)}&search_type=${searchType}`)
 
 export const getTitleDetails = (
-    titleId: string,
+    titleId: number,
     appendToResponse?: string,
     language?: string,
     regions?: string
-) => api.get(`/v1/title/${titleId}/details/?apiKey=${apiKey}&language=${language}`)
+) => api.get(`/v1/title/${titleId}/details/?apiKey=${apiKey}`)
 
 export const getTitleStreamingSources = (
-    titleId: string,
+    titleId: number,
     regions?: string
 ) => api.get(`/v1/title/${titleId}/sources/?apiKey=${apiKey}`)
 
 export const getTitleSeasons = (
-    titleId: string
+    titleId: number
 ) => api.get(`/v1/title/${titleId}/seasons/?apiKey=${apiKey}`)
 
 export const getTitleEpisodes = (
-    titleId: string
+    titleId: number
 ) => api.get(`/v1/title/${titleId}/episodes/?apiKey=${apiKey}`)
 
 export const getTitleCast_Crew = (
-    titleId: string,
+    titleId: number,
     language?: string
 ) => api.get(`/v1/title/${titleId}/cast-crew/?apiKey=${apiKey}&language=${language}`)
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 import {
     Checkbox,
     MenuItem, Menu,
@@ -14,6 +15,7 @@ import { useStateGeneral } from '../state/useStateGeneral'
 import { useResStreamingReleaseState } from "../state/useStreamingReleasesState";
 
 const Universal: React.FC = () => {
+    const navigate = useNavigate()
     const PaperProps: SxProps<Theme> = {
         sx: {
             borderRadius: '10px',
@@ -64,7 +66,7 @@ const Universal: React.FC = () => {
         '&.Mui-checked': { color: 'var(--color-cyan-300)' },
     }
 
-    const { icons, imgs, contentType, serviceType } = useGlobal()
+    const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
     const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
     const { resRegions, setResRegions } = useResRegionState()
@@ -164,8 +166,7 @@ const Universal: React.FC = () => {
     }
 
     const allCheckedContentType = checkedItemsContentType.length === contentType.length
-    const isIndeterminateContentType =
-        checkedItemsContentType.length > 0 && checkedItemsContentType.length < contentType.length
+    const isIndeterminateContentType = checkedItemsContentType.length > 0 && checkedItemsContentType.length < contentType.length
 
     // Khi click vào "All"
     const handleCheckAllContentType = () => {
@@ -180,7 +181,10 @@ const Universal: React.FC = () => {
         checkedItemsContentType.includes(id) ?
             setCheckedItemsContentType(checkedItemsContentType.filter((itemId) => itemId !== id))
             :
-            setCheckedItemsContentType([...checkedItemsContentType, id])
+            (
+                setCheckedItemsContentType([...checkedItemsContentType, id])
+
+            )
     }
 
     const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
@@ -243,54 +247,12 @@ const Universal: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
 
-    const styleColor = (source_id: number) => {
-        switch (source_id) {
-            case 203:
-            case 440:
-            case 269: return { backgroundColor: "rgb(229, 9, 20)" }
-            case 157: return { backgroundColor: "#01BE74" }
-            case 387:
-            case 454: return { backgroundColor: "#0137FB" }
-            case 26: return { backgroundColor: "#10A3DA" }
-            case 372: return { backgroundColor: "#0E1D52" }
-            case 371: return { backgroundColor: "#6F7378" }
-            case 444: return { backgroundColor: "#065FFB" }
-            case 455: return { backgroundColor: "#0269FB" }
-            case 365: return { backgroundColor: "#38135F" }
-            case 108: return { backgroundColor: "#604D22" }
-            case 367: return { backgroundColor: "#757575" }
-            case 192: return { backgroundColor: "#E76728" }
-            case 464: return { backgroundColor: "#971B84" }
-            case 299:
-            case 369:
-            case 252:
-            case 318:
-            case 344:
-            case 345:
-            case 368: return { backgroundColor: "#D91E25" }
-            case 80: return { backgroundColor: "#F78B24" }
-            case 456: return { backgroundColor: "#009BF4" }
-            case 457: return { backgroundColor: "#04FFA8" }
-            case 140: return { backgroundColor: "#52D8CA" }
-            case 24:
-            case 68:
-            case 81:
-            case 253:
-            case 234: return { backgroundColor: "#8DB449" }
-            case 307: return { backgroundColor: "#3578BC" }
-            case 270:
-            case 271: return { backgroundColor: "#E0FF35" }
-            case 18: return { backgroundColor: "#892526" }
-            default: return { backgroundColor: "var(--color-cyan-600)" }
-        }
-    }
-
     return (
         <>
             <div className="max-w-[1535px] mx-auto grid lg:grid-cols-[1fr_4fr] gap-6">
-                <aside className="grid h-fit sticky top-[105px] gap-6 ">
+                <aside className="grid h-fit sticky top-[105px] gap-4 overflow-y-auto scroll-y-all max-h-[88vh]">
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowContentType(!showContentType)
@@ -334,7 +296,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowServiceType(!showServiceType)
@@ -378,7 +340,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowRegions(!showRegions)
@@ -400,7 +362,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowStreaming(!showStreaming)
@@ -417,7 +379,6 @@ const Universal: React.FC = () => {
                                                 <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
                                                 <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
                                             </div>
-                                            <span className="text-sm px-2 py-1 rounded-full bg-cyan-300/10 border-[1px] border-cyan-300/10 mr-2 group-hover:text-cyan-300">{res.type}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -425,7 +386,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:border-cyan-300">
+                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowGenres(!showGenres)
@@ -470,7 +431,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
 
-                    <button className="text-white/70 border-[1px] border-gray-800 h-[40px] rounded-[10px] transition-all duration-300 ease hover:text-cyan-300 hover:border-cyan-300"
+                    <button className="text-white/70 border-[1px] border-gray-800 h-[40px] rounded-[10px] transition-all duration-300 ease hover:text-cyan-300 hover:shadow-lg hover:shadow-cyan-300/50 m-1"
                         onClick={handleClearFilter}
                     >
                         Clear All Filters
@@ -480,7 +441,7 @@ const Universal: React.FC = () => {
                     <div className="flex justify-between items-center">
                         <p className="text-white text-xl">Results</p>
                         <div>
-                            <button className={`${openSortBy ? "shadow-xl border-cyan-300" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px] transition-all duration-300 ease border-gray-800 h-[40px] shadow-lg hover:border-cyan-300`}
+                            <button className={`${openSortBy ? "shadow-xl border-cyan-300" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px] transition-all duration-300 ease border-gray-800 h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50`}
                                 onClick={handleClickSortBy}
                             >
                                 <p className="text-white/70 text-sm">Sort by:</p>
@@ -518,8 +479,12 @@ const Universal: React.FC = () => {
                         :
                         <div className={`grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6`}>
                             {resStreamingRelease.map((res) => (
-                                <button key={res.id} className="group grid gap-2 ">
-                                    <div className="flex flex-col gap-2">
+                                <div key={res.id} className="group grid gap-2 ">
+                                    <button className="flex flex-col gap-2"
+                                        onClick={() => {
+                                            navigate("/universal-detail", { state: { idDetail: res.id } })
+                                        }}
+                                    >
                                         <div className="relative">
                                             <img src={res.poster_url} alt={res.source_name}
                                                 onError={handleImgError}
@@ -529,11 +494,13 @@ const Universal: React.FC = () => {
                                                 <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
                                             )}
                                         </div>
-                                        <h3 className="text-white/80 text-lg font-bold text-start">{res.title}</h3>
-                                        <div className="flex gap-1 text-white/70 text-sm">{res.type} <span>•</span> {getYear(res.source_release_date)}</div>
-                                    </div>
-                                    <span className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px]`} style={styleColor(res.source_id)}>{icons.iconPlay}{res.source_name}</span>
-                                </button>
+                                        <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
+                                        <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{res.type}<span>•</span> {getYear(res.source_release_date)}</div>
+                                    </button>
+                                    <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
+                                        {icons.iconPlay}{res.source_name}
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     }

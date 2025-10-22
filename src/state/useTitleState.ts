@@ -38,7 +38,7 @@ export const useResTitleDetailState = create<ResTitleDetailState>((set) => ({
     clearResTitleDetail: () => set({ resTitleDetail: undefined })
 }))
 
-interface ResTitleStreamingSource {
+export interface ResTitleStreamingSource {
     source_id: number;
     name: string;
     type: string;
@@ -53,20 +53,43 @@ interface ResTitleStreamingSource {
 }
 
 interface ResTitleStreamingSourceState {
-    resTitleStreamingSourceStates: ResTitleStreamingSource[];
-    setResTitleStreamingSourceStates: (data: ResTitleStreamingSource[]) => void;
-    addResTitleStreamingSourceState: (item: ResTitleStreamingSource) => void;
-    clearResTitleStreamingSourceStates: () => void
+    resTitleStreamingSource: ResTitleStreamingSource[];
+    setResTitleStreamingSource: (data: ResTitleStreamingSource[]) => void;
+    addResTitleStreamingSource: (item: ResTitleStreamingSource) => void;
+    clearResTitleStreamingSource: () => void
 }
 
 export const useResTitleStreamingSourceState = create<ResTitleStreamingSourceState>((set) => ({
-    resTitleStreamingSourceStates: [],
-    setResTitleStreamingSourceStates: (data) => set({ resTitleStreamingSourceStates: data }),
-    addResTitleStreamingSourceState: (item) =>
+    resTitleStreamingSource: [],
+    setResTitleStreamingSource: (data) => {
+        set((state) => {
+            // 1️⃣ Loại bỏ trùng trong chính mảng data
+            const uniqueData = Array.from(
+                new Map(data.map((item) => [item.source_id, item])).values()
+            );
+
+            // 2️⃣ Lọc ra những item chưa có trong state
+            const newItems = uniqueData.filter(
+                (item) =>
+                    !state.resTitleStreamingSource.some(
+                        (p) => p.source_id === item.source_id
+                    )
+            );
+
+            return {
+                resTitleStreamingSource: [
+                    ...state.resTitleStreamingSource,
+                    ...newItems,
+                ],
+            };
+        });
+    },
+
+    addResTitleStreamingSource: (item) =>
         set((state) => ({
-            resTitleStreamingSourceStates: [...state.resTitleStreamingSourceStates, item]
+            resTitleStreamingSource: [...state.resTitleStreamingSource, item]
         })),
-    clearResTitleStreamingSourceStates: () => set({ resTitleStreamingSourceStates: [] })
+    clearResTitleStreamingSource: () => set({ resTitleStreamingSource: [] })
 }))
 
 interface ResTitleSeason {
@@ -121,43 +144,61 @@ export const useResTitleEpisodeState = create<ResTitleEpisodeState>((set) => ({
     clearResTitleEpisode: () => ({ resTitleEpisodes: [] })
 }))
 
-interface Cast {
-    id: number;
-    name: string;
-    character_name: string;
-    is_male: boolean;
-    tmdb_id: number
-}
+// interface Cast {
+//     id: number;
+//     name: string;
+//     character_name: string;
+//     is_male: boolean;
+//     tmdb_id: number
+// }
 
-interface Crew {
-    id: number;
-    name: string;
-    job: string;
-    is_male: boolean;
-    tmdb_id: number
-}
+// interface Crew {
+//     id: number;
+//     name: string;
+//     job: string;
+//     is_male: boolean;
+//     tmdb_id: number
+// }
 
-interface ResTitleCast_Crew {
-    cast: Cast[];
-    crew: Crew[];
+interface Cast_Crew {
+    person_id: number;
+    type: 'Cast' | 'Crew';
+    full_name: string;
+    headshot_url: string;
+    role: string;
+    episode_count: number;
+    order: 3
 }
 
 interface ResTitleCast_CrewState {
-    resTitleCast_Crew: ResTitleCast_Crew,
-    setResTitleCast_Crew: (data: ResTitleCast_Crew) => void;
-    clearTitleCast_Crew: () => void
+    resTitleCast: Cast_Crew[],
+    setResTitleCast: (data: Cast_Crew[]) => void;
+    clearTitleCast: () => void;
+
+    resTitleCrew: Cast_Crew[];
+    setResTitleCrew: (data: Cast_Crew[]) => void;
+    clearTitleCrew: () => void
+
+    setResTitleCastCrew: (data: Cast_Crew[]) => void;
 }
 
 export const useResTitleCast_CrewState = create<ResTitleCast_CrewState>((set) => ({
-    resTitleCast_Crew: {
-        cast: [],
-        crew: []
+    resTitleCast: [],
+    setResTitleCast: (data) => set({ resTitleCast: data }),
+    clearTitleCast: () => set({
+        resTitleCast: []
+    }),
+    resTitleCrew: [],
+    setResTitleCrew: (data) => set({ resTitleCrew: data }),
+    clearTitleCrew: () => set({
+        resTitleCrew: []
+    }),
+    setResTitleCastCrew: (data) => {
+        const cast = data.filter((item) => item.type === 'Cast');
+        const crew = data.filter((item) => item.type === 'Crew');
+        set({
+            resTitleCast: cast,
+            resTitleCrew: crew,
+        });
     },
-    setResTitleCast_Crew: (data) => set({ resTitleCast_Crew: data }),
-    clearTitleCast_Crew: () => set({
-        resTitleCast_Crew: {
-            cast: [],
-            crew: []
-        }
-    })
 }))

@@ -5,6 +5,7 @@ import { Footer, Header, BackToTop } from './components';
 
 const Home = React.lazy(() => import('./view/home'));
 const Universal = React.lazy(() => import('./view/universal'));
+const UniversalDetail = React.lazy(() => import('./view/universalDetail'));
 
 const ProtectedRoute: React.FC = () => {
   // const { isMobile } = useGlobalContext();
@@ -31,6 +32,7 @@ const App: React.FC = () => {
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path='/universal' element={<Universal/>}/>
+            <Route path='/universal-detail' element={<UniversalDetail/>}/>
           </Route>
         </Routes>
       </Suspense>
