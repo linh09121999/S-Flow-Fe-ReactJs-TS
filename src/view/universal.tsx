@@ -482,7 +482,7 @@ const Universal: React.FC = () => {
                                 <div key={res.id} className="group grid gap-2 ">
                                     <button className="flex flex-col gap-2"
                                         onClick={() => {
-                                            navigate("/universal-detail", { state: { idDetail: res.id } })
+                                            navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
                                         }}
                                     >
                                         <div className="relative">

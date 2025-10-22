@@ -19,6 +19,7 @@ import {
 } from '../state/useTitleState'
 import { useStateGeneral } from '../state/useStateGeneral'
 import { useGlobal } from "../context/GlobalContext";
+import { Dialog, DialogContent } from "@mui/material";
 
 const UniversalDetail: React.FC = () => {
     const { setSelectNav } = useStateGeneral()
@@ -102,13 +103,15 @@ const UniversalDetail: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
 
+    const [selectSeasons, setSelectSeasons] = useState<number>(0)
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
 
 
     return (
         <>
             <div className="max-w-[1535px] mx-auto flex flex-col gap-20">
                 <section className="relative bg-black">
-                    <img src={resTitleDetail?.backdrop} alt={resTitleDetail?.title} className="w-full h-[70vh] opacity-30" onError={handleImgError} />
+                    <img src={resTitleDetail?.trailer_thumbnail} alt={resTitleDetail?.title} className="w-full h-[70vh] opacity-30" onError={handleImgError} />
                     <div className="flex items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         <div className="w-[1025px] px-10 relative flex flex-col gap-5">
                             <h1 className="text-white font-bold text-7xl">{resTitleDetail?.title}</h1>
@@ -133,9 +136,32 @@ const UniversalDetail: React.FC = () => {
                                 {resTitleDetail?.plot_overview}
                             </p>
                             <div className="flex gap-4">
-                                <button className="flex gap-2 h-[50px] px-6 bg-cyan-600 items-center rounded-[10px] text-white font-bold text-lg "><span>{icons.iconPlay}</span> Watch on sources</button>
-                                <button className="flex gap-2 h-[50px] px-6 bg-white/40 backdrop-blur-[10px] items-center rounded-[10px] text-white font-bold text-lg"><span>{icons.iconAdd}</span> Add My List</button>
+                                <button className="flex css-icon gap-2 h-[50px] px-6 bg-cyan-600 items-center rounded-[10px] text-white font-bold text-lg "
+                                    onClick={() => {
+                                        setModalOpen(true);
+                                    }}
+                                ><span>{icons.iconPlay}</span> Trailer</button>
+                                <button className="flex css-icon gap-2 h-[50px] px-6 bg-white/40 backdrop-blur-[10px] items-center rounded-[10px] text-white font-bold text-lg"><span>{icons.iconAdd}</span> Add My List</button>
                             </div>
+                            <Dialog
+                                open={modalOpen}
+                                onClose={() => setModalOpen(false)}
+                            >
+                                <DialogContent sx={{ padding: 0, maxWidth: 'auto' }}>
+                                    <div className="mx-auto flex flex-col gap-4 items-center p-5">
+                                        <h1 className="text-3xl w-full">{resTitleDetail?.title}</h1>
+                                        <iframe
+                                            width="500"
+                                            height="320"
+                                            src="https://www.youtube.com/embed/MjP-63ZG74I?autoplay=1&controls=1"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
+                                </DialogContent>
+
+                            </Dialog>
                         </div>
                     </div>
                     <div className="absolute -bottom-[50px] left-1/2 -translate-x-1/2 flex gap-6 text-cyan-950 text-lg grid grid-cols-5 w-[90%]">
@@ -164,32 +190,20 @@ const UniversalDetail: React.FC = () => {
                 <section className="flex flex-col gap-8">
                     <div className="grid grid-cols-[5fr_2fr] gap-6">
                         <div className="flex flex-col gap-6 self-start">
-                            <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease ">
-                                <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-xl text-white">Sources</h3>
-                                </div>
-                                <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-3 gap-4">
-                                    {resTitleStreamingSource.map((res) => (
-                                        <button key={res.source_id} className={`flex flex-col gap-4 self-end w-full text-white text-start items-center p-3 w-fit rounded-[10px] transition-all duration-300 ease shadow-lg shadow-cyan-300/10 border-[1px] border-gray-800 bg-gray-900 hover:-translate-y-[3px] hover:shadow-cyan-300/50`}>
-                                            <div className="flex gap-2 w-full">
-                                                <span className={`py-1 px-2 rounded-[6px] shadow-sm ${res.type === "buy" ? "bg-red-500 text-white" : "bg-cyan-600 text-gray-900"} font-bold text-sm`}>{res.type === "buy" ? "$" + res.price : res.type.toUpperCase()}</span>
-                                                <span className="py-1 px-2 rounded-[6px] text-sm border-[1px] border-cyan-600 text-cyan-600">{res.format}</span>
-                                            </div>
-                                            <h3 className="text-2xl text-white font-bold w-full">{res.name}</h3>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            {resTitleSeasons.length > 0 &&
-                                <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease">
+                            {resTitleStreamingSource.length > 0 &&
+                                <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease ">
                                     <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                        <h3 className="text-xl text-white">Seasons</h3>
-                                        <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                        <h3 className="text-xl text-white">Sources</h3>
                                     </div>
-                                    <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-5 gap-4">
-                                        {resTitleSeasons.map((res) => (
-                                            <div key={res.season_number}>
-                                            </div>
+                                    <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-3 gap-4">
+                                        {resTitleStreamingSource.map((res) => (
+                                            <button key={res.source_id} className={`flex flex-col gap-4 self-end w-full text-white text-start items-center p-3 w-fit rounded-[10px] transition-all duration-300 ease shadow-lg shadow-cyan-300/10 border-[1px] border-gray-800 bg-gray-900 hover:-translate-y-[3px] hover:shadow-cyan-300/50`}>
+                                                <div className="flex gap-2 w-full">
+                                                    <span className={`py-1 px-2 rounded-[6px] shadow-sm ${res.type === "buy" ? "bg-red-500 text-white" : "bg-cyan-600 text-gray-900"} ${res.type === 'free' && "bg-green-500"} font-bold text-sm`}>{res.type === "buy" ? "$" + res.price : res.type.toUpperCase()}</span>
+                                                    <span className={`py-1 px-2 rounded-[6px] text-sm border-[1px] border-cyan-600 text-cyan-600 ${res.format === null ? "hidden" : ""}`}>{res.format}</span>
+                                                </div>
+                                                <h3 className="text-2xl text-white font-bold w-full">{res.name}</h3>
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
@@ -198,11 +212,24 @@ const UniversalDetail: React.FC = () => {
                                 <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease">
                                     <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                         <h3 className="text-xl text-white">Episodes</h3>
-                                        <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
                                     </div>
-                                    <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-5 gap-4">
+                                    <div className="text-lg text-white/70 mt-5 gap-6 flex flex-col gap-4">
+                                        {resTitleSeasons.map((res) => (
+                                            <button key={res.id}
+                                                onClick={() => setSelectSeasons(res.id)}
+                                                className={`border-[1px] css-icon ${selectSeasons === res.id ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{res.name}</button>
+                                        ))}
                                         {resTitleEpisodes.map((res) => (
-                                            <div key={res.episode_number}>
+                                            <div key={res.id} className={`${selectSeasons === res.season_id ? "" : "hidden"} flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
+                                                <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" />
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="flex justify-between">
+                                                        <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
+                                                        <span className="text-sm py-1 px-4 rounded-[10px] bg-cyan-500/10 text-cyan-300 border-[1px] border-cyan-500/10">{res.runtime_minutes} minutes</span>
+                                                    </div>
+                                                    <p className="text-sm text-white/70">{res.overview}</p>
+                                                    <p className="text-sm">Sources: <strong className="text-cyan-300">{res.sources.length}</strong></p>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -246,7 +273,11 @@ const UniversalDetail: React.FC = () => {
                         <div className="flex flex-col gap-6 self-start">
                             <div className="relative group">
                                 <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-lg group-hover:shadow-cyan-300/50" />
-                                <button className="absolute text-white bottom-[10px] left-[10px] p-5 rounded-full bg-cyan-500 backdrop-blir-[10px] css-icon transition-all duration-300 ease opacity-0 group-hover:opacity-100">{icons.iconPlay}</button>
+                                <button
+                                    onClick={() => {
+                                        setModalOpen(true);
+                                    }}
+                                    className="absolute text-white bottom-[10px] left-[10px] p-5 rounded-full bg-cyan-500 backdrop-blir-[10px] css-icon transition-all duration-300 ease opacity-0 group-hover:opacity-100">{icons.iconPlay}</button>
                             </div>
                             <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50">
                                 <h3 className="text-white text-xl">Information</h3>
@@ -271,7 +302,7 @@ const UniversalDetail: React.FC = () => {
                                         <span>Us Rating:</span>
                                         <span className="text-white font-bold text-xl">{resTitleDetail?.us_rating}</span>
                                     </div>
-                                    <div className="flex wrap gap-4">
+                                    <div className="flex wrap gap-4 mt-2">
                                         {resTitleDetail?.genre_names.map((res, id) => (
                                             <span key={id} className="bg-white/10 py-1 px-4 rounded-full">
                                                 {res}
@@ -285,15 +316,15 @@ const UniversalDetail: React.FC = () => {
                                 <div className="text-lg text-white/70 gap-2 flex flex-col">
                                     <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                         <span>User Rating:</span>
-                                        <span className="text-white font-bold text-xl">{resTitleDetail?.user_rating}/10</span>
+                                        <span className="text-white font-bold text-xl">{resTitleDetail?.user_rating ?? 0}/10</span>
                                     </div>
                                     <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                         <span>Critic Score:</span>
-                                        <span className="text-white font-bold text-xl">{resTitleDetail?.critic_score}%</span>
+                                        <span className="text-white font-bold text-xl">{resTitleDetail?.critic_score ?? 0}%</span>
                                     </div>
                                     <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                         <span>Relevance Percentile:</span>
-                                        <span className="text-white font-bold text-xl">{resTitleDetail?.relevance_percentile}</span>
+                                        <span className="text-white font-bold text-xl">{resTitleDetail?.relevance_percentile ?? 0}%</span>
                                     </div>
                                 </div>
                             </div>

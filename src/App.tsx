@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path='/universal' element={<Universal/>}/>
-            <Route path='/universal-detail' element={<UniversalDetail/>}/>
+            <Route path='/universal-detail/:id' element={<UniversalDetail/>}/>
           </Route>
         </Routes>
       </Suspense>

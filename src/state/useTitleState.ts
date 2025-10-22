@@ -19,11 +19,17 @@ interface ResTitleDetail {
     critic_score: number;
     us_rating: string;
     poster: string;
+    posterMedium: string;
+    posterLarge: string;
     backdrop: string;
     original_language: string;
+    similar_titles: number[],
     networks: number[];
     network_names: string[];
-    relevance_percentile: number
+    relevance_percentile: number;
+    popularity_percentile: number;
+    trailer: string;
+    trailer_thumbnail: string
 }
 
 interface ResTitleDetailState {
@@ -38,7 +44,7 @@ export const useResTitleDetailState = create<ResTitleDetailState>((set) => ({
     clearResTitleDetail: () => set({ resTitleDetail: undefined })
 }))
 
-export interface ResTitleStreamingSource {
+interface Source {
     source_id: number;
     name: string;
     type: string;
@@ -48,6 +54,9 @@ export interface ResTitleStreamingSource {
     web_url: string;
     format: string;
     price: number | null;
+}
+
+export interface ResTitleStreamingSource extends Source {
     seasons: string | null;
     episodes: string | null
 }
@@ -93,11 +102,13 @@ export const useResTitleStreamingSourceState = create<ResTitleStreamingSourceSta
 }))
 
 interface ResTitleSeason {
-    season_number: number;
+    id: number;
+    poster_url: string;
     name: string;
-    plot_overview: string;
-    date_created: string;
-    tmdb_id: number
+    overview: boolean;
+    number: number;
+    air_date: string;
+    episode_count: number
 }
 
 interface ResTitleSeasonState {
@@ -119,12 +130,17 @@ export const useResTitleSeasonState = create<ResTitleSeasonState>((set) => ({
 
 interface ResTitleEpisode {
     id: number;
-    title: string;
-    season_number: string;
-    episode_number: string;
-    air_date: string;
-    plot_overview: string;
-    tmdb_id: number
+    name: string;
+    episode_number: number;
+    season_number: number;
+    season_id: number;
+    tmdb_id: number;
+    imdb_id: boolean;
+    thumbnail_url: string;
+    release_date: string;
+    runtime_minutes: number;
+    overview: string;
+    sources: Source[]
 }
 
 interface ResTitleEpisodeState {
@@ -144,22 +160,6 @@ export const useResTitleEpisodeState = create<ResTitleEpisodeState>((set) => ({
     clearResTitleEpisode: () => ({ resTitleEpisodes: [] })
 }))
 
-// interface Cast {
-//     id: number;
-//     name: string;
-//     character_name: string;
-//     is_male: boolean;
-//     tmdb_id: number
-// }
-
-// interface Crew {
-//     id: number;
-//     name: string;
-//     job: string;
-//     is_male: boolean;
-//     tmdb_id: number
-// }
-
 interface Cast_Crew {
     person_id: number;
     type: 'Cast' | 'Crew';
@@ -167,7 +167,7 @@ interface Cast_Crew {
     headshot_url: string;
     role: string;
     episode_count: number;
-    order: 3
+    order: number
 }
 
 interface ResTitleCast_CrewState {
