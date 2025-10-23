@@ -7,6 +7,8 @@ interface ResSource {
     logo_100px: string;
     ios_appstore_url: string;
     android_playstore_url: string;
+    android_scheme:string;
+    ios_scheme: string;
     regions: string[]
 }
 

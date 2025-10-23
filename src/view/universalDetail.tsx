@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 import {
     getTitleCast_Crew,
@@ -105,6 +107,30 @@ const UniversalDetail: React.FC = () => {
 
     const [selectSeasons, setSelectSeasons] = useState<number>(0)
     const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+    const responsive = {
+        superLargeDesktop: {
+            breakpoint: { max: 4000, min: 1024 },
+            items: 5, //so slider hien thi
+            slidesToSlide: 5
+        },
+        desktop: {
+            breakpoint: { max: 1024, min: 768 },
+            items: 4,
+            slidesToSlide: 4
+        },
+        tablet: {
+            breakpoint: { max: 768, min: 464 },
+            items: 2,
+            slidesToSlide: 2
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1
+        }
+    };
+
 
 
     return (
@@ -241,14 +267,44 @@ const UniversalDetail: React.FC = () => {
                                         <h3 className="text-xl text-white">Cast</h3>
                                         <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
                                     </div>
-                                    <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-5 gap-4">
-                                        {resTitleCast.slice(0, 10).map((res) => (
-                                            <div key={res.person_id} className="flex flex-col gap-2 group">
-                                                <img src={res.headshot_url} alt={res.full_name} className="w-full rounded-[10px] transition-all duration-300 ease group-hover:opacity-50 group-hover:scale-102" />
-                                                <h3 className="text-lg text-white font-bold">{res.full_name}</h3>
-                                                <p className="text-sm">{res.role}</p>
-                                            </div>
-                                        ))}
+                                    <div className="w-full mx-auto mt-5 px-4 xl:max-w-6xl">
+                                        <Carousel
+                                            responsive={responsive}
+                                            draggable //truot tren pc, laptop
+                                            swipeable //vuot tren mobile
+                                            arrows={true} //mui ten
+                                            infinite //truot vo hang 2 huong
+                                            minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                            itemClass="p-2 rounded-[10px]"
+                                            containerClass="flex w-full relative overflow-hidden items-center"
+                                            className="w-full"
+                                            keyBoardControl //su dung phim de dieu huong
+                                            showDots={false} //hiển cham o duoi
+                                            renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                            focusOnSelect={false}
+                                            centerMode={false}
+                                            additionalTransfrom={0}
+                                            shouldResetAutoplay
+                                            rewind={false} //tua lai
+                                            rewindWithAnimation={false} //
+                                            rtl={false} //huong bang chuyen (r->l)
+                                            renderButtonGroupOutside={false}
+                                        >
+                                            {resTitleCast.map((res) => (
+                                                <div
+                                                    key={res.person_id}
+                                                    className="flex flex-col items-center gap-2 group"
+                                                >
+                                                    <img
+                                                        src={res.headshot_url}
+                                                        alt={res.full_name}
+                                                        className="w-full object-cover rounded-[10px] transition-all duration-300 ease group-hover:scale-105"
+                                                    />
+                                                    <h3 className="text-lg text-white font-bold transition-all duration-300 ease group-hover:text-cyan-300">{res.full_name}</h3>
+                                                    <p className="text-xs text-center text-white/70 transition-all duration-300 ease group-hover:text-cyan-300/70">{res.role}</p>
+                                                </div>
+                                            ))}
+                                        </Carousel>
                                     </div>
                                 </div>
                             }
@@ -258,21 +314,51 @@ const UniversalDetail: React.FC = () => {
                                         <h3 className="text-xl text-white">Crew</h3>
                                         <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
                                     </div>
-                                    <div className="text-lg text-white/70 mt-5 gap-4 grid grid-cols-5 gap-4">
-                                        {resTitleCrew.slice(0, 10).map((res) => (
-                                            <div key={res.person_id} className="flex flex-col gap-2 group">
-                                                <img src={res.headshot_url} alt={res.full_name} className="w-full rounded-[10px] transition-all duration-300 ease group-hover:opacity-50 group-hover:scale-102" />
-                                                <h3 className="text-lg text-white font-bold">{res.full_name}</h3>
-                                                <p className="text-sm">{res.role}</p>
-                                            </div>
-                                        ))}
+                                    <div className="w-full mx-auto mt-5 px-4 xl:max-w-6xl">
+                                        <Carousel
+                                            responsive={responsive}
+                                            draggable //truot tren pc, laptop
+                                            swipeable //vuot tren mobile
+                                            arrows={true} //mui ten
+                                            infinite //truot vo hang 2 huong
+                                            minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                            itemClass="p-2 rounded-[10px]"
+                                            containerClass="flex w-full relative overflow-hidden items-center"
+                                            className="w-full"
+                                            keyBoardControl //su dung phim de dieu huong
+                                            showDots={false} //hiển cham o duoi
+                                            renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                            focusOnSelect={false}
+                                            centerMode={false}
+                                            additionalTransfrom={0}
+                                            shouldResetAutoplay
+                                            rewind={false} //tua lai
+                                            rewindWithAnimation={false} //
+                                            rtl={false} //huong bang chuyen (r->l)
+                                            renderButtonGroupOutside={false}
+                                        >
+                                            {resTitleCrew.slice(0, 10).map((res) => (
+                                                <div
+                                                    key={res.person_id}
+                                                    className="flex flex-col items-center gap-2 group"
+                                                >
+                                                    <img
+                                                        src={res.headshot_url}
+                                                        alt={res.full_name}
+                                                        className="w-full object-cover rounded-[10px] transition-all duration-300 ease group-hover:scale-105"
+                                                    />
+                                                    <h3 className="text-lg text-white font-bold transition-all duration-300 ease group-hover:text-cyan-300">{res.full_name}</h3>
+                                                    <p className="text-xs text-center text-white/70 transition-all duration-300 ease group-hover:text-cyan-300/70">{res.role}</p>
+                                                </div>
+                                            ))}
+                                        </Carousel>
                                     </div>
                                 </div>
                             }
                         </div>
                         <div className="flex flex-col gap-6 self-start">
                             <div className="relative group">
-                                <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-lg group-hover:shadow-cyan-300/50" />
+                                <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg shadow-gray-900 group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-cyan-300/50" />
                                 <button
                                     onClick={() => {
                                         setModalOpen(true);

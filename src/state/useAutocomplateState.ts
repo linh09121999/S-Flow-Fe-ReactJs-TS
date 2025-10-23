@@ -12,24 +12,17 @@ interface Result {
     image_url: string
 }
 
-interface ResAutocomplate {
-    results: Result[]
-}
 
 interface ResAutocomplateState {
-    resAutocomplate: ResAutocomplate;
-    setResAutocomplate: (data: ResAutocomplate) => void;
+    resAutocomplate: Result[];
+    setResAutocomplate: (data: Result[]) => void;
     clearResAutocomplate: () => void
 }
 
 export const useResAutocomplateState = create<ResAutocomplateState>((set) => ({
-    resAutocomplate: {
-        results: []
-    },
+    resAutocomplate: [],
     setResAutocomplate: (data) => set({ resAutocomplate: data }),
     clearResAutocomplate: () => set({
-        resAutocomplate: {
-            results: []
-        }
+        resAutocomplate: []
     })
 }))
