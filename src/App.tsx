@@ -4,6 +4,9 @@ import { HashRouter, Route, Routes, Navigate, Outlet, BrowserRouter } from 'reac
 import { Footer, Header, BackToTop } from './components';
 
 const Home = React.lazy(() => import('./view/home'));
+const Sources = React.lazy(() => import('./view/sources'));
+const Region = React.lazy(() => import('./view/region'));
+const Genres = React.lazy(() => import('./view/genres'));
 const Universal = React.lazy(() => import('./view/universal'));
 const UniversalDetail = React.lazy(() => import('./view/universalDetail'));
 
@@ -14,7 +17,7 @@ const ProtectedRoute: React.FC = () => {
       {/* <!-- Header --> */}
       <BackToTop />
       <Header />
-      <main className='min-h-[80vh] p-5'>
+      <main className='min-h-[80vh] px-5'>
         <Outlet />
       </main>
       <Footer />
@@ -31,8 +34,11 @@ const App: React.FC = () => {
           <Route path="/" element={<ProtectedRoute />}>
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
-            <Route path='/universal' element={<Universal/>}/>
-            <Route path='/universal-detail/:id' element={<UniversalDetail/>}/>
+            <Route path='/universal' element={<Universal />} />
+            <Route path='/sources' element={<Sources />} />
+            <Route path='/genres' element={<Genres />} />
+            <Route path='/region' element={<Region />} />
+            <Route path='/universal-detail/:id' element={<UniversalDetail />} />
           </Route>
         </Routes>
       </Suspense>

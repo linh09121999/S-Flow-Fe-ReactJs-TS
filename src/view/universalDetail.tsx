@@ -121,7 +121,7 @@ const UniversalDetail: React.FC = () => {
         }
     }, [])
 
-    const { icons, imgs} = useGlobal()
+    const { icons, imgs } = useGlobal()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -134,6 +134,15 @@ const UniversalDetail: React.FC = () => {
 
     return (
         <>
+            <div className='w-full px-5 sticky z-[999] top-[80px] backdrop-blur-[10px]'>
+                <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
+                    <div
+                        onClick={() => navigate("/universal")}
+                        className='transition duration-300 ease css-icon'>Universal</div>
+                    <span>{icons.iconNext}</span>
+                    <div className='transition duration-300 ease css-icon'>Detail</div>
+                </div>
+            </div>
             <div className="max-w-[1535px] mx-auto flex flex-col gap-20">
                 <section className="relative bg-black">
                     <img src={resTitleDetail?.trailer_thumbnail} alt={resTitleDetail?.title} className="w-full h-[70vh] opacity-30" onError={handleImgError} />

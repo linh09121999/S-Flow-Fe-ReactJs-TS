@@ -141,15 +141,21 @@ const Home: React.FC = () => {
         return convertDate.toLocaleDateString('en-US')
     }
 
+    const handleViewAll = () => {
+        navigate(`/universal`)
+    }
+
     return (
         <>
-            <div className="p-5">
+            <div className="py-5">
                 <div className="max-w-[1500px] mx-auto flex flex-col gap-6">
                     {resStreamingReleaseMovie.length > 0 &&
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                 <h3 className="text-xl text-white font-bold">Trending Movie</h3>
-                                <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={handleViewAll}
+                                >View all <span>{icons.iconNext}</span></button>
                             </div>
 
                             <div className="w-full mx-auto mt-5 xl:max-w-9xl">
@@ -207,7 +213,9 @@ const Home: React.FC = () => {
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                 <h3 className="text-xl text-white font-bold">Trending TV Series</h3>
-                                <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={handleViewAll}
+                                >View all <span>{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                                 <Carousel
@@ -264,7 +272,9 @@ const Home: React.FC = () => {
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                 <h3 className="text-xl text-white font-bold">Trending TV Special</h3>
-                                <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={handleViewAll}
+                                >View all <span>{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                                 <Carousel
@@ -321,7 +331,9 @@ const Home: React.FC = () => {
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                 <h3 className="text-xl text-white font-bold">Trending TV Miniseries</h3>
-                                <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={handleViewAll}
+                                >View all <span>{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                                 <Carousel
@@ -378,7 +390,9 @@ const Home: React.FC = () => {
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                 <h3 className="text-xl text-white font-bold">Trending Short Film</h3>
-                                <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={handleViewAll}
+                                >View all <span>{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                                 <Carousel
@@ -434,7 +448,11 @@ const Home: React.FC = () => {
                     <div className="items-center transition-all duration-300 ease">
                         <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                             <h3 className="text-xl text-white font-bold">Browse By Sources</h3>
-                            <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                            <button className="flex gap-1 items-center text-cyan-300"
+                                onClick={() =>
+                                    navigate('/sources')
+                                }
+                            >View all <span>{icons.iconNext}</span></button>
                         </div>
                         <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                             <Carousel
@@ -475,7 +493,11 @@ const Home: React.FC = () => {
                     <div className="items-center transition-all duration-300 ease">
                         <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                             <h3 className="text-xl text-white font-bold">Browse By Region</h3>
-                            <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                            <button className="flex gap-1 items-center text-cyan-300"
+                                onClick={() =>
+                                    navigate('/region')
+                                }
+                            >View all <span>{icons.iconNext}</span></button>
                         </div>
                         <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                             <Carousel
@@ -513,7 +535,11 @@ const Home: React.FC = () => {
                     <div className="items-center transition-all duration-300 ease">
                         <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                             <h3 className="text-xl text-white font-bold">Browse By Genres</h3>
-                            <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                            <button className="flex gap-1 items-center text-cyan-300"
+                                onClick={() =>
+                                    navigate('/genres')
+                                }
+                            >View all <span>{icons.iconNext}</span></button>
                         </div>
                         <div className="w-full mx-auto mt-5 xl:max-w-9xl">
                             <Carousel

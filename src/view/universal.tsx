@@ -125,11 +125,11 @@ const Universal: React.FC = () => {
     const [showStreaming, setShowStreaming] = useState<boolean>(true)
     const [showRegions, setShowRegions] = useState<boolean>(true)
     const [showContentType, setShowContentType] = useState<boolean>(true)
-    const [showServiceType, setShowServiceType] = useState<boolean>(true)
+    // const [showServiceType, setShowServiceType] = useState<boolean>(true)
 
     const [checkedItemsGenres, setCheckedItemsGenres] = useState<number[]>([])
     const [checkedItemsContentType, setCheckedItemsContentType] = useState<number[]>([])
-    const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
+    // const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
 
 
     const handleClearFilter = () => {
@@ -137,7 +137,7 @@ const Universal: React.FC = () => {
             setCheckedItemsGenres(resGenres.map((res) => res.id))
         }
         setCheckedItemsContentType(contentType.map((type) => type.id))
-        setCheckedItemsServiceType(serviceType.map((type) => type.id))
+        // setCheckedItemsServiceType(serviceType.map((type) => type.id))
     }
 
     useEffect(() => {
@@ -187,22 +187,22 @@ const Universal: React.FC = () => {
             )
     }
 
-    const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
-    const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
+    // const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
+    // const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
 
-    const handleCheckAllServiceType = () => {
-        allCheckedServiceType ?
-            setCheckedItemsServiceType([])
-            :
-            setCheckedItemsServiceType(serviceType.map((type) => type.id))
-    }
+    // const handleCheckAllServiceType = () => {
+    //     allCheckedServiceType ?
+    //         setCheckedItemsServiceType([])
+    //         :
+    //         setCheckedItemsServiceType(serviceType.map((type) => type.id))
+    // }
 
-    const handleCheckItemServiceType = (id: number) => {
-        checkedItemsServiceType.includes(id) ?
-            setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
-            :
-            setCheckedItemsServiceType([...checkedItemsServiceType, id])
-    }
+    // const handleCheckItemServiceType = (id: number) => {
+    //     checkedItemsServiceType.includes(id) ?
+    //         setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
+    //         :
+    //         setCheckedItemsServiceType([...checkedItemsServiceType, id])
+    // }
 
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
     const openSortBy = Boolean(anchorElSortBy);
@@ -248,7 +248,7 @@ const Universal: React.FC = () => {
 
     return (
         <>
-            <div className="max-w-[1535px] mx-auto grid lg:grid-cols-[1fr_4fr] gap-6">
+            <div className="max-w-[1535px] py-5 mx-auto grid lg:grid-cols-[1fr_4fr] gap-6">
                 <aside className="grid h-fit sticky top-[105px] gap-4 overflow-y-auto scroll-y-all max-h-[88vh]">
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
@@ -294,7 +294,7 @@ const Universal: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    {/* <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
@@ -337,7 +337,7 @@ const Universal: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
