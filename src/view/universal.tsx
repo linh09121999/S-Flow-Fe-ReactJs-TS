@@ -241,7 +241,6 @@ const Universal: React.FC = () => {
         const convertDate = new Date(date)
         return convertDate.toLocaleDateString('en-US')
     }
-
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
@@ -488,7 +487,7 @@ const Universal: React.FC = () => {
                                         <div className="relative">
                                             <img src={res.poster_url} alt={res.source_name}
                                                 onError={handleImgError}
-                                                className="w-full h-[300px] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
+                                                className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
                                             <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
                                             {res.is_original === 1 && (
                                                 <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>

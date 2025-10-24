@@ -54,6 +54,16 @@
     }
 }
 
+@keyframes paw-1 {
+    from {
+        transform: translateX(-0.1em);
+    }
+
+    to {
+        transform: translateX(0.1em);
+    }
+}
+
 .backdrop-blur-sm {
     --tw-backdrop-blur: none !important;
 }
@@ -134,4 +144,30 @@
 
 .scroll-y-all::-webkit-scrollbar {
     width: 3px;
+}
+
+.react-multiple-carousel__arrow--right {
+    right: calc(1% + 1px) !important;
+}
+
+.react-multiple-carousel__arrow--right:hover {
+    animation: next-1 0.6s ease-in-out infinite alternate;
+}
+
+.react-multiple-carousel__arrow--left:hover {
+    animation: paw-1 0.6s ease-in-out infinite alternate;
+}
+
+.react-multiple-carousel__arrow--left {
+    left: calc(1% + 1px) !important;
+}
+
+.react-multiple-carousel__arrow {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    z-index: 10 !important;
+}
+
+.react-multiple-carousel__arrow::before {
+    color: var(--color-cyan-300) !important;
 }

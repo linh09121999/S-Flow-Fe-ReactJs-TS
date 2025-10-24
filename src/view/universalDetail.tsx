@@ -31,7 +31,30 @@ const UniversalDetail: React.FC = () => {
     const { resTitleStreamingSource, setResTitleStreamingSource } = useResTitleStreamingSourceState()
     const { resTitleSeasons, setResTitleSeasons } = useResTitleSeasonState()
     const { resTitleEpisodes, setResTitleEpisode } = useResTitleEpisodeState()
-    const { resTitleCast, resTitleCrew, setResTitleCast, setResTitleCrew, setResTitleCastCrew } = useResTitleCast_CrewState()
+    const { resTitleCast, resTitleCrew, setResTitleCastCrew } = useResTitleCast_CrewState()
+
+    const responsive = {
+        superLargeDesktop: {
+            breakpoint: { max: 4000, min: 1024 },
+            items: 5, //so slider hien thi
+            slidesToSlide: 5
+        },
+        desktop: {
+            breakpoint: { max: 1024, min: 768 },
+            items: 4,
+            slidesToSlide: 4
+        },
+        tablet: {
+            breakpoint: { max: 768, min: 464 },
+            items: 2,
+            slidesToSlide: 2
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1
+        }
+    };
 
     const getApiTitleDetails = async (titleId: number) => {
         try {
@@ -98,7 +121,7 @@ const UniversalDetail: React.FC = () => {
         }
     }, [])
 
-    const { icons, imgs, styleColor } = useGlobal()
+    const { icons, imgs} = useGlobal()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -107,30 +130,6 @@ const UniversalDetail: React.FC = () => {
 
     const [selectSeasons, setSelectSeasons] = useState<number>(0)
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-    const responsive = {
-        superLargeDesktop: {
-            breakpoint: { max: 4000, min: 1024 },
-            items: 5, //so slider hien thi
-            slidesToSlide: 5
-        },
-        desktop: {
-            breakpoint: { max: 1024, min: 768 },
-            items: 4,
-            slidesToSlide: 4
-        },
-        tablet: {
-            breakpoint: { max: 768, min: 464 },
-            items: 2,
-            slidesToSlide: 2
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-            slidesToSlide: 1
-        }
-    };
-
 
 
     return (
@@ -247,7 +246,7 @@ const UniversalDetail: React.FC = () => {
                                         ))}
                                         {resTitleEpisodes.map((res) => (
                                             <div key={res.id} className={`${selectSeasons === res.season_id ? "" : "hidden"} flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
-                                                <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" />
+                                                <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" onError={handleImgError} />
                                                 <div className="flex flex-col gap-2">
                                                     <div className="flex justify-between">
                                                         <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
@@ -358,7 +357,7 @@ const UniversalDetail: React.FC = () => {
                         </div>
                         <div className="flex flex-col gap-6 self-start">
                             <div className="relative group">
-                                <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg shadow-gray-900 group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-cyan-300/50" />
+                                <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg shadow-gray-900 group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-cyan-300/50" onError={handleImgError} />
                                 <button
                                     onClick={() => {
                                         setModalOpen(true);

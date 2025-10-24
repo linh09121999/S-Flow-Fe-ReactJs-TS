@@ -168,16 +168,21 @@ const Header: React.FC = () => {
         navigate(`/universal-detail/${newValue.id}`, { state: { idDetail: newValue.id } });
     };
 
+    const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
+        e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
+    };
+
     return (
         <>
             <header className='top-0 sticky z-100 px-5 py-4 bg-black/10 backdrop-blur-[10px] border-b-[1px] border-b-gray-700'>
                 <div className='max-w-[1535px] mx-auto flex justify-between items-center'>
                     <div className='flex gap-6 items-center'>
                         <div className='flex gap-2 items-center'>
-                            <img src={imgs.imgLogo} alt="logo" className='h-[47px]' />
+                            <img src={imgs.imgLogo} alt="logo" className='h-[47px]' onError={handleImgError} />
                             <p className='text-cyan-300 text-4xl'>S-Flow</p>
                         </div>
-                        <Nav/>
+                        <Nav />
                     </div>
                     <div className='flex gap-2 items-center'>
                         {clickSearch ?
@@ -197,7 +202,7 @@ const Header: React.FC = () => {
                                                 sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                                                 {...optionProps}
                                             >
-                                                <img src={option.image_url} alt={option.name} className='w-[50px]' />
+                                                <img src={option.image_url} alt={option.name} className='w-[50px]' onError={handleImgError} />
                                                 <div>
                                                     <h3 className='text-lg font-bold'>{option.name}</h3>
                                                     <p className='text-sm '>{option.year}</p>
