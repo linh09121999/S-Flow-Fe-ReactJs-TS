@@ -175,44 +175,63 @@ const defaultPages: Pages[] = [
 
 interface Type {
     id: number;
-    title: string
+    title: string,
+    type: string
 }
 
 const defaultContentType: Type[] = [
     {
         id: 0,
-        title: "Movies"
+        title: "Movies",
+        type: "movie"
     },
     {
         id: 1,
-        title: "TV Shows"
+        title: "TV Series",
+        type: 'tv_series'
     },
     {
         id: 2,
-        title: "Miniseries"
+        title: "TV Special",
+        type: 'tv_special'
     },
     {
         id: 3,
-        title: "TV Specials"
+        title: "TV Miniseries",
+        type: 'tv_miniseries'
+    },
+    {
+        id: 4,
+        title: "Short Film",
+        type: 'short_film'
     }
 ]
 
 const defaultServiceType: Type[] = [
     {
         id: 0,
-        title: "Free"
+        title: "Free",
+        type: 'free'
     },
     {
         id: 1,
-        title: "My Services"
+        title: "Sub",
+        type: 'sub'
     },
     {
         id: 2,
-        title: "Rent"
+        title: "Tve",
+        type: 'tve'
     },
     {
         id: 3,
-        title: "Buy"
+        title: "Buy",
+        type: 'buy'
+    },
+    {
+        id: 4,
+        title: 'Purchase',
+        type: 'purchase'
     }
 ]
 
