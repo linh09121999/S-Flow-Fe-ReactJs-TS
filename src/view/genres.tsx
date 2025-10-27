@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
@@ -7,12 +7,8 @@ import { useResGenresState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
 const Genres: React.FC = () => {
     const navigate = useNavigate()
-    const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
+    const { icons} = useGlobal()
     const { resGenres, setResGenres } = useResGenresState()
-    const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
-        e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
-    };
     const { setSelectNav } = useStateGeneral()
 
     const getApiGenres = async () => {
@@ -26,9 +22,13 @@ const Genres: React.FC = () => {
     }
 
     useEffect(() => {
-        // getApiGenres()
+        getApiGenres()
         setSelectNav(0)
     }, [])
+
+    const handleViewAll = () => {
+        navigate(`/universal`)
+    }
 
     return (
         <>
@@ -43,9 +43,9 @@ const Genres: React.FC = () => {
             </div>
             <div className="max-w-[1535px] mx-auto grid grid-cols-5 py-5 gap-8">
                 {resGenres.map((res) => (
-                    <div key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
+                    <button onClick={handleViewAll} key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
                         <h3 className="w-full px-2 py-2 opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg  text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
-                    </div>
+                    </button>
                 ))}
             </div>
             <ToastContainer position="top-right" autoClose={3000} />

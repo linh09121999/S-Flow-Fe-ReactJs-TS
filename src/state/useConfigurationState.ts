@@ -3,17 +3,21 @@ import { create } from 'zustand'
 interface ResSource {
     id: number;
     name: string;
-    type: string;
+    type: 'sub' | 'free' | 'tve' | 'purchase';
     logo_100px: string;
     ios_appstore_url: string;
     android_playstore_url: string;
-    android_scheme:string;
+    android_scheme: string;
     ios_scheme: string;
     regions: string[]
 }
 
 interface ResSourceState {
     resSources: ResSource[]; // mảng dữ liệu
+    resSourcesSub: ResSource[];
+    resSourcesFree: ResSource[];
+    resSourcesTv2: ResSource[];
+    resSourcesPurchase: ResSource[];
     setResSources: (data: ResSource[]) => void; // action cập nhật
     addReSource: (item: ResSource) => void; // thêm 1 resource
     clearReSources: () => void; // xóa hết
@@ -21,7 +25,23 @@ interface ResSourceState {
 
 export const useResSourceState = create<ResSourceState>((set) => ({
     resSources: [],
-    setResSources: (data) => set({ resSources: data }),
+    resSourcesSub: [],
+    resSourcesFree: [],
+    resSourcesTv2: [],
+    resSourcesPurchase: [],
+    setResSources: (data) => {
+        const sub = data.filter((item) => item.type === 'sub')
+        const tve = data.filter((item) => item.type === 'tve')
+        const free = data.filter((item) => item.type === 'free')
+        const purchase = data.filter((item) => item.type === 'purchase')
+        set({
+            resSources: data,
+            resSourcesSub: sub,
+            resSourcesFree: free,
+            resSourcesTv2: tve,
+            resSourcesPurchase: purchase
+        })
+    },
     addReSource: (item) =>
         set((state) => ({
             resSources: [...state.resSources, item]

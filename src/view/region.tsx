@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useStateGeneral } from '../state/useStateGeneral'
 
 const Region: React.FC = () => {
     const navigate = useNavigate()
-    const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
+    const { icons, imgs } = useGlobal()
     const { resRegions, setResRegions } = useResRegionState()
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -27,9 +27,14 @@ const Region: React.FC = () => {
     }
 
     useEffect(() => {
-        // getApiRegion()
+        getApiRegion()
         setSelectNav(0)
     }, [])
+
+    const handleViewAll = () => {
+        navigate(`/universal`)
+    }
+
 
     return (
         <>
@@ -44,11 +49,12 @@ const Region: React.FC = () => {
             </div>
             <div className="max-w-[1535px] mx-auto grid grid-cols-5 py-5 gap-8">
                 {resRegions.map((res, id) => (
-                    <div key={id} className="group grid gap-2 relative bg-black">
+                    <button key={id} className="group grid gap-2 relative bg-black"
+                        onClick={handleViewAll}>
                         <img src={res.flag} alt={res.name} onError={handleImgError}
                             className="w-full aspect-[2/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 opacity-40" />
                         <h3 className="absolute w-full opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
-                    </div>
+                    </button>
                 ))}
             </div>
             <ToastContainer position="top-right" autoClose={3000} />

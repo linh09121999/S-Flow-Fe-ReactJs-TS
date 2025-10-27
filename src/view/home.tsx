@@ -16,8 +16,6 @@ import { useResStreamingReleaseState } from "../state/useStreamingReleasesState"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-import Marquee from "react-fast-marquee";
-
 const Home: React.FC = () => {
     const navigate = useNavigate()
 
@@ -129,10 +127,10 @@ const Home: React.FC = () => {
     }
 
     useEffect(() => {
-        // getApiGenres()
-        // getApiSources()
-        // getApiRegion()
-        // getApiResStreamingRelease()
+        getApiGenres()
+        getApiSources()
+        getApiRegion()
+        getApiResStreamingRelease()
         setSelectNav(0)
     }, [])
 

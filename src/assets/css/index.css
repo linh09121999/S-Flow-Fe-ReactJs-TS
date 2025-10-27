@@ -18,6 +18,10 @@
     color: white !important;
 }
 
+*.Mui-selected{
+    color: var(--color-cyan-300) !important
+}
+
 .MuiInput-root::before {
     border-bottom: 2px solid rgb(255, 255, 255, 0.2) !important
 }
