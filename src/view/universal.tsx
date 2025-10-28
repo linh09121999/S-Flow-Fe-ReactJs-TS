@@ -143,6 +143,7 @@ const Universal: React.FC = () => {
         // getApiSources()
         // getApiResStreamingRelease()
         setSelectNav(1)
+        handleClearFilter()
     }, [])
 
     const [showGenres, setShowGenres] = useState<boolean>(true)
@@ -239,22 +240,60 @@ const Universal: React.FC = () => {
         );
     };
 
+    const [sortOption, setSortOption] = useState("relevance");
+
     const filteredReleases = useMemo(() => {
-        return resStreamingRelease.filter((release) => {
-            // 1️⃣ Filter by content type
+        // return resStreamingRelease.filter((release) => {
+        //     // 1️⃣ Filter by content type
+        //     const matchContentType =
+        //         checkedItemsContentType.length === 0 ||
+        //         contentType
+        //             .filter((t) => checkedItemsContentType.includes(t.id))
+        //             .some((t) => t.type === release.type);
+
+        //     // 2️⃣ Filter by source
+        //     const matchSource =
+        //         checkedSources.length === 0 || checkedSources.includes(release.source_id);
+
+        //     return matchContentType && matchSource;
+        // });
+        let filtered = resStreamingRelease.filter((release) => {
             const matchContentType =
                 checkedItemsContentType.length === 0 ||
                 contentType
                     .filter((t) => checkedItemsContentType.includes(t.id))
                     .some((t) => t.type === release.type);
 
-            // 2️⃣ Filter by source
             const matchSource =
                 checkedSources.length === 0 || checkedSources.includes(release.source_id);
 
             return matchContentType && matchSource;
         });
-    }, [checkedItemsContentType, checkedSources]);
+
+        // Sort
+        const sorted = [...filtered].sort((a, b) => {
+            switch (sortOption) {
+                case "newest":
+                    return (
+                        new Date(b.source_release_date).getTime() -
+                        new Date(a.source_release_date).getTime()
+                    );
+                case "oldest":
+                    return (
+                        new Date(a.source_release_date).getTime() -
+                        new Date(b.source_release_date).getTime()
+                    );
+                case "title-az":
+                    return a.title.localeCompare(b.title);
+                case "title-za":
+                    return b.title.localeCompare(a.title);
+                default:
+                    return 0; // relevance
+            }
+        });
+
+        return sorted;
+    }, [checkedItemsContentType, checkedSources, sortOption]);
 
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
     const openSortBy = Boolean(anchorElSortBy);
@@ -265,28 +304,38 @@ const Universal: React.FC = () => {
         setAnchorElSortBy(null);
     };
 
-    const [sortBy, setSortBy] = useState<string>("Default")
+    const [sortBy, setSortBy] = useState<string>("Relevance")
 
     const handleSortDefault = () => {
         handleCloseSortBy()
-        setSortBy("Default")
+        setSortBy("Relevance")
+        setSortOption("relevance");
     }
 
-    const handleSortHigh = () => {
+    const handleSortNewest = () => {
         handleCloseSortBy()
-        setSortBy("Highest")
+        setSortBy("Newest")
+        setSortOption("newest");
     }
 
     // tang dan
-    const handleSordLow = () => {
+    const handleSortOldest = () => {
         handleCloseSortBy()
-        setSortBy("Lowest")
+        setSortBy("Oldest")
+        setSortOption("oldest");
     }
 
     // Mới nhất (ngày gần nhất trước)
-    const handleSortNewest = () => {
+    const handleSortAtoZ = () => {
         handleCloseSortBy();
-        setSortBy("Newest");
+        setSortBy("A-Z");
+        setSortOption("title-az");
+    };
+
+    const handleSortZtoA = () => {
+        handleCloseSortBy();
+        setSortBy("Z-A");
+        setSortOption("title-za");
     };
 
     const getYear = (date: string) => {
@@ -516,19 +565,23 @@ const Universal: React.FC = () => {
                                 <MenuItem
                                     onClick={handleSortDefault}
                                     sx={sxMenuItem}
-                                >Default</MenuItem>
-                                <MenuItem
-                                    onClick={handleSortHigh}
-                                    sx={sxMenuItem}
-                                >Highest</MenuItem>
-                                <MenuItem
-                                    onClick={handleSordLow}
-                                    sx={sxMenuItem}
-                                >Lowest</MenuItem>
+                                >Relevance</MenuItem>
                                 <MenuItem
                                     onClick={handleSortNewest}
                                     sx={sxMenuItem}
-                                >Newest</MenuItem>
+                                >Release Date (Newest)</MenuItem>
+                                <MenuItem
+                                    onClick={handleSortOldest}
+                                    sx={sxMenuItem}
+                                >Release Date (Oldest)</MenuItem>
+                                <MenuItem
+                                    onClick={handleSortAtoZ}
+                                    sx={sxMenuItem}
+                                >Title (A-Z)</MenuItem>
+                                <MenuItem
+                                    onClick={handleSortZtoA}
+                                    sx={sxMenuItem}
+                                >Title (Z-A)</MenuItem>
                             </Menu>
                         </div>
                     </div>
