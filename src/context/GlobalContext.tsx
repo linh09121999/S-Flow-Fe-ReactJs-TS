@@ -225,11 +225,6 @@ const defaultServiceType: Type[] = [
     },
     {
         id: 3,
-        title: "Buy",
-        type: 'buy'
-    },
-    {
-        id: 4,
         title: 'Purchase',
         type: 'purchase'
     }

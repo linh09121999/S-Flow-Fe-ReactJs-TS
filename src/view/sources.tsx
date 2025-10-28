@@ -5,76 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { getSources, } from "../services/userService"
 import { useResSourceState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
-import { Tabs, Tab, Box } from '@mui/material'
-import type { SxProps, Theme } from "@mui/material/styles";
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-        </div>
-    );
-}
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
 
 const Sources: React.FC = () => {
-    const sxTabs: SxProps<Theme> = {
-        borderBottom: 1,
-        borderColor: 'divider',
-        '& .MuiTab-root': {
-            textTransform: 'none', // bỏ viết hoa
-            fontWeight: 500,
-            fontSize: 16,
-            minHeight: 48,
-            color: 'text.secondary',
-            '&.Mui-selected': {
-                color: 'var(--color-cyan-300)',
-            },
-        },
-        '& .MuiTabs-indicator': {
-            backgroundColor: 'var(--color-cyan-300)',
-            height: 3,
-            borderRadius: '3px 3px 0 0',
-        },
-    }
-
-    const sxTab: SxProps<Theme> = {
-        textTransform: 'none',   // bỏ viết hoa mặc định
-        fontSize: 'var(--text-xl)',
-        minHeight: 48,
-        fontWeight: "bold",
-        color: "#faefefff",
-        "&.MuiButtonBase-root": {
-            color: 'rgb(255,255,255,0.7) !important'
-        },
-        "&.Mui-selected": {
-            color: "var(--color-cyan-300) !important", // màu khi được chọn
-        },
-        "&:hover": {
-            color: "var(--color-cyan-300) !important",
-        },
-    }
-
     const navigate = useNavigate()
     const { icons, imgs } = useGlobal()
     const { resSources, setResSources, resSourcesFree, resSourcesPurchase, resSourcesSub, resSourcesTv2 } = useResSourceState()
@@ -82,7 +14,7 @@ const Sources: React.FC = () => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
-    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
+    const { setSelectNav, checkedSources } = useStateGeneral()
 
     const getApiSources = async () => {
         try {
@@ -100,10 +32,6 @@ const Sources: React.FC = () => {
     }, [])
 
     const [value, setValue] = useState<number>(0);
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
 
     const handleSelectSource = (id: number) => {
         const newSources = checkedSources.includes(id)
@@ -124,21 +52,20 @@ const Sources: React.FC = () => {
                     <div className='transition duration-300 ease css-icon'>Sources</div>
                 </div>
             </div>
-            <div className="max-w-[1535px] mx-auto flex flex-col mt-5">
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs
-                        sx={sxTabs} value={value} onChange={handleChange} aria-label="basic tabs example">
-                        {[
-                            { label: 'All' },
-                            { label: 'Sub' },
-                            { label: 'Free' },
-                            { label: 'Tve' },
-                            { label: 'Purchase' },
-                        ].map((tab, index) => (
-                            <Tab key={tab.label} sx={sxTab} label={tab.label} {...a11yProps(index)} />
-                        ))}
-                    </Tabs>
-                </Box>
+            <div className="max-w-[1535px] text-lg text-white/70 mx-auto gap-6 flex flex-col mt-5">
+                <div className="flex gap-4">
+                    {[
+                        { label: 'All' },
+                        { label: 'Sub' },
+                        { label: 'Free' },
+                        { label: 'Tve' },
+                        { label: 'Purchase' },
+                    ].map((tab, index) => (
+                        <button key={index}
+                            onClick={() => setValue(index)}
+                            className={`border-[1px] css-icon ${value === index ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{tab.label}</button>
+                    ))}
+                </div>
                 {[
                     { data: resSources },
                     { data: resSourcesSub },
@@ -146,21 +73,19 @@ const Sources: React.FC = () => {
                     { data: resSourcesTv2 },
                     { data: resSourcesPurchase },
                 ].map((tabData, index) => (
-                    <CustomTabPanel key={index} value={value} index={index}>
-                        <div className=" grid grid-cols-5 gap-8">
-                            {tabData.data?.map((res) => (
+                    <div key={index} className={`${value === index ? '' : 'hidden'} grid grid-cols-5 gap-8`}>
+                        {tabData.data?.map((res) => (
 
-                                <button key={res.id} className="group flex flex-col gap-2 text-white/70 relative"
-                                    onClick={() => handleSelectSource(res.id)}
-                                >
-                                    <img src={res.logo_100px} alt={res.name} onError={handleImgError}
-                                        /* grayscale group-hover:grayscale-0 */
-                                        className="aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
+                            <button key={res.id} className="group flex flex-col gap-2 text-white/70 relative"
+                                onClick={() => handleSelectSource(res.id)}
+                            >
+                                <img src={res.logo_100px} alt={res.name} onError={handleImgError}
+                                    /* grayscale group-hover:grayscale-0 */
+                                    className="aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
 
-                                </button>
-                            ))}
-                        </div>
-                    </CustomTabPanel>
+                            </button>
+                        ))}
+                    </div>
                 ))}
             </div>
 

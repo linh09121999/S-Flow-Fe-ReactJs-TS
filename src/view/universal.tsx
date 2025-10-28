@@ -10,9 +10,9 @@ import {
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
-import { getGenres, getSources, getRegions, getStreamingReleases } from "../services/userService"
-import type { ResSource, ResGenre, ResRegion } from '../state/useConfigurationState'
-import { useResGenresState, useResSourceState, useResRegionState } from '../state/useConfigurationState'
+import { getSources, getStreamingReleases } from "../services/userService"//getGenres, getRegions,
+// import type { ResSource, ResGenre, ResRegion } from '../state/useConfigurationState'
+import { useResSourceState } from '../state/useConfigurationState' //useResGenresState, , useResRegionState 
 import { useStateGeneral } from '../state/useStateGeneral'
 import { useResStreamingReleaseState } from "../state/useStreamingReleasesState";
 
@@ -102,21 +102,21 @@ const Universal: React.FC = () => {
         '&.Mui-checked': { color: 'var(--color-cyan-300)' },
     }
 
-    const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
-    const { resGenres, setResGenres } = useResGenresState()
+    const { icons, imgs, contentType, styleColor } = useGlobal()
+    // const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
     const { resStreamingRelease, setResStreamingRelease } = useResStreamingReleaseState()
     const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
 
-    const getApiGenres = async () => {
-        try {
-            const res = await getGenres()
-            setResGenres(res.data)
-        } catch (error: any) {
-            console.error("Lỗi khi gọi API getGenres", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
-        }
-    }
+    // const getApiGenres = async () => {
+    //     try {
+    //         const res = await getGenres()
+    //         setResGenres(res.data)
+    //     } catch (error: any) {
+    //         console.error("Lỗi khi gọi API getGenres", error)
+    //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
+    //     }
+    // }
 
     const getApiSources = async () => {
         try {
@@ -155,14 +155,14 @@ const Universal: React.FC = () => {
         setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])
 
-    const [showGenres, setShowGenres] = useState<boolean>(true)
+    // const [showGenres, setShowGenres] = useState<boolean>(true)
     const [showStreaming, setShowStreaming] = useState<boolean>(true)
     const [showContentType, setShowContentType] = useState<boolean>(true)
-    const [showServiceType, setShowServiceType] = useState<boolean>(true)
+    // const [showServiceType, setShowServiceType] = useState<boolean>(true)
 
-    const [checkedItemsGenres, setCheckedItemsGenres] = useState<number[]>([])
+    // const [checkedItemsGenres, setCheckedItemsGenres] = useState<number[]>([])
     const [checkedItemsContentType, setCheckedItemsContentType] = useState<number[]>([])
-    const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
+    // const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
 
 
     const handleClearFilter = () => {
@@ -174,26 +174,26 @@ const Universal: React.FC = () => {
         setCheckedSources([])
     }
 
-    const allCheckedGenres = checkedItemsGenres.length === resGenres.length
-    const isIndeterminateGenres =
-        checkedItemsGenres.length > 0 && checkedItemsGenres.length < resGenres.length
+    // const allCheckedGenres = checkedItemsGenres.length === resGenres.length
+    // const isIndeterminateGenres =
+    //     checkedItemsGenres.length > 0 && checkedItemsGenres.length < resGenres.length
 
-    // Khi click vào "All"
-    const handleCheckAllGenres = () => {
-        allCheckedGenres ?
-            setCheckedItemsGenres([])
-            :
-            setCheckedItemsGenres(resGenres.map((res) => res.id))
-    }
+    // // Khi click vào "All"
+    // const handleCheckAllGenres = () => {
+    //     allCheckedGenres ?
+    //         setCheckedItemsGenres([])
+    //         :
+    //         setCheckedItemsGenres(resGenres.map((res) => res.id))
+    // }
 
     // Khi click vào từng item
-    const handleCheckItemGenres = (id: number) => {
-        if (checkedItemsGenres.includes(id)) {
-            setCheckedItemsGenres(checkedItemsGenres.filter((itemId) => itemId !== id))
-        } else {
-            setCheckedItemsGenres([...checkedItemsGenres, id])
-        }
-    }
+    // const handleCheckItemGenres = (id: number) => {
+    //     if (checkedItemsGenres.includes(id)) {
+    //         setCheckedItemsGenres(checkedItemsGenres.filter((itemId) => itemId !== id))
+    //     } else {
+    //         setCheckedItemsGenres([...checkedItemsGenres, id])
+    //     }
+    // }
 
     const allCheckedContentType = checkedItemsContentType.length === contentType.length
     const isIndeterminateContentType = checkedItemsContentType.length > 0 && checkedItemsContentType.length < contentType.length
@@ -217,20 +217,20 @@ const Universal: React.FC = () => {
             )
     }
 
-    const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
-    const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
-    const handleCheckAllServiceType = () => {
-        allCheckedServiceType ?
-            setCheckedItemsServiceType([])
-            :
-            setCheckedItemsServiceType(serviceType.map((type) => type.id))
-    }
-    const handleCheckItemServiceType = (id: number) => {
-        checkedItemsServiceType.includes(id) ?
-            setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
-            :
-            setCheckedItemsServiceType([...checkedItemsServiceType, id])
-    }
+    // const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
+    // const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
+    // const handleCheckAllServiceType = () => {
+    //     allCheckedServiceType ?
+    //         setCheckedItemsServiceType([])
+    //         :
+    //         setCheckedItemsServiceType(serviceType.map((type) => type.id))
+    // }
+    // const handleCheckItemServiceType = (id: number) => {
+    //     checkedItemsServiceType.includes(id) ?
+    //         setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
+    //         :
+    //         setCheckedItemsServiceType([...checkedItemsServiceType, id])
+    // }
 
 
     const [inputValueSources, setInputValueSources] = useState<string>("");

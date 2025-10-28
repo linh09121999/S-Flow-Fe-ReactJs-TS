@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
-import {
-    Checkbox,
-    MenuItem, Menu,
-    FormControlLabel
-} from '@mui/material'
-import type { SxProps, Theme } from "@mui/material/styles";
 
-import { getGenres, getSources, getRegions, getStreamingReleases } from "../services/userService"
+import { getSources, getStreamingReleases } from "../services/userService" //getGenres,  getRegions,
 import { useResGenresState, useResSourceState, useResRegionState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
 import { useResStreamingReleaseState } from "../state/useStreamingReleasesState";
@@ -65,12 +59,12 @@ const Home: React.FC = () => {
         }
     }
 
-    const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
-    const { resGenres, setResGenres } = useResGenresState()
+    const { icons, imgs, styleColor } = useGlobal()
+    const { resGenres } = useResGenresState()//, setResGenres
     const { resSources, setResSources } = useResSourceState()
-    const { resRegions, setResRegions } = useResRegionState()
+    const { resRegions } = useResRegionState()//, setResRegions
     const {
-        resStreamingRelease,
+        // resStreamingRelease,
         setResStreamingRelease,
         resStreamingReleaseMovie,
         resStreamingReleaseShortFilm,
@@ -78,7 +72,7 @@ const Home: React.FC = () => {
         resStreamingReleaseTVSeries,
         resStreamingReleaseTVSpecial
     } = useResStreamingReleaseState()
-    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
+    const { setSelectNav, checkedSources } = useStateGeneral()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -93,15 +87,15 @@ const Home: React.FC = () => {
         navigate('/universal', { state: { selectSource: newSources } })
     };
 
-    const getApiGenres = async () => {
-        try {
-            const res = await getGenres()
-            setResGenres(res.data)
-        } catch (error: any) {
-            console.error("Lỗi khi gọi API getGenres", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
-        }
-    }
+    // const getApiGenres = async () => {
+    //     try {
+    //         const res = await getGenres()
+    //         setResGenres(res.data)
+    //     } catch (error: any) {
+    //         console.error("Lỗi khi gọi API getGenres", error)
+    //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
+    //     }
+    // }
 
     const getApiSources = async () => {
         try {
@@ -113,15 +107,15 @@ const Home: React.FC = () => {
         }
     }
 
-    const getApiRegion = async () => {
-        try {
-            const res = await getRegions()
-            setResRegions(res.data)
-        } catch (error: any) {
-            console.error("Lỗi khi gọi API getRegions", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
-        }
-    }
+    // const getApiRegion = async () => {
+    //     try {
+    //         const res = await getRegions()
+    //         setResRegions(res.data)
+    //     } catch (error: any) {
+    //         console.error("Lỗi khi gọi API getRegions", error)
+    //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
+    //     }
+    // }
 
     const getApiResStreamingRelease = async () => {
         try {
