@@ -274,7 +274,6 @@ const Universal: React.FC = () => {
 
             const matchSource =
                 checkedSources.length === 0 || checkedSources.includes(release.source_id);
-
             return matchContentType && matchSource;
         });
 

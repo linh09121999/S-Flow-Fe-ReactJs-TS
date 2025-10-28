@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-interface Release {
+export interface Release {
     id: number;
     title: string;
     type: 'movie' | 'tv_series' | 'tv_special' | 'tv_miniseries' | 'short_film';
