@@ -1,23 +1,30 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { getGenres } from "../services/userService"
 import { useResGenresState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
+import { Backdrop, CircularProgress } from '@mui/material'
+
 const Genres: React.FC = () => {
     const navigate = useNavigate()
-    const { icons} = useGlobal()
+    const { icons } = useGlobal()
     const { resGenres, setResGenres } = useResGenresState()
     const { setSelectNav } = useStateGeneral()
 
+    const [loading, setLoading] = useState<boolean>(true);
+
     const getApiGenres = async () => {
         try {
+            setLoading(true);
             const res = await getGenres()
             setResGenres(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getGenres", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -29,6 +36,17 @@ const Genres: React.FC = () => {
     const handleViewAll = () => {
         navigate(`/universal`)
     }
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>

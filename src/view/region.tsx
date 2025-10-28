@@ -1,10 +1,11 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { getRegions } from "../services/userService"
 import { useResRegionState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
+import { Backdrop, CircularProgress } from '@mui/material'
 
 const Region: React.FC = () => {
     const navigate = useNavigate()
@@ -15,14 +16,18 @@ const Region: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
     const { setSelectNav } = useStateGeneral()
+    const [loading, setLoading] = useState<boolean>(true);
 
     const getApiRegion = async () => {
         try {
+            setLoading(true);
             const res = await getRegions()
             setResRegions(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getRegions", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -35,6 +40,16 @@ const Region: React.FC = () => {
         navigate(`/universal`)
     }
 
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>

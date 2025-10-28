@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getSources, } from "../services/userService"
 import { useResSourceState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
+import { Backdrop, CircularProgress } from '@mui/material'
 
 const Sources: React.FC = () => {
     const navigate = useNavigate()
@@ -15,14 +16,18 @@ const Sources: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
     const { setSelectNav, checkedSources } = useStateGeneral()
+    const [loading, setLoading] = useState<boolean>(true);
 
     const getApiSources = async () => {
         try {
+            setLoading(true);
             const res = await getSources()
             setResSources(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getApiSources", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getApiSources")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -40,6 +45,17 @@ const Sources: React.FC = () => {
 
         navigate('/universal', { state: { selectSource: newSources } })
     };
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>

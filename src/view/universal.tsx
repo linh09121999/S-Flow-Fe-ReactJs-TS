@@ -6,7 +6,8 @@ import {
     Checkbox,
     MenuItem, Menu,
     FormControlLabel, InputAdornment, IconButton,
-    TextField
+    TextField,
+    Backdrop, CircularProgress
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
@@ -107,34 +108,44 @@ const Universal: React.FC = () => {
     const { resSources, setResSources } = useResSourceState()
     const { resStreamingRelease, setResStreamingRelease } = useResStreamingReleaseState()
     const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
+    const [loading, setLoading] = useState<boolean>(true);
 
     // const getApiGenres = async () => {
     //     try {
+    // setLoading(true);
     //         const res = await getGenres()
     //         setResGenres(res.data)
     //     } catch (error: any) {
     //         console.error("Lỗi khi gọi API getGenres", error)
     //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
-    //     }
+    //     }finally {
+    //     setLoading(false); // 👈 tắt loading sau khi có dữ liệu
+    // }
     // }
 
     const getApiSources = async () => {
         try {
+            setLoading(true);
             const res = await getSources()
             setResSources(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getApiSources", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getApiSources")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     const getApiResStreamingRelease = async () => {
         try {
+            setLoading(true);
             const res = await getStreamingReleases()
             setResStreamingRelease(res.data.releases)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getStreamingReleases", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getStreamingReleases")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -343,6 +354,17 @@ const Universal: React.FC = () => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>

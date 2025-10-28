@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
@@ -9,9 +9,11 @@ import { useStateGeneral } from '../state/useStateGeneral'
 import { useResStreamingReleaseState } from "../state/useStreamingReleasesState";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Backdrop, CircularProgress } from '@mui/material'
 
 const Home: React.FC = () => {
     const navigate = useNavigate()
+    const [loading, setLoading] = useState<boolean>(true);
 
     const responsive = {
         superLargeDesktop: {
@@ -99,31 +101,41 @@ const Home: React.FC = () => {
 
     const getApiSources = async () => {
         try {
+            setLoading(true);
             const res = await getSources()
             setResSources(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getApiSources", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getApiSources")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     // const getApiRegion = async () => {
     //     try {
+    // setLoading(true);
     //         const res = await getRegions()
     //         setResRegions(res.data)
     //     } catch (error: any) {
     //         console.error("Lỗi khi gọi API getRegions", error)
     //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
     //     }
+    // finally {
+    //         setLoading(false); // 👈 tắt loading sau khi có dữ liệu
+    //     }
     // }
 
     const getApiResStreamingRelease = async () => {
         try {
+            setLoading(true);
             const res = await getStreamingReleases()
             setResStreamingRelease(res.data.releases)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getStreamingReleases", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getStreamingReleases")
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -143,6 +155,17 @@ const Home: React.FC = () => {
     const handleViewAll = () => {
         navigate(`/universal`)
     }
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>
