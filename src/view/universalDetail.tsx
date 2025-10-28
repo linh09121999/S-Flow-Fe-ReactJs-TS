@@ -79,7 +79,10 @@ const UniversalDetail: React.FC = () => {
     const getApiTitleSeasons = async (titleId: number) => {
         try {
             const res = await getTitleSeasons(titleId)
-            setResTitleSeasons(res.data)
+            if (res.data.lenght > 0) {
+                setResTitleSeasons(res.data)
+                setSelectSeasons(res.data[0].id)
+            }
         } catch (error: any) {
             console.error("Lỗi khi gọi API getTitleSeasons", error)
             toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleSeasons")
@@ -110,15 +113,11 @@ const UniversalDetail: React.FC = () => {
     const { idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        if (idDetail === undefined) {
-            navigate("/universal")
-        } else {
-            getApiTitleDetails(idDetail)
-            getApiTitleStreamingSources(idDetail)
-            getApiTitleSeasons(idDetail)
-            getApiTitleEpisodes(idDetail)
-            getApiTitleCast_Crew(idDetail)
-        }
+        getApiTitleDetails(idDetail)
+        getApiTitleStreamingSources(idDetail)
+        getApiTitleSeasons(idDetail)
+        getApiTitleEpisodes(idDetail)
+        getApiTitleCast_Crew(idDetail)
     }, [])
 
     const { icons, imgs } = useGlobal()
@@ -134,7 +133,7 @@ const UniversalDetail: React.FC = () => {
 
     return (
         <>
-            <div className='w-full px-5 sticky z-[999] top-[80px] backdrop-blur-[10px]'>
+            <div className='w-full sticky z-[999] top-[80px] backdrop-blur-[10px]'>
                 <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
                     <div
                         onClick={() => navigate("/universal")}
@@ -143,14 +142,14 @@ const UniversalDetail: React.FC = () => {
                     <div className='transition duration-300 ease css-icon'>Detail</div>
                 </div>
             </div>
-            <div className="max-w-[1535px] mx-auto flex flex-col gap-20">
+            <div className="max-w-[1535px] mx-auto flex flex-col gap-20 py-5">
                 <section className="relative bg-black">
-                    <img src={resTitleDetail?.trailer_thumbnail} alt={resTitleDetail?.title} className="w-full h-[70vh] opacity-30" onError={handleImgError} />
+                    <img src={resTitleDetail?.trailer_thumbnail || imgs.imgDefault} alt={resTitleDetail?.title} className="w-full h-[70vh] opacity-30" onError={handleImgError} />
                     <div className="flex items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         <div className="w-[1025px] px-10 relative flex flex-col gap-5">
                             <h1 className="text-white font-bold text-7xl">{resTitleDetail?.title}</h1>
                             <div className="flex wrap items-center gap-4 text-white/80 text-lg">
-                                <div className="flex items-center gap-2 h-[40px] px-4 rounded-[10px] bg-gray-950 border-[1px] border-gray-700">
+                                <div className={`${resTitleDetail?.us_rating === null ? 'hidden' : ''} flex items-center gap-2 h-[40px] px-4 rounded-[10px] bg-gray-100/20 backdrop-blur-[10px] border-[1px] border-gray-100/20`}>
                                     <p>{resTitleDetail?.us_rating}</p>
                                 </div>
                                 <p>{resTitleDetail?.type}</p>
@@ -191,7 +190,7 @@ const UniversalDetail: React.FC = () => {
                                             frameBorder="0"
                                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                             allowFullScreen
-                                        ></iframe>
+                                        />
                                     </div>
                                 </DialogContent>
 
@@ -247,16 +246,18 @@ const UniversalDetail: React.FC = () => {
                                     <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                         <h3 className="text-xl text-white">Episodes</h3>
                                     </div>
-                                    <div className="text-lg text-white/70 mt-5 gap-6 flex flex-col gap-4">
-                                        {resTitleSeasons.map((res) => (
-                                            <button key={res.id}
-                                                onClick={() => setSelectSeasons(res.id)}
-                                                className={`border-[1px] css-icon ${selectSeasons === res.id ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{res.name}</button>
-                                        ))}
+                                    <div className="text-lg text-white/70 mt-5 gap-6 flex flex-col">
+                                        <div className="flex gap-4">
+                                            {resTitleSeasons.map((res) => (
+                                                <button key={res.id}
+                                                    onClick={() => setSelectSeasons(res.id)}
+                                                    className={`border-[1px] css-icon ${selectSeasons === res.id ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{res.name}</button>
+                                            ))}
+                                        </div>
                                         {resTitleEpisodes.map((res) => (
                                             <div key={res.id} className={`${selectSeasons === res.season_id ? "" : "hidden"} flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
                                                 <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" onError={handleImgError} />
-                                                <div className="flex flex-col gap-2">
+                                                <div className="flex flex-col gap-2 w-full">
                                                     <div className="flex justify-between">
                                                         <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
                                                         <span className="text-sm py-1 px-4 rounded-[10px] bg-cyan-500/10 text-cyan-300 border-[1px] border-cyan-500/10">{res.runtime_minutes} minutes</span>
@@ -365,8 +366,9 @@ const UniversalDetail: React.FC = () => {
                             }
                         </div>
                         <div className="flex flex-col gap-6 self-start">
-                            <div className="relative group">
-                                <img src={resTitleDetail?.poster} alt={resTitleDetail?.title} className="w-full rounded-[10px] transition-all duration-300 ease shadow-lg shadow-gray-900 group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-cyan-300/50" onError={handleImgError} />
+                            <div className="relative group w-full ">
+                                <img src={resTitleDetail?.poster || imgs.imgDefault}
+                                    alt={resTitleDetail?.title || "No image available"} className="rounded-[10px] transition-all duration-300 ease shadow-lg shadow-gray-900 group-hover:scale-103 group-hover:opacity-70 group-hover:shadow-cyan-300/50" onError={handleImgError} />
                                 <button
                                     onClick={() => {
                                         setModalOpen(true);
@@ -392,11 +394,11 @@ const UniversalDetail: React.FC = () => {
                                         <span>Original Language:</span>
                                         <span className="text-white font-bold text-xl">{resTitleDetail?.original_language}</span>
                                     </div>
-                                    <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
+                                    <div className={`${resTitleDetail?.us_rating === null ? 'hidden' : ''} flex justify-between py-3 border-b-[1px] border-b-gray-600`}>
                                         <span>Us Rating:</span>
                                         <span className="text-white font-bold text-xl">{resTitleDetail?.us_rating}</span>
                                     </div>
-                                    <div className="flex wrap gap-4 mt-2">
+                                    <div className="flex flex-wrap gap-4 mt-2">
                                         {resTitleDetail?.genre_names.map((res, id) => (
                                             <span key={id} className="bg-white/10 py-1 px-4 rounded-full">
                                                 {res}

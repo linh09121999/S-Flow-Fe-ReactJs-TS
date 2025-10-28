@@ -6,7 +6,7 @@ import {
     Checkbox,
     MenuItem, Menu,
     FormControlLabel, InputAdornment, IconButton,
-    Autocomplete, TextField
+    TextField
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
@@ -105,7 +105,6 @@ const Universal: React.FC = () => {
     const { icons, imgs, contentType, serviceType, styleColor } = useGlobal()
     const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
-    const { resRegions, setResRegions } = useResRegionState()
     const { resStreamingRelease, setResStreamingRelease } = useResStreamingReleaseState()
     const { setSelectNav } = useStateGeneral()
 
@@ -129,16 +128,6 @@ const Universal: React.FC = () => {
         }
     }
 
-    const getApiRegion = async () => {
-        try {
-            const res = await getRegions()
-            setResRegions(res.data)
-        } catch (error: any) {
-            console.error("Lỗi khi gọi API getRegions", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
-        }
-    }
-
     const getApiResStreamingRelease = async () => {
         try {
             const res = await getStreamingReleases()
@@ -152,33 +141,28 @@ const Universal: React.FC = () => {
     useEffect(() => {
         // getApiGenres()
         // getApiSources()
-        // getApiRegion()
         // getApiResStreamingRelease()
         setSelectNav(1)
     }, [])
 
     const [showGenres, setShowGenres] = useState<boolean>(true)
     const [showStreaming, setShowStreaming] = useState<boolean>(true)
-    const [showRegions, setShowRegions] = useState<boolean>(true)
     const [showContentType, setShowContentType] = useState<boolean>(true)
-    // const [showServiceType, setShowServiceType] = useState<boolean>(true)
+    const [showServiceType, setShowServiceType] = useState<boolean>(true)
 
     const [checkedItemsGenres, setCheckedItemsGenres] = useState<number[]>([])
     const [checkedItemsContentType, setCheckedItemsContentType] = useState<number[]>([])
-    // const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
+    const [checkedItemsServiceType, setCheckedItemsServiceType] = useState<number[]>([])
 
 
     const handleClearFilter = () => {
-        if (resGenres.length > 0) {
-            setCheckedItemsGenres(resGenres.map((res) => res.id))
-        }
+        // if (resGenres.length > 0) {
+        //     setCheckedItemsGenres(resGenres.map((res) => res.id))
+        // }
         setCheckedItemsContentType(contentType.map((type) => type.id))
         // setCheckedItemsServiceType(serviceType.map((type) => type.id))
+        setCheckedSources([])
     }
-
-    useEffect(() => {
-        handleClearFilter()
-    }, [resGenres])
 
     const allCheckedGenres = checkedItemsGenres.length === resGenres.length
     const isIndeterminateGenres =
@@ -223,14 +207,21 @@ const Universal: React.FC = () => {
             )
     }
 
-    const [inputValueRegion, setInputValueRegion] = useState<string>("");
+    const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
+    const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
+    const handleCheckAllServiceType = () => {
+        allCheckedServiceType ?
+            setCheckedItemsServiceType([])
+            :
+            setCheckedItemsServiceType(serviceType.map((type) => type.id))
+    }
+    const handleCheckItemServiceType = (id: number) => {
+        checkedItemsServiceType.includes(id) ?
+            setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
+            :
+            setCheckedItemsServiceType([...checkedItemsServiceType, id])
+    }
 
-    const filteredRegions = useMemo(() => {
-        if (!inputValueRegion.trim()) return resRegions;
-        return resRegions.filter((r) =>
-            r.name.toLowerCase().includes(inputValueRegion.toLowerCase())
-        );
-    }, [inputValueRegion, resRegions]);
 
     const [inputValueSources, setInputValueSources] = useState<string>("");
 
@@ -240,6 +231,30 @@ const Universal: React.FC = () => {
             r.name.toLowerCase().includes(inputValueSources.toLowerCase())
         );
     }, [inputValueSources, resSources]);
+
+    const [checkedSources, setCheckedSources] = useState<number[]>([]);
+    const handleSelectSource = (id: number) => {
+        setCheckedSources((prev) =>
+            prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+        );
+    };
+
+    const filteredReleases = useMemo(() => {
+        return resStreamingRelease.filter((release) => {
+            // 1️⃣ Filter by content type
+            const matchContentType =
+                checkedItemsContentType.length === 0 ||
+                contentType
+                    .filter((t) => checkedItemsContentType.includes(t.id))
+                    .some((t) => t.type === release.type);
+
+            // 2️⃣ Filter by source
+            const matchSource =
+                checkedSources.length === 0 || checkedSources.includes(release.source_id);
+
+            return matchContentType && matchSource;
+        });
+    }, [checkedItemsContentType, checkedSources]);
 
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
     const openSortBy = Boolean(anchorElSortBy);
@@ -331,64 +346,50 @@ const Universal: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    {/* <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
-                                    setShowRegions(!showRegions)
+                                    setShowServiceType(!showServiceType)
                                 }}
                             >
-                                <h3 className="text-xl ">Regions</h3>
-                                <span>{showRegions ? icons.iconUp : icons.iconDown}</span>
+                                <h3 className="text-xl ">Service Types</h3>
+                                <span>{showServiceType ? icons.iconUp : icons.iconDown}</span>
                             </button>
-
-                            {showRegions && (
-                                <div className="mt-5 flex flex-col gap-4">
-                                    <TextField
-                                        type="search"
-                                        placeholder="Search of regions..."
-                                        sx={sxTextField}
-                                        onChange={(e) => setInputValueRegion(e.target.value)}
-                                        value={inputValueRegion}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        sx={{ color: 'var(--color-cyan-300)' }}
-                                                    >
-                                                        {icons.iconSearch}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        }}
+                            {showServiceType && (
+                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                    <FormControlLabel control={
+                                        <Checkbox
+                                            indeterminate={isIndeterminateServiceType}
+                                            checked={allCheckedServiceType}
+                                            onChange={handleCheckAllServiceType}
+                                            icon={icons.iconUncheck}
+                                            indeterminateIcon={icons.iconMinus}
+                                            checkedIcon={icons.iconCheck}
+                                            sx={sxCheckBoxMinate}
+                                        />
+                                    }
+                                        label="All Services"
+                                        sx={sxControlLabel}
                                     />
-                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
-                                        {filteredRegions.length > 0 ? (
-                                            filteredRegions.map((res, id) => (
-                                                <div
-                                                    key={id}
-                                                    className="flex items-center gap-4 rounded-lg cursor-pointer transition"
-                                                >
-                                                    <img
-                                                        src={res.flag}
-                                                        alt={res.name}
-                                                        className="h-[25px] w-[40px] object-cover rounded"
-                                                    />
-                                                    <p className="text-sm font-medium">{res.name}</p>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-400 text-sm italic">
-                                                No countries found.
-                                            </p>
-                                        )}
-
-                                    </div>
-
+                                    {serviceType.map((type) => (
+                                        <FormControlLabel key={type.id} control={
+                                            <Checkbox
+                                                checked={checkedItemsServiceType.includes(type.id)}
+                                                onChange={() => handleCheckItemServiceType(type.id)}
+                                                icon={icons.iconUncheck}
+                                                checkedIcon={icons.iconCheck}
+                                                sx={sxCheckBox}
+                                            />
+                                        }
+                                            label={type.title}
+                                            sx={sxControlLabel}
+                                        />
+                                    ))}
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
@@ -422,7 +423,11 @@ const Universal: React.FC = () => {
                                     <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
                                         {filteredSources.length > 0 ? (
                                             filteredSources.map((res) => (
-                                                <button key={res.id} className="flex items-center justify-between gap-4 group">
+                                                <button
+                                                    key={res.id}
+                                                    onClick={() => handleSelectSource(res.id)}
+                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
+                                                >
                                                     <div className="flex items-center gap-4">
                                                         <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
                                                         <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
@@ -430,16 +435,16 @@ const Universal: React.FC = () => {
                                                 </button>
                                             ))
                                         ) : (
-                                        <p className="text-gray-400 text-sm italic">
-                                            No source found.
-                                        </p>)}
+                                            <p className="text-gray-400 text-sm italic">
+                                                No source found.
+                                            </p>)}
                                     </div>
                                 </div>
 
                             )}
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    {/* <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
@@ -451,7 +456,6 @@ const Universal: React.FC = () => {
                             </button>
                             {showGenres && (
                                 <div className="text-lg mt-5 text-white/70 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
-                                    {/* Checkbox "All" */}
                                     <FormControlLabel control={
                                         <Checkbox
                                             indeterminate={isIndeterminateGenres}
@@ -483,7 +487,7 @@ const Universal: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div> */}
 
                     <button className="text-white/70 border-[1px] border-gray-800 h-[40px] rounded-[10px] transition-all duration-300 ease hover:text-cyan-300 hover:shadow-lg hover:shadow-cyan-300/50 m-1"
                         onClick={handleClearFilter}
@@ -493,7 +497,7 @@ const Universal: React.FC = () => {
                 </aside >
                 <section className="flex flex-col gap-6">
                     <div className="flex justify-between items-center">
-                        <p className="text-white text-xl">Results</p>
+                        <p className="text-white text-xl">{filteredReleases.length} Results</p>
                         <div>
                             <button className={`${openSortBy ? "shadow-xl border-cyan-300" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px] transition-all duration-300 ease border-gray-800 h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50`}
                                 onClick={handleClickSortBy}
@@ -528,11 +532,11 @@ const Universal: React.FC = () => {
                             </Menu>
                         </div>
                     </div>
-                    {resStreamingRelease.length === 0 ?
+                    {filteredReleases.length === 0 ?
                         <p className="text-center text-cyan-300">! No data</p>
                         :
                         <div className={`grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6`}>
-                            {resStreamingRelease.map((res) => (
+                            {filteredReleases.map((res) => (
                                 <div key={res.id} className="group grid gap-2 ">
                                     <button className="flex flex-col gap-2"
                                         onClick={() => {
