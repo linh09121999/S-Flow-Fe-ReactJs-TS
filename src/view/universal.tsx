@@ -144,6 +144,9 @@ const Universal: React.FC = () => {
     useEffect(() => {
         if (selectSource) {
             setCheckedSources(selectSource);
+            console.log(selectSource)
+        } else {
+            setCheckedSources([])
         }
     }, [selectSource, setCheckedSources]);
 
