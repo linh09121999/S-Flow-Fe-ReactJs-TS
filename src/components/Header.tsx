@@ -10,7 +10,8 @@ import {
     InputAdornment,
     IconButton,
     FormControl,
-    Autocomplete, Box
+    Autocomplete, Box,
+    Backdrop, CircularProgress
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
@@ -72,7 +73,7 @@ const Header: React.FC = () => {
             sx: {
                 background: 'var(--color-gray-900)',
                 zIndex: 100,
-
+                minHeight: '70px',
                 '& .MuiAutocomplete-noOptions': {
                     minHeight: '30px !important',
                     color: 'rgb(255,255,255,0.7) !important',
@@ -103,9 +104,9 @@ const Header: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     const getApiAutocomplate = async (searchValue: string, searchType: number) => {
-        setLoading(true);
         setResAutocomplate([]);
         try {
+            setLoading(true);
             const res = await getAutocomplete(searchValue, searchType)
             setResAutocomplate(res.data.results)
         } catch (error: any) {
@@ -189,7 +190,13 @@ const Header: React.FC = () => {
                             <FormControl className="w-full" sx={sxFormControl}>
                                 <Autocomplete
                                     // disableClearable
-                                    noOptionsText={loading ? "loading..." : "There is no data"}
+                                    noOptionsText={loading ?
+                                        <Backdrop
+                                            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                                            open={loading}
+                                        >
+                                            <CircularProgress color="inherit" />
+                                        </Backdrop> : <p className='text-center h-full items-center'>There is no data</p>}
                                     options={resAutocomplate}
                                     componentsProps={componentsProps}
                                     getOptionLabel={(option) => option.name}
