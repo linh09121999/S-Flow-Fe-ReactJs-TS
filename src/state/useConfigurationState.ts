@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-interface ResSource {
+export interface ResSource {
     id: number;
     name: string;
     type: 'sub' | 'free' | 'tve' | 'purchase';
@@ -49,7 +49,7 @@ export const useResSourceState = create<ResSourceState>((set) => ({
     clearReSources: () => set({ resSources: [] })
 }))
 
-interface ResRegion {
+export interface ResRegion {
     country: string;
     name: string;
     flag: string;
@@ -98,7 +98,7 @@ export const useResNetworkState = create<ResNetworkState>((set) => ({
     clearResNetworks: () => set({ resNetworks: [] })
 }))
 
-interface ResGenre {
+export interface ResGenre {
     id: number;
     name: string;
     tmdb_id: string;

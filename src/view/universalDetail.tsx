@@ -113,11 +113,11 @@ const UniversalDetail: React.FC = () => {
         if (idDetail === undefined) {
             navigate("/universal")
         } else {
-            // getApiTitleDetails(idDetail)
-            // getApiTitleStreamingSources(idDetail)
-            // getApiTitleSeasons(idDetail)
-            // getApiTitleEpisodes(idDetail)
-            // getApiTitleCast_Crew(idDetail)
+            getApiTitleDetails(idDetail)
+            getApiTitleStreamingSources(idDetail)
+            getApiTitleSeasons(idDetail)
+            getApiTitleEpisodes(idDetail)
+            getApiTitleCast_Crew(idDetail)
         }
     }, [])
 

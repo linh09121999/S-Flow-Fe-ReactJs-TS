@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import {
     Checkbox,
     MenuItem, Menu,
-    FormControlLabel
+    FormControlLabel, InputAdornment, IconButton,
+    Autocomplete, TextField
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
 import { getGenres, getSources, getRegions, getStreamingReleases } from "../services/userService"
+import type { ResSource, ResGenre, ResRegion } from '../state/useConfigurationState'
 import { useResGenresState, useResSourceState, useResRegionState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
 import { useResStreamingReleaseState } from "../state/useStreamingReleasesState";
@@ -23,6 +25,40 @@ const Universal: React.FC = () => {
             maxWidth: 'calc(100%)',
             background: 'var(--color-gray-900)',
             zIndex: 100,
+        },
+    }
+
+    const sxTextField: SxProps<Theme> = {
+        width: {
+            md: '100%',
+        },
+        '& .MuiOutlinedInput-root': {
+            borderRadius: "10px",
+            background: "var(--color-gray-900)",
+            padding: '3px 8px !important',
+            transition: 'all 0.3s',
+            fontSize: 'var(--text-xl)',
+            border: '1px solid var(--color-gray-800)',
+            height: '40px',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+        },
+
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+            outline: 'none',
+            border: 'none'
+        },
+
+        '& .MuiOutlinedInput-input': {
+            padding: 0
+        },
+
+        '& .MuiInputBase-input': {
+            color: 'var(--color-cyan-300)',
+            paddingLeft: '14px',
+            fontSize: 'var(--text-lg)',
+            border: 'none',
         },
     }
 
@@ -187,22 +223,23 @@ const Universal: React.FC = () => {
             )
     }
 
-    // const allCheckedServiceType = checkedItemsServiceType.length === serviceType.length
-    // const isIndeterminateServiceType = checkedItemsServiceType.length > 0 && checkedItemsServiceType.length < serviceType.length
+    const [inputValueRegion, setInputValueRegion] = useState<string>("");
 
-    // const handleCheckAllServiceType = () => {
-    //     allCheckedServiceType ?
-    //         setCheckedItemsServiceType([])
-    //         :
-    //         setCheckedItemsServiceType(serviceType.map((type) => type.id))
-    // }
+    const filteredRegions = useMemo(() => {
+        if (!inputValueRegion.trim()) return resRegions;
+        return resRegions.filter((r) =>
+            r.name.toLowerCase().includes(inputValueRegion.toLowerCase())
+        );
+    }, [inputValueRegion, resRegions]);
 
-    // const handleCheckItemServiceType = (id: number) => {
-    //     checkedItemsServiceType.includes(id) ?
-    //         setCheckedItemsServiceType(checkedItemsServiceType.filter((itemId) => itemId !== id))
-    //         :
-    //         setCheckedItemsServiceType([...checkedItemsServiceType, id])
-    // }
+    const [inputValueSources, setInputValueSources] = useState<string>("");
+
+    const filteredSources = useMemo(() => {
+        if (!inputValueSources.trim()) return resSources;
+        return resSources.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSources]);
 
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
     const openSortBy = Boolean(anchorElSortBy);
@@ -294,50 +331,6 @@ const Universal: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    {/* <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
-                            <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
-                                onClick={() => {
-                                    setShowServiceType(!showServiceType)
-                                }}
-                            >
-                                <h3 className="text-xl ">Service Types</h3>
-                                <span>{showServiceType ? icons.iconUp : icons.iconDown}</span>
-                            </button>
-                            {showServiceType && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
-                                    <FormControlLabel control={
-                                        <Checkbox
-                                            indeterminate={isIndeterminateServiceType}
-                                            checked={allCheckedServiceType}
-                                            onChange={handleCheckAllServiceType}
-                                            icon={icons.iconUncheck}
-                                            indeterminateIcon={icons.iconMinus}
-                                            checkedIcon={icons.iconCheck}
-                                            sx={sxCheckBoxMinate}
-                                        />
-                                    }
-                                        label="All Services"
-                                        sx={sxControlLabel}
-                                    />
-                                    {serviceType.map((type) => (
-                                        <FormControlLabel key={type.id} control={
-                                            <Checkbox
-                                                checked={checkedItemsServiceType.includes(type.id)}
-                                                onChange={() => handleCheckItemServiceType(type.id)}
-                                                icon={icons.iconUncheck}
-                                                checkedIcon={icons.iconCheck}
-                                                sx={sxCheckBox}
-                                            />
-                                        }
-                                            label={type.title}
-                                            sx={sxControlLabel}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div> */}
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
@@ -348,14 +341,50 @@ const Universal: React.FC = () => {
                                 <h3 className="text-xl ">Regions</h3>
                                 <span>{showRegions ? icons.iconUp : icons.iconDown}</span>
                             </button>
+
                             {showRegions && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
-                                    {resRegions.map((res) => (
-                                        <button className="flex items-center gap-4 group">
-                                            <img src={res.flag} alt={res.name} className="h-[25px] w-[40px]" />
-                                            <p className="text-sm group-hover:text-cyan-300">{res.name}</p>
-                                        </button>
-                                    ))}
+                                <div className="mt-5 flex flex-col gap-4">
+                                    <TextField
+                                        type="search"
+                                        placeholder="Search of regions..."
+                                        sx={sxTextField}
+                                        onChange={(e) => setInputValueRegion(e.target.value)}
+                                        value={inputValueRegion}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        sx={{ color: 'var(--color-cyan-300)' }}
+                                                    >
+                                                        {icons.iconSearch}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                        {filteredRegions.length > 0 ? (
+                                            filteredRegions.map((res, id) => (
+                                                <div
+                                                    key={id}
+                                                    className="flex items-center gap-4 rounded-lg cursor-pointer transition"
+                                                >
+                                                    <img
+                                                        src={res.flag}
+                                                        alt={res.name}
+                                                        className="h-[25px] w-[40px] object-cover rounded"
+                                                    />
+                                                    <p className="text-sm font-medium">{res.name}</p>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-gray-400 text-sm italic">
+                                                No countries found.
+                                            </p>
+                                        )}
+
+                                    </div>
+
                                 </div>
                             )}
                         </div>
@@ -371,16 +400,42 @@ const Universal: React.FC = () => {
                                 <span>{showStreaming ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showStreaming && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
-                                    {resSources.map((res) => (
-                                        <button className="flex items-center justify-between gap-4 group">
-                                            <div className="flex items-center gap-4">
-                                                <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
-                                                <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
-                                            </div>
-                                        </button>
-                                    ))}
+                                <div className="mt-5 flex flex-col gap-4">
+                                    <TextField
+                                        type="search"
+                                        placeholder="Search of sources..."
+                                        sx={sxTextField}
+                                        onChange={(e) => setInputValueSources(e.target.value)}
+                                        value={inputValueSources}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        sx={{ color: 'var(--color-cyan-300)' }}
+                                                    >
+                                                        {icons.iconSearch}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                        {filteredSources.length > 0 ? (
+                                            filteredSources.map((res) => (
+                                                <button key={res.id} className="flex items-center justify-between gap-4 group">
+                                                    <div className="flex items-center gap-4">
+                                                        <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
+                                                        <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
+                                                    </div>
+                                                </button>
+                                            ))
+                                        ) : (
+                                        <p className="text-gray-400 text-sm italic">
+                                            No source found.
+                                        </p>)}
+                                    </div>
                                 </div>
+
                             )}
                         </div>
                     </div>
