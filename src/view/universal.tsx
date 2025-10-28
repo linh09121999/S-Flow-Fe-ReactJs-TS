@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
     Checkbox,
     MenuItem, Menu,
@@ -106,7 +106,7 @@ const Universal: React.FC = () => {
     const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
     const { resStreamingRelease, setResStreamingRelease } = useResStreamingReleaseState()
-    const { setSelectNav } = useStateGeneral()
+    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
 
     const getApiGenres = async () => {
         try {
@@ -138,12 +138,21 @@ const Universal: React.FC = () => {
         }
     }
 
+    const location = useLocation();
+    const { selectSource } = location.state || {};
+
+    useEffect(() => {
+        if (selectSource) {
+            setCheckedSources(selectSource);
+        }
+    }, [selectSource, setCheckedSources]);
+
     useEffect(() => {
         // getApiGenres()
-        // getApiSources()
-        // getApiResStreamingRelease()
+        getApiSources()
+        getApiResStreamingRelease()
         setSelectNav(1)
-        handleClearFilter()
+        setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])
 
     const [showGenres, setShowGenres] = useState<boolean>(true)
@@ -233,7 +242,6 @@ const Universal: React.FC = () => {
         );
     }, [inputValueSources, resSources]);
 
-    const [checkedSources, setCheckedSources] = useState<number[]>([]);
     const handleSelectSource = (id: number) => {
         setCheckedSources((prev) =>
             prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
@@ -243,20 +251,6 @@ const Universal: React.FC = () => {
     const [sortOption, setSortOption] = useState("relevance");
 
     const filteredReleases = useMemo(() => {
-        // return resStreamingRelease.filter((release) => {
-        //     // 1️⃣ Filter by content type
-        //     const matchContentType =
-        //         checkedItemsContentType.length === 0 ||
-        //         contentType
-        //             .filter((t) => checkedItemsContentType.includes(t.id))
-        //             .some((t) => t.type === release.type);
-
-        //     // 2️⃣ Filter by source
-        //     const matchSource =
-        //         checkedSources.length === 0 || checkedSources.includes(release.source_id);
-
-        //     return matchContentType && matchSource;
-        // });
         let filtered = resStreamingRelease.filter((release) => {
             const matchContentType =
                 checkedItemsContentType.length === 0 ||
@@ -475,7 +469,7 @@ const Universal: React.FC = () => {
                                                 <button
                                                     key={res.id}
                                                     onClick={() => handleSelectSource(res.id)}
-                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
+                                                    className={`flex items-center gap-2 px-2 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
                                                 >
                                                     <div className="flex items-center gap-4">
                                                         <img src={res.logo_100px} alt={res.name} className="h-[35px]" />

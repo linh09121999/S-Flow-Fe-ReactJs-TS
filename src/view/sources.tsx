@@ -82,7 +82,7 @@ const Sources: React.FC = () => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
-    const { setSelectNav } = useStateGeneral()
+    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
 
     const getApiSources = async () => {
         try {
@@ -105,9 +105,13 @@ const Sources: React.FC = () => {
         setValue(newValue);
     };
 
-    const handleViewAll = () => {
-        navigate(`/universal`)
-    }
+    const handleSelectSource = (id: number) => {
+        const newSources = checkedSources.includes(id)
+            ? checkedSources.filter((v) => v !== id)
+            : [...checkedSources, id];
+
+        navigate('/universal', { state: { selectSource: newSources } })
+    };
 
     return (
         <>
@@ -147,7 +151,7 @@ const Sources: React.FC = () => {
                             {tabData.data?.map((res) => (
 
                                 <button key={res.id} className="group flex flex-col gap-2 text-white/70 relative"
-                                    onClick={handleViewAll}
+                                    onClick={() => handleSelectSource(res.id)}
                                 >
                                     <img src={res.logo_100px} alt={res.name} onError={handleImgError}
                                         /* grayscale group-hover:grayscale-0 */

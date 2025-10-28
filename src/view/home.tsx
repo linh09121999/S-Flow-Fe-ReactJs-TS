@@ -78,13 +78,20 @@ const Home: React.FC = () => {
         resStreamingReleaseTVSeries,
         resStreamingReleaseTVSpecial
     } = useResStreamingReleaseState()
-    const { setSelectNav } = useStateGeneral()
+    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
 
+    const handleSelectSource = (id: number) => {
+        const newSources = checkedSources.includes(id)
+            ? checkedSources.filter((v) => v !== id)
+            : [...checkedSources, id];
+
+        navigate('/universal', { state: { selectSource: newSources } })
+    };
 
     const getApiGenres = async () => {
         try {
@@ -127,9 +134,9 @@ const Home: React.FC = () => {
     }
 
     useEffect(() => {
-        getApiGenres()
+        // getApiGenres()
         getApiSources()
-        getApiRegion()
+        // getApiRegion()
         getApiResStreamingRelease()
         setSelectNav(0)
     }, [])
@@ -443,133 +450,140 @@ const Home: React.FC = () => {
                             </div>
                         </div>
                     }
-                    <div className="items-center transition-all duration-300 ease">
-                        <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                            <h3 className="text-xl text-white font-bold">Browse By Sources</h3>
-                            <button className="flex gap-1 items-center text-cyan-300"
-                                onClick={() =>
-                                    navigate('/sources')
-                                }
-                            >View all <span>{icons.iconNext}</span></button>
+                    {resSources.length > 0 &&
+                        <div className="items-center transition-all duration-300 ease">
+                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                                <h3 className="text-xl text-white font-bold">Browse By Sources</h3>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={() =>
+                                        navigate('/sources')
+                                    }
+                                >View all <span>{icons.iconNext}</span></button>
+                            </div>
+                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                                <Carousel
+                                    responsive={responsive1}
+                                    draggable //truot tren pc, laptop
+                                    swipeable //vuot tren mobile
+                                    arrows={true} //mui ten
+                                    infinite //truot vo hang 2 huong
+                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                    itemClass="p-2 rounded-[10px]"
+                                    containerClass="flex w-full relative overflow-hidden items-center"
+                                    className="w-full"
+                                    keyBoardControl //su dung phim de dieu huong
+                                    showDots={false} //hiển cham o duoi
+                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                    focusOnSelect={false}
+                                    centerMode={false}
+                                    additionalTransfrom={0}
+                                    shouldResetAutoplay
+                                    rewind={false} //tua lai
+                                    rewindWithAnimation={false} //
+                                    rtl={false} //huong bang chuyen (r->l)
+                                    renderButtonGroupOutside={false}
+                                >
+                                    {resSources.map((res) => (
+                                        <div key={res.id} className="group grid gap-2">
+                                            <button className="flex flex-col gap-2"
+                                                onClick={() => handleSelectSource(res.id)}
+                                            >
+                                                <img src={res.logo_100px} alt={res.name} onError={handleImgError}
+                                                    /* grayscale group-hover:grayscale-0 */
+                                                    className="w-[150px] aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </Carousel>
+                            </div>
                         </div>
-                        <div className="w-full mx-auto mt-5 xl:max-w-9xl">
-                            <Carousel
-                                responsive={responsive1}
-                                draggable //truot tren pc, laptop
-                                swipeable //vuot tren mobile
-                                arrows={true} //mui ten
-                                infinite //truot vo hang 2 huong
-                                minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                itemClass="p-2 rounded-[10px]"
-                                containerClass="flex w-full relative overflow-hidden items-center"
-                                className="w-full"
-                                keyBoardControl //su dung phim de dieu huong
-                                showDots={false} //hiển cham o duoi
-                                renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                focusOnSelect={false}
-                                centerMode={false}
-                                additionalTransfrom={0}
-                                shouldResetAutoplay
-                                rewind={false} //tua lai
-                                rewindWithAnimation={false} //
-                                rtl={false} //huong bang chuyen (r->l)
-                                renderButtonGroupOutside={false}
-                            >
-                                {resSources.map((res) => (
-                                    <div key={res.id} className="group grid gap-2">
-                                        <button className="flex flex-col gap-2"
-                                        >
-                                            <img src={res.logo_100px} alt={res.name} onError={handleImgError}
-                                                /* grayscale group-hover:grayscale-0 */
-                                                className="w-[150px] aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </Carousel>
+                    }
+                    {resRegions.length > 0 &&
+                        <div className="items-center transition-all duration-300 ease">
+                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                                <h3 className="text-xl text-white font-bold">Browse By Region</h3>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={() =>
+                                        navigate('/region')
+                                    }
+                                >View all <span>{icons.iconNext}</span></button>
+                            </div>
+                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                                <Carousel
+                                    responsive={responsive1}
+                                    draggable //truot tren pc, laptop
+                                    swipeable //vuot tren mobile
+                                    arrows={true} //mui ten
+                                    infinite //truot vo hang 2 huong
+                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                    itemClass="p-2 rounded-[10px]"
+                                    containerClass="flex w-full relative overflow-hidden items-center"
+                                    className="w-full"
+                                    keyBoardControl //su dung phim de dieu huong
+                                    showDots={false} //hiển cham o duoi
+                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                    focusOnSelect={false}
+                                    centerMode={false}
+                                    additionalTransfrom={0}
+                                    shouldResetAutoplay
+                                    rewind={false} //tua lai
+                                    rewindWithAnimation={false} //
+                                    rtl={false} //huong bang chuyen (r->l)
+                                    renderButtonGroupOutside={false}
+                                >
+                                    {resRegions.map((res, id) => (
+                                        <div key={id} className="group grid gap-2 relative bg-black">
+                                            <img src={res.flag} alt={res.name} onError={handleImgError}
+                                                className="w-full aspect-[2/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 opacity-40" />
+                                            <h3 className="absolute w-full opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
+                                        </div>
+                                    ))}
+                                </Carousel>
+                            </div>
                         </div>
-                    </div>
-                    <div className="items-center transition-all duration-300 ease">
-                        <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                            <h3 className="text-xl text-white font-bold">Browse By Region</h3>
-                            <button className="flex gap-1 items-center text-cyan-300"
-                                onClick={() =>
-                                    navigate('/region')
-                                }
-                            >View all <span>{icons.iconNext}</span></button>
+                    }
+                    {resGenres.length > 0 &&
+                        <div className="items-center transition-all duration-300 ease">
+                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                                <h3 className="text-xl text-white font-bold">Browse By Genres</h3>
+                                <button className="flex gap-1 items-center text-cyan-300"
+                                    onClick={() =>
+                                        navigate('/genres')
+                                    }
+                                >View all <span>{icons.iconNext}</span></button>
+                            </div>
+                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                                <Carousel
+                                    responsive={responsive1}
+                                    draggable //truot tren pc, laptop
+                                    swipeable //vuot tren mobile
+                                    arrows={true} //mui ten
+                                    infinite //truot vo hang 2 huong
+                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                    itemClass="p-2 rounded-[10px]"
+                                    containerClass="flex w-full relative overflow-hidden items-center"
+                                    className="w-full"
+                                    keyBoardControl //su dung phim de dieu huong
+                                    showDots={false} //hiển cham o duoi
+                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                    focusOnSelect={false}
+                                    centerMode={false}
+                                    additionalTransfrom={0}
+                                    shouldResetAutoplay
+                                    rewind={false} //tua lai
+                                    rewindWithAnimation={false} //
+                                    rtl={false} //huong bang chuyen (r->l)
+                                    renderButtonGroupOutside={false}
+                                >
+                                    {resGenres.map((res) => (
+                                        <div key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
+                                            <h3 className="w-full px-2 py-2 opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg  text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
+                                        </div>
+                                    ))}
+                                </Carousel>
+                            </div>
                         </div>
-                        <div className="w-full mx-auto mt-5 xl:max-w-9xl">
-                            <Carousel
-                                responsive={responsive1}
-                                draggable //truot tren pc, laptop
-                                swipeable //vuot tren mobile
-                                arrows={true} //mui ten
-                                infinite //truot vo hang 2 huong
-                                minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                itemClass="p-2 rounded-[10px]"
-                                containerClass="flex w-full relative overflow-hidden items-center"
-                                className="w-full"
-                                keyBoardControl //su dung phim de dieu huong
-                                showDots={false} //hiển cham o duoi
-                                renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                focusOnSelect={false}
-                                centerMode={false}
-                                additionalTransfrom={0}
-                                shouldResetAutoplay
-                                rewind={false} //tua lai
-                                rewindWithAnimation={false} //
-                                rtl={false} //huong bang chuyen (r->l)
-                                renderButtonGroupOutside={false}
-                            >
-                                {resRegions.map((res, id) => (
-                                    <div key={id} className="group grid gap-2 relative bg-black">
-                                        <img src={res.flag} alt={res.name} onError={handleImgError}
-                                            className="w-full aspect-[2/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 opacity-40" />
-                                        <h3 className="absolute w-full opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
-                                    </div>
-                                ))}
-                            </Carousel>
-                        </div>
-                    </div>
-                    <div className="items-center transition-all duration-300 ease">
-                        <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                            <h3 className="text-xl text-white font-bold">Browse By Genres</h3>
-                            <button className="flex gap-1 items-center text-cyan-300"
-                                onClick={() =>
-                                    navigate('/genres')
-                                }
-                            >View all <span>{icons.iconNext}</span></button>
-                        </div>
-                        <div className="w-full mx-auto mt-5 xl:max-w-9xl">
-                            <Carousel
-                                responsive={responsive1}
-                                draggable //truot tren pc, laptop
-                                swipeable //vuot tren mobile
-                                arrows={true} //mui ten
-                                infinite //truot vo hang 2 huong
-                                minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                itemClass="p-2 rounded-[10px]"
-                                containerClass="flex w-full relative overflow-hidden items-center"
-                                className="w-full"
-                                keyBoardControl //su dung phim de dieu huong
-                                showDots={false} //hiển cham o duoi
-                                renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                focusOnSelect={false}
-                                centerMode={false}
-                                additionalTransfrom={0}
-                                shouldResetAutoplay
-                                rewind={false} //tua lai
-                                rewindWithAnimation={false} //
-                                rtl={false} //huong bang chuyen (r->l)
-                                renderButtonGroupOutside={false}
-                            >
-                                {resGenres.map((res) => (
-                                    <div key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
-                                        <h3 className="w-full px-2 py-2 opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg  text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
-                                    </div>
-                                ))}
-                            </Carousel>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
             <ToastContainer position="top-right" autoClose={3000} />

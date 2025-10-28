@@ -2,10 +2,20 @@ import { create } from 'zustand'
 
 interface State {
     selectNav: number;
-    setSelectNav: (nav: number) => void
+    setSelectNav: (nav: number) => void;
+    checkedSources: number[];
+    setCheckedSources: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 export const useStateGeneral = create<State>((set) => ({
     selectNav: 0,
-    setSelectNav: (nav) => set({ selectNav: nav })
+    setSelectNav: (nav) => set({ selectNav: nav }),
+    checkedSources: [],
+    setCheckedSources: (value) =>
+        set((state) => ({
+            checkedSources:
+                typeof value === "function"
+                    ? (value as (prev: number[]) => number[])(state.checkedSources)
+                    : value,
+        })),
 }))
