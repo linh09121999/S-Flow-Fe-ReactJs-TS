@@ -254,19 +254,42 @@ const UniversalDetail: React.FC = () => {
                                                     className={`border-[1px] css-icon ${selectSeasons === res.id ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{res.name}</button>
                                             ))}
                                         </div>
-                                        {resTitleEpisodes.map((res) => (
-                                            <div key={res.id} className={`${selectSeasons === res.season_id ? "" : "hidden"} flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
-                                                <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" onError={handleImgError} />
-                                                <div className="flex flex-col gap-2 w-full">
-                                                    <div className="flex justify-between">
-                                                        <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
-                                                        <span className="text-sm py-1 px-4 rounded-[10px] bg-cyan-500/10 text-cyan-300 border-[1px] border-cyan-500/10">{res.runtime_minutes} minutes</span>
-                                                    </div>
-                                                    <p className="text-sm text-white/70">{res.overview}</p>
-                                                    <p className="text-sm">Sources: <strong className="text-cyan-300">{res.sources.length}</strong></p>
-                                                </div>
-                                            </div>
-                                        ))}
+                                        {resTitleSeasons.length > 0 ?
+                                            <>
+                                                {
+                                                    resTitleEpisodes.map((res) => (
+                                                        <div key={res.id} className={`${selectSeasons === res.season_id ? "" : "hidden"} flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
+                                                            <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" onError={handleImgError} />
+                                                            <div className="flex flex-col gap-2 w-full">
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
+                                                                    <span className="text-sm py-1 px-4 rounded-[10px] bg-cyan-500/10 text-cyan-300 border-[1px] border-cyan-500/10">{res.runtime_minutes} minutes</span>
+                                                                </div>
+                                                                <p className="text-sm text-white/70">{res.overview}</p>
+                                                                <p className="text-sm">Sources: <strong className="text-cyan-300">{res.sources.length}</strong></p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </>
+                                            :
+                                            <>
+                                                {
+                                                    resTitleEpisodes.map((res) => (
+                                                        <div key={res.id} className={` flex gap-4 rounded-[10px] transition-all duration-100 ease group hover:border-l-[3px] hover:border-l-cyan-300 pl-[1px]`}>
+                                                            <img src={res.thumbnail_url} alt={res.name} className="w-[150px] rounded-[10px] group-hover:scale-102" onError={handleImgError} />
+                                                            <div className="flex flex-col gap-2 w-full">
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-lg text-white"><strong>{res.name}</strong> <span>{"(" + res.release_date + ")"}</span></h3>
+                                                                    <span className="text-sm py-1 px-4 rounded-[10px] bg-cyan-500/10 text-cyan-300 border-[1px] border-cyan-500/10">{res.runtime_minutes} minutes</span>
+                                                                </div>
+                                                                <p className="text-sm text-white/70">{res.overview}</p>
+                                                                <p className="text-sm">Sources: <strong className="text-cyan-300">{res.sources.length}</strong></p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </>}
                                     </div>
                                 </div>
                             }
