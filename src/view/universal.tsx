@@ -302,6 +302,16 @@ const Universal: React.FC = () => {
         return sorted;
     }, [checkedItemsContentType, checkedSources, sortOption]);
 
+    const [isFiltering, setIsFiltering] = useState<boolean>(false)
+
+    useEffect(() => {
+        const isCheck =
+            checkedItemsContentType.length < contentType.length ||
+            checkedSources.length > 0 ||
+            sortOption !== "relevance";
+        setIsFiltering(isCheck)
+    }, [checkedItemsContentType, checkedSources, sortOption])
+
     const [anchorElSortBy, setAnchorElSortBy] = useState<null | HTMLElement>(null);
     const openSortBy = Boolean(anchorElSortBy);
     const handleClickSortBy = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -603,11 +613,11 @@ const Universal: React.FC = () => {
                             </Menu>
                         </div>
                     </div>
-                    {filteredReleases.length === 0 ?
+                    {(isFiltering ? filteredReleases : resStreamingRelease).length === 0 ?
                         <p className="text-center text-cyan-300">! No data</p>
                         :
                         <div className={`grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6`}>
-                            {filteredReleases.map((res) => (
+                            {(isFiltering ? filteredReleases : resStreamingRelease).map((res) => (
                                 <div key={res.id} className="group grid gap-2 ">
                                     <button className="flex flex-col gap-2"
                                         onClick={() => {
