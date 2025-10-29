@@ -59,7 +59,8 @@ const Genres: React.FC = () => {
                     <div className='transition duration-300 ease css-icon'>Genres</div>
                 </div>
             </div>
-            <div className="max-w-[1535px] mx-auto grid grid-cols-5 py-5 gap-8">
+            <div className="max-w-[1535px] mx-auto grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 
+                gap-3 sm:gap-4 md:gap-6 lg:gap-8 py-5">
                 {resGenres.map((res) => (
                     <button onClick={handleViewAll} key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
                         <h3 className="w-full px-2 py-2 opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg  text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>

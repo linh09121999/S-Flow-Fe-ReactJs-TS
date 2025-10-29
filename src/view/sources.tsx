@@ -1,13 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { getSources, } from "../services/userService"
 import { useResSourceState } from '../state/useConfigurationState'
 import { useStateGeneral } from '../state/useStateGeneral'
-import { Backdrop, CircularProgress } from '@mui/material'
+import {
+    Backdrop, CircularProgress,
+    TextField, InputAdornment, IconButton
+} from '@mui/material'
+import type { SxProps, Theme } from "@mui/material/styles";
 
 const Sources: React.FC = () => {
+    const sxTextField: SxProps<Theme> = {
+        width: '450px',
+        '& .MuiOutlinedInput-root': {
+            borderRadius: "10px",
+            background: "var(--color-gray-900)",
+            padding: '3px 8px !important',
+            transition: 'all 0.3s',
+            fontSize: 'var(--text-xl)',
+            border: '1px solid var(--color-gray-800)',
+            height: '40px',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+        },
+
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+            outline: 'none',
+            border: 'none'
+        },
+
+        '& .MuiOutlinedInput-input': {
+            padding: 0
+        },
+
+        '& .MuiInputBase-input': {
+            color: 'var(--color-cyan-300)',
+            paddingLeft: '14px',
+            fontSize: 'var(--text-lg)',
+            border: 'none',
+        },
+    }
+
     const navigate = useNavigate()
     const { icons, imgs } = useGlobal()
     const { resSources, setResSources, resSourcesFree, resSourcesPurchase, resSourcesSub, resSourcesTv2 } = useResSourceState()
@@ -47,6 +83,42 @@ const Sources: React.FC = () => {
         navigate('/universal')
     };
 
+    const [inputValueSources, setInputValueSources] = useState<string>("");
+    const filteredSources = useMemo(() => {
+        if (!inputValueSources.trim()) return resSources;
+        return resSources.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSources]);
+
+    const filteredSourcesSub = useMemo(() => {
+        if (!inputValueSources.trim()) return resSourcesSub;
+        return resSourcesSub.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSourcesSub]);
+
+    const filteredSourcesFree = useMemo(() => {
+        if (!inputValueSources.trim()) return resSourcesFree;
+        return resSourcesFree.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSourcesFree]);
+
+    const filteredSourcesTv2 = useMemo(() => {
+        if (!inputValueSources.trim()) return resSourcesTv2;
+        return resSourcesTv2.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSourcesTv2]);
+
+    const filteredSourcesPurchase = useMemo(() => {
+        if (!inputValueSources.trim()) return resSourcesPurchase;
+        return resSourcesPurchase.filter((r) =>
+            r.name.toLowerCase().includes(inputValueSources.toLowerCase())
+        );
+    }, [inputValueSources, resSourcesPurchase]);
+
     if (loading) return (
         <>
             <Backdrop
@@ -60,46 +132,120 @@ const Sources: React.FC = () => {
 
     return (
         <>
-            <div className='w-full px-5 sticky z-[999] top-[80px] backdrop-blur-[10px]'>
-                <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
-                    <div
+            <div className='w-full sticky z-[999] top-[80px] backdrop-blur-[10px] bg-black/50'>
+                <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl md:text-lg sm:text-base'>
+                    <button
                         onClick={() => navigate("/")}
-                        className='transition duration-300 ease css-icon'>{icons.iconHome}</div>
-                    <span>{icons.iconNext}</span>
-                    <div className='transition duration-300 ease css-icon'>Sources</div>
+                        className='transition duration-300 ease hover:scale-110 cursor-pointer'
+                    >
+                        {icons.iconHome}
+                    </button>
+                    <span className='text-sm'>{icons.iconNext}</span>
+                    <div className='transition duration-300 ease'>Sources</div>
                 </div>
             </div>
-            <div className="max-w-[1535px] text-lg text-white/70 mx-auto gap-6 flex flex-col mt-5">
-                <div className="flex gap-4">
-                    {[
-                        { label: 'All' },
-                        { label: 'Sub' },
-                        { label: 'Free' },
-                        { label: 'Tve' },
-                        { label: 'Purchase' },
-                    ].map((tab, index) => (
-                        <button key={index}
-                            onClick={() => setValue(index)}
-                            className={`border-[1px] css-icon ${value === index ? "text-cyan-300 border-cyan-300" : "border-gray-500"} w-fit h-[40px] text-lg px-4 rounded-[10px] hover:text-cyan-300 hover:border-cyan-300`}>{tab.label}</button>
-                    ))}
-                </div>
-                {[
-                    { data: resSources },
-                    { data: resSourcesSub },
-                    { data: resSourcesFree },
-                    { data: resSourcesTv2 },
-                    { data: resSourcesPurchase },
-                ].map((tabData, index) => (
-                    <div key={index} className={`${value === index ? '' : 'hidden'} grid grid-cols-5 gap-8`}>
-                        {tabData.data?.map((res) => (
 
-                            <button key={res.id} className="group flex flex-col gap-2 text-white/70 relative"
+            <div className="max-w-[1535px] text-lg text-white/70 mx-auto gap-4 md:gap-6 flex flex-col py-4 md:py-5">
+                {/* Filter và Search Section */}
+                <div className="flex flex-col md:flex-row justify-between gap-3 sm:gap-4">
+                    {/* Filter Tabs */}
+                    <div className="flex gap-1 sm:gap-2 md:gap-3 overflow-x-auto scroll-x pb-2 sm:pb-0 scrollbar-hide">
+                        {[
+                            { label: 'All' },
+                            { label: 'Sub' },
+                            { label: 'Free' },
+                            { label: 'Tve' },
+                            { label: 'Purchase' },
+                        ].map((tab, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setValue(index)}
+                                className={`
+                        border flex-shrink-0 transition-all duration-300 ease-in-out
+                        ${value === index
+                                        ? "text-cyan-300 border-cyan-300 bg-cyan-300/10"
+                                        : "border-gray-500 hover:text-cyan-300 hover:border-cyan-300"
+                                    }
+                        h-[40px] px-3 rounded-lg text-lg
+                    `}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search Field */}
+                    <div className="w-full sm:w-auto min-w-[200px]">
+                        <TextField
+                            type="search"
+                            placeholder="Search sources..."
+                            sx={{
+                                ...sxTextField,
+                                width: '100%',
+                                '& .MuiInputBase-root': {
+                                    height: '40px',
+                                    fontSize: '14px',
+                                    '@media (min-width: 640px)': {
+                                        fontSize: '16px',
+                                        height: '44px'
+                                    }
+                                }
+                            }}
+                            onChange={(e) => setInputValueSources(e.target.value)}
+                            value={inputValueSources}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            sx={{
+                                                color: 'var(--color-cyan-300)',
+                                                padding: '8px'
+                                            }}
+                                        >
+                                            {icons.iconSearch}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Content Grid */}
+                {[
+                    { data: filteredSources },
+                    { data: filteredSourcesSub },
+                    { data: filteredSourcesFree },
+                    { data: filteredSourcesTv2 },
+                    { data: filteredSourcesPurchase },
+                ].map((tabData, index) => (
+                    <div
+                        key={index}
+                        className={`
+                ${value === index ? 'animate-fadeIn' : 'hidden'}
+                grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 
+                gap-3 sm:gap-4 md:gap-6 lg:gap-8
+            `}
+                    >
+                        {tabData.data?.map((res) => (
+                            <button
+                                key={res.id}
+                                className="group flex flex-col gap-2 text-white/70 relative"
                                 onClick={() => handleSelectSource(res.id)}
                             >
-                                <img src={res.logo_100px} alt={res.name} onError={handleImgError}
-                                    /* grayscale group-hover:grayscale-0 */
-                                    className="aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
-
+                                <img
+                                    src={res.logo_100px}
+                                    alt={res.name}
+                                    onError={handleImgError}
+                                    className="
+                            aspect-square rounded-lg transition-all duration-300 ease-in-out
+                            object-cover bg-gray-700 group-hover:scale-105 group-hover:shadow-lg
+                            group-hover:shadow-cyan-300/20 border border-gray-600
+                        "
+                                />
+                                <div className="text-xs sm:text-sm text-center truncate px-1 group-hover:text-cyan-300 transition-colors">
+                                    {res.name}
+                                </div>
                             </button>
                         ))}
                     </div>

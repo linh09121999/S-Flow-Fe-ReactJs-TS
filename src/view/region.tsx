@@ -62,7 +62,8 @@ const Region: React.FC = () => {
                     <div className='transition duration-300 ease css-icon'>Region</div>
                 </div>
             </div>
-            <div className="max-w-[1535px] mx-auto grid grid-cols-5 py-5 gap-8">
+            <div className="max-w-[1535px] mx-auto grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 
+                gap-3 sm:gap-4 md:gap-6 lg:gap-8 py-5">
                 {resRegions.map((res, id) => (
                     <button key={id} className="group grid gap-2 relative bg-black"
                         onClick={handleViewAll}>

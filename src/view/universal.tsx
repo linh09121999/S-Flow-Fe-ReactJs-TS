@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useGlobal } from "../context/GlobalContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";//, useLocation
 import {
     Checkbox,
     MenuItem, Menu,
     FormControlLabel, InputAdornment, IconButton,
     TextField,
-    Backdrop, CircularProgress
+    Backdrop, CircularProgress,
+    Drawer, Box, Divider, List,
+    ListItem
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
@@ -103,6 +105,48 @@ const Universal: React.FC = () => {
         '&.Mui-checked': { color: 'var(--color-cyan-300)' },
     }
 
+    const sxPaperPropsDrawer: SxProps<Theme> = {
+        sx: {
+            background: 'color-mix(in oklab, var(--color-black) 20%, transparent)',
+            color: 'var(--color-gray-200)',
+            backdropFilter: 'blur(10px)'
+        }
+    }
+
+    const sxBox1Drawer: SxProps<Theme> = {
+        width: 250,
+    }
+
+    const sxBox2Drawer: SxProps<Theme> = {
+        display: 'flex',
+        // justifyContent: 'flex-end',
+        alignItems: 'center',
+        padding: '12px 16px',
+        cursor: 'pointer'
+    }
+
+    const sxIconButton: SxProps<Theme> = {
+        color: 'white',
+        fontSize: '2rem'
+    }
+
+    const sxDivider: SxProps<Theme> = {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    }
+
+    const sxListItemDrawer: SxProps<Theme> = {
+        padding: '12px 24px',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            color: "var(--color-cyan-300)"
+        },
+        '& .MuiListItemIcon-root': {
+            color: 'inherit',
+            minWidth: '40px'
+        }
+    }
+
     const { icons, imgs, contentType, styleColor } = useGlobal()
     // const { resGenres, setResGenres } = useResGenresState()
     const { resSources, setResSources } = useResSourceState()
@@ -160,8 +204,9 @@ const Universal: React.FC = () => {
         //     setCheckedSources([])
         // }
         // getApiGenres()
-        getApiSources()
-        getApiResStreamingRelease()
+
+        // getApiSources()
+        // getApiResStreamingRelease()
         setSelectNav(1)
         setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])
@@ -352,6 +397,18 @@ const Universal: React.FC = () => {
         setSortOption("title-za");
     };
 
+    const [openDrawerSort, setOpenDrawerSort] = useState<boolean>(false);
+
+    const toggleDrawerSort = (newOpen: boolean) => () => {
+        setOpenDrawerSort(newOpen);
+    };
+
+    const [openDrawerFilter, setOpenDrawerFilter] = useState<boolean>(false);
+
+    const toggleDrawerFilter = (newOpen: boolean) => () => {
+        setOpenDrawerFilter(newOpen);
+    };
+
     const getYear = (date: string) => {
         const convertDate = new Date(date)
         return convertDate.toLocaleDateString('en-US')
@@ -374,8 +431,8 @@ const Universal: React.FC = () => {
 
     return (
         <>
-            <div className="max-w-[1535px] py-5 mx-auto grid lg:grid-cols-[1fr_4fr] gap-6">
-                <aside className="grid h-fit sticky top-[105px] gap-4 overflow-y-auto scroll-y-all max-h-[88vh]">
+            <div className="max-w-[1535px] py-5 mx-auto grid lg:grid-cols-[300px_1fr] gap-6">
+                <aside className="grid h-fit max-lg:hidden lg:sticky lg:top-[105px] gap-4 overflow-y-auto scroll-y-all max-h-[88vh]">
                     <div className="flex flex-col gap-4">
                         <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
@@ -569,17 +626,233 @@ const Universal: React.FC = () => {
                         Clear All Filters
                     </button>
                 </aside >
-                <section className="flex flex-col gap-6">
-                    <div className="flex justify-between items-center">
-                        <p className="text-white text-xl">{filteredReleases.length} Results</p>
-                        <div>
-                            <button className={`${openSortBy ? "shadow-xl border-cyan-300" : ""} flex gap-4 justify-bettwen p-2 rounded-[10px] items-center bg-gray-900 border-[1px] transition-all duration-300 ease border-gray-800 h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50`}
+                <section className="flex flex-col gap-4 md:gap-6">
+                    <div className="ld:hidden grid grid-cols-2 gap-2">
+                        <button className={`
+                    flex justify-between items-center w-full sm:w-auto 
+                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
+                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
+                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                `}
+                            onClick={toggleDrawerFilter(true)}>
+                            <p className="text-white/70 text-lg w-full">Filter</p>
+                            <span className="transtion-all duration-300 ease text-white ml-2">
+                                {openDrawerFilter ? icons.iconUp : icons.iconDown}
+                            </span>
+                        </button>
+                        <button className={`
+                    flex justify-between items-center w-full sm:w-auto 
+                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
+                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
+                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                `}
+                            onClick={toggleDrawerSort(true)}>
+                            <p className="text-white/70 text-lg w-full">Sort</p>
+                            <span className="transtion-all duration-300 ease text-white ml-2">
+                                {openDrawerSort ? icons.iconUp : icons.iconDown}
+                            </span>
+                        </button>
+                    </div>
+
+                    <Drawer
+                        anchor="right"
+                        open={openDrawerFilter}
+                        onClose={toggleDrawerFilter(false)}
+                        PaperProps={sxPaperPropsDrawer}
+                    >
+                        <Box sx={sxBox1Drawer}>
+                            <Box sx={sxBox2Drawer}>
+                                <h3 className="w-full text-2xl">Filter</h3>
+                                <IconButton onClick={toggleDrawerFilter(false)} sx={sxIconButton}>
+                                    {icons.iconClose}
+                                </IconButton>
+                            </Box>
+
+                            <Divider sx={sxDivider} />
+
+                            <List>
+                                <div className="p-4 flex flex-col gap-4">
+                                    <h3 className="text-xl ">Content Type</h3>
+                                    <div className="flex flex-col">
+                                        <FormControlLabel control={
+                                            <Checkbox
+                                                indeterminate={isIndeterminateContentType}
+                                                checked={allCheckedContentType}
+                                                onChange={handleCheckAllContentType}
+                                                icon={icons.iconUncheck}
+                                                indeterminateIcon={icons.iconMinus}
+                                                checkedIcon={icons.iconCheck}
+                                                sx={sxCheckBoxMinate}
+                                            />
+                                        }
+                                            label="All"
+                                            sx={sxControlLabel}
+                                        />
+                                        {contentType.map((type) => (
+                                            <FormControlLabel key={type.id} control={
+                                                <Checkbox
+                                                    checked={checkedItemsContentType.includes(type.id)}
+                                                    onChange={() => handleCheckItemContentType(type.id)}
+                                                    icon={icons.iconUncheck}
+                                                    checkedIcon={icons.iconCheck}
+                                                    sx={sxCheckBox}
+                                                />
+                                            }
+                                                label={type.title}
+                                                sx={sxControlLabel}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </List>
+                            <Divider sx={sxDivider} />
+                            <List>
+                                <div className="px-4 flex flex-col gap-4">
+                                    <h3 className="text-xl ">Streaming Services</h3>
+                                    <div className="flex flex-col gap-4">
+                                        <TextField
+                                            type="search"
+                                            placeholder="Search of sources..."
+                                            sx={sxTextField}
+                                            onChange={(e) => setInputValueSources(e.target.value)}
+                                            value={inputValueSources}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            sx={{ color: 'var(--color-cyan-300)' }}
+                                                        >
+                                                            {icons.iconSearch}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                        <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[35vh] flex flex-col">
+                                            {filteredSources.length > 0 ? (
+                                                filteredSources.map((res) => (
+                                                    <button
+                                                        key={res.id}
+                                                        onClick={() => handleSelectSource(res.id)}
+                                                        className={`flex items-center gap-2 px-2 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
+                                                    >
+                                                        <div className="flex items-center gap-4">
+                                                            <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
+                                                            <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
+                                                        </div>
+                                                    </button>
+                                                ))
+                                            ) : (
+                                                <p className="text-gray-400 text-sm italic">
+                                                    No source found.
+                                                </p>)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </List>
+                            <Divider sx={sxDivider} />
+                            <List>
+                                <div className="w-full grid grid-cols-2">
+                                    <button className="text-gray-950 font-bold bg-cyan-300 h-[40px] rounded-[10px] transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1"
+                                        onClick={toggleDrawerFilter(false)}>
+                                        Filter
+                                    </button>
+                                    <button className="text-white/70 border-[1px] border-gray-500 h-[40px] rounded-[10px] transition-all duration-300 ease hover:text-cyan-300 hover:shadow-lg hover:shadow-cyan-300/50 m-1"
+                                        onClick={() => {
+                                            handleClearFilter()
+                                            setOpenDrawerFilter(false)
+                                        }}
+                                    >
+                                        Clear All
+                                    </button>
+                                </div>
+
+                            </List>
+                        </Box>
+                    </Drawer>
+                    <Drawer
+                        anchor="right"
+                        open={openDrawerSort}
+                        onClose={toggleDrawerSort(false)}
+                        PaperProps={sxPaperPropsDrawer}
+                    >
+                        <Box sx={sxBox1Drawer}>
+                            <Box sx={sxBox2Drawer}>
+                                <h3 className="w-full text-2xl">Sort</h3>
+                                <IconButton onClick={toggleDrawerSort(false)} sx={sxIconButton}>
+                                    {icons.iconClose}
+                                </IconButton>
+                            </Box>
+                            <Divider sx={sxDivider} />
+                            <List>
+                                <ListItem onClick={()=>{
+                                    handleSortDefault()
+                                    setOpenDrawerSort(false)
+                                }}
+                                    sx={sxListItemDrawer}>
+                                    Relevance
+                                </ListItem>
+                                <ListItem onClick={()=>{
+                                    handleSortNewest()
+                                    setOpenDrawerSort(false)
+                                }}
+                                    sx={sxListItemDrawer}>
+                                    Release Date (Newest)
+                                </ListItem>
+                                <ListItem onClick={()=>{
+                                    handleSortOldest()
+                                    setOpenDrawerSort(false)
+                                }}
+                                    sx={sxListItemDrawer}>
+                                    Release Date (Oldest)
+                                </ListItem>
+                                <ListItem onClick={()=>{
+                                    handleSortAtoZ()
+                                    setOpenDrawerSort(false)
+                                }}
+                                    sx={sxListItemDrawer}>
+                                    Title (A-Z)
+                                </ListItem>
+                                <ListItem onClick={()=>{
+                                    handleSortZtoA()
+                                    setOpenDrawerSort(false)
+                                }}
+                                    sx={sxListItemDrawer}>
+                                    Title (Z-A)
+                                </ListItem>
+                            </List>
+                        </Box>
+                    </Drawer>
+                    {/* Header with Results Count and Sort Button */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4">
+                        <p className="text-white text-lg md:text-xl font-medium">
+                            {(isFiltering ? filteredReleases : resStreamingRelease).length} Results
+                        </p>
+
+                        {/* Sort Button */}
+                        <div className="w-full sm:w-auto max-lg:hidden">
+                            <button
+                                className={`
+                    ${openSortBy ? "shadow-xl border-cyan-300" : ""} 
+                    flex justify-between items-center w-full sm:w-auto 
+                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
+                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
+                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                `}
                                 onClick={handleClickSortBy}
                             >
-                                <p className="text-white/70 text-sm">Sort by:</p>
-                                <p className="md:w-[120px] text-start text-white">{sortBy}</p>
-                                <span className="transtion-all duration-300 ease text-white">{openSortBy ? icons.iconUp : icons.iconDown}</span>
+                                <div className="flex items-center gap-2 md:gap-4">
+                                    <p className="text-white/70 text-sm">Sort by:</p>
+                                    <p className="text-white text-lg w-[80px] md:w-[120px] text-start truncate">
+                                        {sortBy}
+                                    </p>
+                                </div>
+                                <span className="transtion-all duration-300 ease text-white ml-2">
+                                    {openSortBy ? icons.iconUp : icons.iconDown}
+                                </span>
                             </button>
+
+                            {/* Sort Menu */}
                             <Menu
                                 anchorEl={anchorElSortBy}
                                 open={openSortBy}
@@ -587,59 +860,102 @@ const Universal: React.FC = () => {
                                 PaperProps={PaperProps}
                                 MenuListProps={MenuListProps}
                             >
-                                <MenuItem
-                                    onClick={handleSortDefault}
-                                    sx={sxMenuItem}
-                                >Relevance</MenuItem>
-                                <MenuItem
-                                    onClick={handleSortNewest}
-                                    sx={sxMenuItem}
-                                >Release Date (Newest)</MenuItem>
-                                <MenuItem
-                                    onClick={handleSortOldest}
-                                    sx={sxMenuItem}
-                                >Release Date (Oldest)</MenuItem>
-                                <MenuItem
-                                    onClick={handleSortAtoZ}
-                                    sx={sxMenuItem}
-                                >Title (A-Z)</MenuItem>
-                                <MenuItem
-                                    onClick={handleSortZtoA}
-                                    sx={sxMenuItem}
-                                >Title (Z-A)</MenuItem>
+                                <MenuItem onClick={handleSortDefault} sx={sxMenuItem}>
+                                    Relevance
+                                </MenuItem>
+                                <MenuItem onClick={handleSortNewest} sx={sxMenuItem}>
+                                    Release Date (Newest)
+                                </MenuItem>
+                                <MenuItem onClick={handleSortOldest} sx={sxMenuItem}>
+                                    Release Date (Oldest)
+                                </MenuItem>
+                                <MenuItem onClick={handleSortAtoZ} sx={sxMenuItem}>
+                                    Title (A-Z)
+                                </MenuItem>
+                                <MenuItem onClick={handleSortZtoA} sx={sxMenuItem}>
+                                    Title (Z-A)
+                                </MenuItem>
                             </Menu>
                         </div>
                     </div>
-                    {(isFiltering ? filteredReleases : resStreamingRelease).length === 0 ?
-                        <p className="text-center text-cyan-300">! No data</p>
-                        :
-                        <div className={`grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6`}>
+
+                    {/* Results Grid */}
+                    {(isFiltering ? filteredReleases : resStreamingRelease).length === 0 ? (
+                        <p className="text-center text-cyan-300 py-8 text-lg md:text-xl">
+                            ! No data found
+                        </p>
+                    ) : (
+                        <div className={`
+            grid 
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-5
+            lg:grid-cols-3 
+            xl:grid-cols-5 
+            gap-4 md:gap-6
+        `}>
                             {(isFiltering ? filteredReleases : resStreamingRelease).map((res) => (
-                                <div key={res.id} className="group grid gap-2 ">
-                                    <button className="flex flex-col gap-2"
+                                <div key={res.id} className="group grid gap-2">
+                                    <button
+                                        className="flex flex-col gap-2 w-full text-start"
                                         onClick={() => {
                                             navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
                                         }}
                                     >
-                                        <div className="relative">
-                                            <img src={res.poster_url} alt={res.source_name}
+                                        {/* Image Container */}
+                                        <div className="relative overflow-hidden rounded-lg md:rounded-[10px]">
+                                            <img
+                                                src={res.poster_url}
+                                                alt={res.source_name}
                                                 onError={handleImgError}
-                                                className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                            <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
+                                                className="w-full aspect-[3/4] object-cover transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70"
+                                            />
+
+                                            {/* Play Icon Overlay */}
+                                            <span className="absolute text-4xl md:text-5xl lg:text-6xl xl:text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">
+                                                {icons.iconPlayCircle}
+                                            </span>
+
+                                            {/* Original Badge */}
                                             {res.is_original === 1 && (
-                                                <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
+                                                <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 text-cyan-950 font-bold text-xs transition-all duration-300 ease rounded-bl-lg group-hover:opacity-70">
+                                                    Original
+                                                </span>
                                             )}
                                         </div>
-                                        <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                        <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{res.type}<span>•</span> {getYear(res.source_release_date)}</div>
+
+                                        {/* Content Info */}
+                                        <div className="space-y-1 md:space-y-2">
+                                            <h3 className="text-white/80 text-sm md:text-lg font-bold line-clamp-2 transition-all duration-300 ease group-hover:opacity-70">
+                                                {res.title}
+                                            </h3>
+                                            <div className="flex gap-1 text-white/70 text-xs md:text-sm transition-all duration-300 ease group-hover:opacity-70">
+                                                {res.type}
+                                                <span>•</span>
+                                                {getYear(res.source_release_date)}
+                                            </div>
+                                        </div>
                                     </button>
-                                    <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                        {icons.iconPlay}{res.source_name}
+
+                                    {/* Source Button */}
+                                    <button
+                                        className={`
+                            flex gap-2 items-center px-2 py-1 md:px-2 md:py-1 
+                            h-[28px] md:h-[30px] w-fit rounded-lg md:rounded-[10px] 
+                            text-xs md:text-sm text-white text-start 
+                            transition-all duration-300 ease self-end
+                        `}
+                                        style={styleColor(res.source_id)}
+                                    >
+                                        {icons.iconPlay}
+                                        <span className="truncate max-w-[80px] md:max-w-none">
+                                            {res.source_name}
+                                        </span>
                                     </button>
                                 </div>
                             ))}
                         </div>
-                    }
+                    )}
                 </section>
             </div >
             <ToastContainer position="top-right" autoClose={3000} />
