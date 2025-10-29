@@ -74,7 +74,7 @@ const Home: React.FC = () => {
         resStreamingReleaseTVSeries,
         resStreamingReleaseTVSpecial
     } = useResStreamingReleaseState()
-    const { setSelectNav, checkedSources } = useStateGeneral()
+    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -86,7 +86,9 @@ const Home: React.FC = () => {
             ? checkedSources.filter((v) => v !== id)
             : [...checkedSources, id];
 
-        navigate('/universal', { state: { selectSource: newSources } })
+        setCheckedSources(newSources)
+        // navigate('/universal', { state: { selectSource: newSources } })
+        navigate('/universal')
     };
 
     // const getApiGenres = async () => {

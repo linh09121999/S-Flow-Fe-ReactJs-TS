@@ -15,7 +15,7 @@ const Sources: React.FC = () => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
-    const { setSelectNav, checkedSources } = useStateGeneral()
+    const { setSelectNav, checkedSources, setCheckedSources } = useStateGeneral()
     const [loading, setLoading] = useState<boolean>(true);
 
     const getApiSources = async () => {
@@ -42,8 +42,9 @@ const Sources: React.FC = () => {
         const newSources = checkedSources.includes(id)
             ? checkedSources.filter((v) => v !== id)
             : [...checkedSources, id];
-
-        navigate('/universal', { state: { selectSource: newSources } })
+        setCheckedSources(newSources)
+        // navigate('/universal', { state: { selectSource: newSources } })
+        navigate('/universal')
     };
 
     if (loading) return (

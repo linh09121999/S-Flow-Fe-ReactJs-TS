@@ -149,19 +149,16 @@ const Universal: React.FC = () => {
         }
     }
 
-    const location = useLocation();
-    const { selectSource } = location.state || {};
+    // const location = useLocation();
+    // const { selectSource } = location.state || {};
 
     useEffect(() => {
-        if (selectSource) {
-            setCheckedSources(selectSource);
-            console.log(selectSource)
-        } else {
-            setCheckedSources([])
-        }
-    }, [selectSource, setCheckedSources]);
-
-    useEffect(() => {
+        // if (selectSource) {
+        //     setCheckedSources(selectSource);
+        //     console.log(selectSource)
+        // } else {
+        //     setCheckedSources([])
+        // }
         // getApiGenres()
         getApiSources()
         getApiResStreamingRelease()
