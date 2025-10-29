@@ -444,7 +444,7 @@ const Universal: React.FC = () => {
                                 <span>{showContentType ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showContentType && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                <div className="text-lg mt-5 text-white/70 gap-4 flex flex-col">
                                     <FormControlLabel control={
                                         <Checkbox
                                             indeterminate={isIndeterminateContentType}
@@ -551,7 +551,7 @@ const Universal: React.FC = () => {
                                             ),
                                         }}
                                     />
-                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[35vh] flex flex-col">
                                         {filteredSources.length > 0 ? (
                                             filteredSources.map((res) => (
                                                 <button
@@ -560,7 +560,7 @@ const Universal: React.FC = () => {
                                                     className={`flex items-center gap-2 px-2 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
                                                 >
                                                     <div className="flex items-center gap-4">
-                                                        <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
+                                                        <img src={res.logo_100px} alt={res.name} className="h-[35px] aspect-[1/1]" />
                                                         <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
                                                     </div>
                                                 </button>
@@ -737,7 +737,7 @@ const Universal: React.FC = () => {
                                                         className={`flex items-center gap-2 px-2 py-2 rounded-lg group ${checkedSources.includes(res.id) ? "border border-cyan-300 text-cyan-300" : ""}`}
                                                     >
                                                         <div className="flex items-center gap-4">
-                                                            <img src={res.logo_100px} alt={res.name} className="h-[35px]" />
+                                                            <img src={res.logo_100px} alt={res.name} className="h-[35px] aspect-[1/1]" />
                                                             <p className="text-sm group-hover:text-cyan-300 text-start">{res.name}</p>
                                                         </div>
                                                     </button>
