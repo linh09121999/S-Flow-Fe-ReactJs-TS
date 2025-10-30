@@ -208,8 +208,8 @@ const Universal: React.FC = () => {
         // }
         // getApiGenres()
 
-        // getApiSources()
-        // getApiResStreamingRelease()
+        getApiSources()
+        getApiResStreamingRelease()
         setSelectNav(1)
         setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])

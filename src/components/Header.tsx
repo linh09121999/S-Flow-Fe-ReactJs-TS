@@ -11,12 +11,14 @@ import {
     IconButton,
     FormControl,
     Autocomplete, Box,
-    Backdrop, CircularProgress
+    Backdrop, CircularProgress,
+    ListItem, List, Divider, Drawer, ListItemText
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
 import { useResAutocomplateState } from '../state/useAutocomplateState';
 import { getAutocomplete } from '../services/userService';
+import { useStateGeneral } from '../state/useStateGeneral';
 
 const Header: React.FC = () => {
     const navigate = useNavigate()
@@ -69,6 +71,12 @@ const Header: React.FC = () => {
         margin: 0
     }
 
+    const sxPrimaryTypographyProps = {
+        fontSize: '1rem',
+        fontWeight: 'medium',
+        transition: 'all 0.3s ease',
+    }
+
     const componentsProps: SxProps<Theme> = {
         paper: {
             sx: {
@@ -100,9 +108,53 @@ const Header: React.FC = () => {
         }
     }
 
+    const sxPaperPropsDrawer: SxProps<Theme> = {
+        sx: {
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            color: 'var(--color-gray-200)',
+            backdropFilter: 'blur(10px)'
+        }
+    }
+
+    const sxBox1Drawer: SxProps<Theme> = {
+        width: 250,
+    }
+
+    const sxBox2Drawer: SxProps<Theme> = {
+        display: 'flex',
+        // justifyContent: 'flex-end',
+        alignItems: 'center',
+        padding: '12px 16px',
+        cursor: 'pointer'
+    }
+
+    const sxIconButton: SxProps<Theme> = {
+        color: 'white',
+        fontSize: '2rem'
+    }
+
+    const sxDivider: SxProps<Theme> = {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    }
+
+    const sxListItemDrawer: SxProps<Theme> = {
+        padding: '12px 24px',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            color: "var(--color-cyan-300)"
+        },
+        '& .MuiListItemIcon-root': {
+            color: 'inherit',
+            minWidth: '40px'
+        }
+    }
+
     const [selectAutocomplateID, setSelectAutocomplateID] = useState<number>(0)
 
-    const { imgs, icons } = useGlobal()
+    const { imgs, icons, pages } = useGlobal()
+    const { selectNav, setSelectNav } = useStateGeneral()
+
 
     const { resAutocomplate, setResAutocomplate } = useResAutocomplateState()
     const [loading, setLoading] = useState(false);
@@ -122,6 +174,12 @@ const Header: React.FC = () => {
     }
 
     const lastQueryRef = useRef("");
+
+    const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpenDrawer(newOpen);
+    };
 
     // Debounce tránh spam API
     const debouncedFetch = useMemo(
@@ -187,7 +245,9 @@ const Header: React.FC = () => {
                             <img src={imgs.imgLogo} alt="logo" className='h-[47px]' onError={handleImgError} />
                             <p className='text-cyan-300 text-4xl'>S-Flow</p>
                         </div>
-                        <Nav />
+                        <div className='max-lg:hidden'>
+                            <Nav />
+                        </div>
                     </div>
                     <div className='flex gap-2 items-center'>
                         {clickSearch ?
@@ -263,6 +323,47 @@ const Header: React.FC = () => {
                                 {icons.iconSearch}
                             </IconButton>
                         }
+                        <button
+                            onClick={toggleDrawer(true)}
+                            className='lg:hidden text-cyan-300 p-2.5 border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-[10px]'>
+                            {icons.iconMenu}
+                        </button>
+                        <Drawer
+                            anchor="right"
+                            open={openDrawer}
+                            onClose={toggleDrawer(false)}
+                            PaperProps={sxPaperPropsDrawer}
+                        >
+
+                            <Box sx={sxBox1Drawer}>
+                                <Box sx={sxBox2Drawer}>
+                                    <IconButton onClick={toggleDrawer(false)} sx={sxIconButton}>
+                                        {icons.iconClose}
+                                    </IconButton>
+                                </Box>
+
+                                <Divider sx={sxDivider} />
+                                <List>
+                                    {pages.map((page, index) => (
+                                        <ListItem
+                                            component="button"
+                                            key={index}
+                                            onClick={() => {
+                                                setSelectNav(index)
+                                                setOpenDrawer(false)
+                                                navigate(page.path)
+                                            }}
+                                            sx={sxListItemDrawer}
+                                        >
+                                            <ListItemText
+                                                primary={page.title}
+                                                primaryTypographyProps={sxPrimaryTypographyProps}
+                                            />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Box>
+                        </Drawer>
                     </div>
                 </div>
             </header>
