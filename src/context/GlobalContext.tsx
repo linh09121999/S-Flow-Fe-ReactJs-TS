@@ -239,6 +239,7 @@ export interface GlobalState {
     contentType: Type[];
     serviceType: Type[];
     styleColor: (source_id: number) => React.CSSProperties;
+    styleContent: (content: string) => string
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -246,22 +247,34 @@ const GlobalContext = createContext<GlobalState | undefined>(undefined);
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const isTable = useMediaQuery("(max-width:1024px)");
+
+    const styleContent = (content: string) => {
+        switch (content) {
+            case 'movie': return 'Movie'
+            case 'tv_series': return 'TV Series'
+            case 'tv_special': return "TV Special"
+            case 'tv_miniseries': return "TV Miniseries"
+            case 'short_film': return "Short Film"
+            default: return ''
+        }
+    }
+
     const styleColor = (source_id: number) => {
         switch (source_id) {
             case 203:
             case 440:
-            case 269: return { backgroundColor: "rgb(229, 9, 20)" }
-            case 157: return { backgroundColor: "#01BE74" }
+            case 269: return { backgroundColor: "rgba(229, 9, 20)", color: 'white' }
+            case 157: return { backgroundColor: "#01BE74", color: "#080800ff" }
             case 387:
-            case 454: return { backgroundColor: "#0137FB" }
-            case 26: return { backgroundColor: "#10A3DA" }
-            case 372: return { backgroundColor: "#0E1D52" }
-            case 371: return { backgroundColor: "#6F7378" }
-            case 444: return { backgroundColor: "#065FFB" }
-            case 455: return { backgroundColor: "#0269FB" }
-            case 365: return { backgroundColor: "#38135F" }
-            case 108: return { backgroundColor: "#604D22" }
-            case 367: return { backgroundColor: "#757575" }
+            case 454: return { backgroundColor: "#0137FB", color: 'white' }
+            case 26: return { backgroundColor: "#10A3DA", color: 'white' }
+            case 372: return { backgroundColor: "#0E1D52", color: 'white' }
+            case 371: return { backgroundColor: "#6F7378", color: "#080800ff" }
+            case 444: return { backgroundColor: "#065FFB", color: 'white' }
+            case 455: return { backgroundColor: "#0269FB", color: 'white' }
+            case 365: return { backgroundColor: "#38135F", color: 'white' }
+            case 108: return { backgroundColor: "#604D22", color: 'white' }
+            case 367: return { backgroundColor: "#757575", color: "#080800ff" }
             case 192: return { backgroundColor: "#E76728" }
             case 464: return { backgroundColor: "#971B84" }
             case 299:
@@ -270,21 +283,21 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             case 318:
             case 344:
             case 345:
-            case 368: return { backgroundColor: "#D91E25" }
-            case 80: return { backgroundColor: "#F78B24" }
-            case 456: return { backgroundColor: "#009BF4" }
-            case 457: return { backgroundColor: "#04FFA8" }
-            case 140: return { backgroundColor: "#52D8CA" }
+            case 368: return { backgroundColor: "#D91E25", color: 'white' }
+            case 80: return { backgroundColor: "#F78B24", color: 'white' }
+            case 456: return { backgroundColor: "#009BF4", color: 'white' }
+            case 457: return { backgroundColor: "#04FFA8", color: "#080800ff" }
+            case 140: return { backgroundColor: "#52D8CA", color: "#080800ff" }
             case 24:
             case 68:
             case 81:
             case 253:
-            case 234: return { backgroundColor: "#8DB449" }
-            case 307: return { backgroundColor: "#3578BC" }
+            case 234: return { backgroundColor: "#8DB449", color: "#080800ff" }
+            case 307: return { backgroundColor: "#3578BC", color: 'white' }
             case 270:
-            case 271: return { backgroundColor: "#E0FF35" }
-            case 18: return { backgroundColor: "#892526" }
-            default: return { backgroundColor: "var(--color-cyan-600)" }
+            case 271: return { backgroundColor: "#E0FF35", color: "#080800ff" }
+            case 18: return { backgroundColor: "#892526", color: 'white' }
+            default: return { backgroundColor: "var(--color-cyan-600)", color: 'white' }
         }
     }
 
@@ -295,7 +308,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         pages: defaultPages,
         contentType: defaultContentType,
         serviceType: defaultServiceType,
-        styleColor
+        styleColor, styleContent
     }
 
     return (

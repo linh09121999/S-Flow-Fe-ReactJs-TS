@@ -18,13 +18,13 @@ const Home: React.FC = () => {
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 1024 },
-            items: 6, //so slider hien thi
-            slidesToSlide: 6
+            items: 5, //so slider hien thi
+            slidesToSlide: 5
         },
         desktop: {
             breakpoint: { max: 1024, min: 768 },
-            items: 5,
-            slidesToSlide: 5
+            items: 4,
+            slidesToSlide: 4
         },
         tablet: {
             breakpoint: { max: 768, min: 464 },
@@ -143,8 +143,9 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         // getApiGenres()
-        getApiSources()
         // getApiRegion()
+
+        getApiSources()
         getApiResStreamingRelease()
         setSelectNav(0)
     }, [])
@@ -173,311 +174,115 @@ const Home: React.FC = () => {
         <>
             <div className="py-5">
                 <div className="max-w-[1500px] mx-auto flex flex-col gap-6">
-                    {resStreamingReleaseMovie.length > 0 &&
-                        <div className="items-center transition-all duration-300 ease">
-                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Trending Movie</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
-                                    onClick={handleViewAll}
-                                >View all <span>{icons.iconNext}</span></button>
-                            </div>
+                    {[
+                        { data: resStreamingReleaseMovie, title: "Trending Movies" },
+                        { data: resStreamingReleaseTVSeries, title: "Trending TV Series" },
+                        { data: resStreamingReleaseTVSpecial, title: "Trending TV Specials" },
+                        { data: resStreamingReleaseTVMiniseries, title: "Trending Miniseries" },
+                        { data: resStreamingReleaseShortFilm, title: "Trending Short Films" },
+                    ].map(({ data, title }) => (
+                        data.length > 0 && (
+                            <div className="items-center transition-all duration-300 ease">
+                                <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">{title}</h3>
+                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
+                                        onClick={handleViewAll}
+                                    >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
+                                </div>
+                                <div className="w-full grid mx-auto mt-5">
+                                    <Carousel
+                                        responsive={responsive}
+                                        draggable //truot tren pc, laptop
+                                        swipeable //vuot tren mobile
+                                        arrows={true} //mui ten
+                                        infinite //truot vo hang 2 huong
+                                        minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                        itemClass="p-2 rounded-[10px]"
+                                        containerClass="flex w-full relative overflow-hidden items-center"
+                                        className="w-full"
+                                        keyBoardControl //su dung phim de dieu huong
+                                        showDots={false} //hiển cham o duoi
+                                        renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                        focusOnSelect={false}
+                                        centerMode={false}
+                                        additionalTransfrom={0}
+                                        shouldResetAutoplay
+                                        rewind={false} //tua lai
+                                        rewindWithAnimation={false} //
+                                        rtl={false} //huong bang chuyen (r->l)
+                                        renderButtonGroupOutside={false}
+                                    >
+                                        {data.map((res) => (
+                                            <button
+                                                key={res.id}
+                                                onClick={() =>
+                                                    navigate(`/universal-detail/${res.id}`, {
+                                                        state: { idDetail: res.id },
+                                                    })
+                                                }
+                                                className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-400/40 transition-all duration-300 ease-in-out"
+                                            >
+                                                {/* Poster background */}
+                                                <img
+                                                    src={res.poster_url}
+                                                    alt={res.source_name}
+                                                    onError={handleImgError}
+                                                    className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-700 ease-in-out group-hover:scale-110 group-hover:brightness-60"
+                                                />
 
-                            <div className="w-full grid mx-auto mt-5">
-                                <Carousel
-                                    responsive={responsive}
-                                    draggable //truot tren pc, laptop
-                                    swipeable //vuot tren mobile
-                                    arrows={true} //mui ten
-                                    infinite //truot vo hang 2 huong
-                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                    itemClass="p-2 rounded-[10px]"
-                                    containerClass="flex w-full relative overflow-hidden items-center"
-                                    className="w-full"
-                                    keyBoardControl //su dung phim de dieu huong
-                                    showDots={false} //hiển cham o duoi
-                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                    focusOnSelect={false}
-                                    centerMode={false}
-                                    additionalTransfrom={0}
-                                    shouldResetAutoplay
-                                    rewind={false} //tua lai
-                                    rewindWithAnimation={false} //
-                                    rtl={false} //huong bang chuyen (r->l)
-                                    renderButtonGroupOutside={false}
-                                >
-                                    {resStreamingReleaseMovie.map((res) => (
-                                        <div key={res.id} className="group grid gap-2 ">
-                                            <button className="flex flex-col gap-2"
-                                                onClick={() => {
-                                                    navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <img src={res.poster_url} alt={res.source_name}
-                                                        onError={handleImgError}
-                                                        className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                                    <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
-                                                    {res.is_original === 1 && (
-                                                        <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
-                                                    )}
+                                                {/* Overlay gradient */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                                                {/* Badge Original */}
+                                                {res.is_original === 1 && (
+                                                    <span className="absolute top-3 right-3 px-3 py-1 bg-cyan-400 text-gray-900 font-bold text-sm rounded-md shadow-md backdrop-blur-sm">
+                                                        Original
+                                                    </span>
+                                                )}
+
+                                                {/* Play Icon Center */}
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
+                                                    <span className="text-cyan-300 text-7xl drop-shadow-[0_0_10px_#22d3ee] animate-pulse">
+                                                        {icons.iconPlayCircle}
+                                                    </span>
                                                 </div>
-                                                <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                                <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{getYear(res.source_release_date)}</div>
-                                            </button>
-                                            <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                                {icons.iconPlay}{res.source_name}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            </div>
-                        </div>
-                    }
-                    {resStreamingReleaseTVSeries.length > 0 &&
-                        <div className="items-center transition-all duration-300 ease">
-                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Trending TV Series</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
-                                    onClick={handleViewAll}
-                                >View all <span>{icons.iconNext}</span></button>
-                            </div>
-                            <div className="w-full grid mx-auto mt-5">
-                                <Carousel
-                                    responsive={responsive}
-                                    draggable //truot tren pc, laptop
-                                    swipeable //vuot tren mobile
-                                    arrows={true} //mui ten
-                                    infinite //truot vo hang 2 huong
-                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                    itemClass="p-2 rounded-[10px]"
-                                    containerClass="flex w-full relative overflow-hidden items-center"
-                                    className="w-full"
-                                    keyBoardControl //su dung phim de dieu huong
-                                    showDots={false} //hiển cham o duoi
-                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                    focusOnSelect={false}
-                                    centerMode={false}
-                                    additionalTransfrom={0}
-                                    shouldResetAutoplay
-                                    rewind={false} //tua lai
-                                    rewindWithAnimation={false} //
-                                    rtl={false} //huong bang chuyen (r->l)
-                                    renderButtonGroupOutside={false}
-                                >
-                                    {resStreamingReleaseTVSeries.map((res) => (
-                                        <div key={res.id} className="group grid gap-2 ">
-                                            <button className="flex flex-col gap-2"
-                                                onClick={() => {
-                                                    navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <img src={res.poster_url} alt={res.source_name}
-                                                        onError={handleImgError}
-                                                        className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                                    <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
-                                                    {res.is_original === 1 && (
-                                                        <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
-                                                    )}
+
+                                                {/* Info Section (bottom) */}
+                                                <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col gap-2 z-10">
+                                                    <h3 className="text-white text-start font-bold text-lg leading-tight line-clamp-2 hover:text-cyan-300 transition-colors duration-300">
+                                                        {res.title}
+                                                    </h3>
+                                                    <div className="flex gap-1 items-center text-sm text-gray-300">
+                                                        <span className="opacity-80 text-white/80 text-start"><strong>{res.season_number ?? 0}</strong> sources</span>
+                                                        <div className="w-[2px] h-[12px] bg-gray-500"></div>
+                                                        <span className="opacity-80 text-white/80 text-start">{getYear(res.source_release_date)}</span>
+                                                    </div>
+                                                    <button
+                                                        className="flex w-fit items-center gap-2 px-3 py-1.5 text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-lg hover:bg-white/20 transition-all duration-300"
+                                                        style={styleColor(res.source_id)}
+                                                    >
+                                                        <span className=" text-base">{icons.iconPlay}</span>
+                                                        <span className="truncate  " title={res.source_name}>
+                                                            {res.source_name}
+                                                        </span>
+                                                    </button>
                                                 </div>
-                                                <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                                <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{getYear(res.source_release_date)}</div>
                                             </button>
-                                            <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                                {icons.iconPlay}{res.source_name}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </Carousel>
+
+                                        ))}
+                                    </Carousel>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    {resStreamingReleaseTVSpecial.length > 0 &&
-                        <div className="items-center transition-all duration-300 ease">
-                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Trending TV Special</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
-                                    onClick={handleViewAll}
-                                >View all <span>{icons.iconNext}</span></button>
-                            </div>
-                            <div className="w-full grid mx-auto mt-5">
-                                <Carousel
-                                    responsive={responsive}
-                                    draggable //truot tren pc, laptop
-                                    swipeable //vuot tren mobile
-                                    arrows={true} //mui ten
-                                    infinite //truot vo hang 2 huong
-                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                    itemClass="p-2 rounded-[10px]"
-                                    containerClass="flex w-full relative overflow-hidden items-center"
-                                    className="w-full"
-                                    keyBoardControl //su dung phim de dieu huong
-                                    showDots={false} //hiển cham o duoi
-                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                    focusOnSelect={false}
-                                    centerMode={false}
-                                    additionalTransfrom={0}
-                                    shouldResetAutoplay
-                                    rewind={false} //tua lai
-                                    rewindWithAnimation={false} //
-                                    rtl={false} //huong bang chuyen (r->l)
-                                    renderButtonGroupOutside={false}
-                                >
-                                    {resStreamingReleaseTVSpecial.map((res) => (
-                                        <div key={res.id} className="group grid gap-2 ">
-                                            <button className="flex flex-col gap-2"
-                                                onClick={() => {
-                                                    navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <img src={res.poster_url} alt={res.source_name}
-                                                        onError={handleImgError}
-                                                        className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                                    <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
-                                                    {res.is_original === 1 && (
-                                                        <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
-                                                    )}
-                                                </div>
-                                                <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                                <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{getYear(res.source_release_date)}</div>
-                                            </button>
-                                            <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                                {icons.iconPlay}{res.source_name}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            </div>
-                        </div>
-                    }
-                    {resStreamingReleaseTVMiniseries.length > 0 &&
-                        <div className="items-center transition-all duration-300 ease">
-                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Trending TV Miniseries</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
-                                    onClick={handleViewAll}
-                                >View all <span>{icons.iconNext}</span></button>
-                            </div>
-                            <div className="w-full grid mx-auto mt-5">
-                                <Carousel
-                                    responsive={responsive}
-                                    draggable //truot tren pc, laptop
-                                    swipeable //vuot tren mobile
-                                    arrows={true} //mui ten
-                                    infinite //truot vo hang 2 huong
-                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                    itemClass="p-2 rounded-[10px]"
-                                    containerClass="flex w-full relative overflow-hidden items-center"
-                                    className="w-full"
-                                    keyBoardControl //su dung phim de dieu huong
-                                    showDots={false} //hiển cham o duoi
-                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                    focusOnSelect={false}
-                                    centerMode={false}
-                                    additionalTransfrom={0}
-                                    shouldResetAutoplay
-                                    rewind={false} //tua lai
-                                    rewindWithAnimation={false} //
-                                    rtl={false} //huong bang chuyen (r->l)
-                                    renderButtonGroupOutside={false}
-                                >
-                                    {resStreamingReleaseTVMiniseries.map((res) => (
-                                        <div key={res.id} className="group grid gap-2 ">
-                                            <button className="flex flex-col gap-2"
-                                                onClick={() => {
-                                                    navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <img src={res.poster_url} alt={res.source_name}
-                                                        onError={handleImgError}
-                                                        className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                                    <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
-                                                    {res.is_original === 1 && (
-                                                        <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
-                                                    )}
-                                                </div>
-                                                <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                                <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{getYear(res.source_release_date)}</div>
-                                            </button>
-                                            <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                                {icons.iconPlay}{res.source_name}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            </div>
-                        </div>
-                    }
-                    {resStreamingReleaseShortFilm.length > 0 &&
-                        <div className="items-center transition-all duration-300 ease">
-                            <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Trending Short Film</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
-                                    onClick={handleViewAll}
-                                >View all <span>{icons.iconNext}</span></button>
-                            </div>
-                            <div className="w-full grid mx-auto mt-5">
-                                <Carousel
-                                    responsive={responsive}
-                                    draggable //truot tren pc, laptop
-                                    swipeable //vuot tren mobile
-                                    arrows={true} //mui ten
-                                    infinite //truot vo hang 2 huong
-                                    minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                    itemClass="p-2 rounded-[10px]"
-                                    containerClass="flex w-full relative overflow-hidden items-center"
-                                    className="w-full"
-                                    keyBoardControl //su dung phim de dieu huong
-                                    showDots={false} //hiển cham o duoi
-                                    renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                    focusOnSelect={false}
-                                    centerMode={false}
-                                    additionalTransfrom={0}
-                                    shouldResetAutoplay
-                                    rewind={false} //tua lai
-                                    rewindWithAnimation={false} //
-                                    rtl={false} //huong bang chuyen (r->l)
-                                    renderButtonGroupOutside={false}
-                                >
-                                    {resStreamingReleaseShortFilm.map((res) => (
-                                        <div key={res.id} className="group grid gap-2 ">
-                                            <button className="flex flex-col gap-2"
-                                                onClick={() => {
-                                                    navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                                }}
-                                            >
-                                                <div className="relative">
-                                                    <img src={res.poster_url} alt={res.source_name}
-                                                        onError={handleImgError}
-                                                        className="w-full aspect-[3/4] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70" />
-                                                    <span className="absolute text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">{icons.iconPlayCircle}</span>
-                                                    {res.is_original === 1 && (
-                                                        <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 backdrop-blur-[10px] text-cyan-950 font-bold transition-all duration-300 ease rounded-[5px_10px_5px_5px] group-hover:opacity-70">Original</span>
-                                                    )}
-                                                </div>
-                                                <h3 className="text-white/80 text-lg font-bold text-start transition-all duration-300 ease group-hover:opacity-70">{res.title}</h3>
-                                                <div className="flex gap-1 text-white/70 text-sm transition-all duration-300 ease group-hover:opacity-70">{getYear(res.source_release_date)}</div>
-                                            </button>
-                                            <button className={`flex gap-2 self-end text-sm text-white text-start items-center px-2 h-[30px] w-fit rounded-[10px] transition-all duration-300 ease`} style={styleColor(res.source_id)}>
-                                                {icons.iconPlay}{res.source_name}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            </div>
-                        </div>
-                    }
+                        )))}
                     {resSources.length > 0 &&
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Browse By Sources</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Browse By Sources</h3>
+                                <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
                                     onClick={() =>
                                         navigate('/sources')
                                     }
-                                >View all <span>{icons.iconNext}</span></button>
+                                >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full grid mx-auto mt-5">
                                 <Carousel
@@ -520,12 +325,12 @@ const Home: React.FC = () => {
                     {resRegions.length > 0 &&
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Browse By Region</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Browse By Region</h3>
+                                <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
                                     onClick={() =>
                                         navigate('/region')
                                     }
-                                >View all <span>{icons.iconNext}</span></button>
+                                >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full grid mx-auto mt-5">
                                 <Carousel
@@ -564,12 +369,12 @@ const Home: React.FC = () => {
                     {resGenres.length > 0 &&
                         <div className="items-center transition-all duration-300 ease">
                             <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                <h3 className="text-xl text-white font-bold">Browse By Genres</h3>
-                                <button className="flex gap-1 items-center text-cyan-300"
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Browse By Genres</h3>
+                                <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
                                     onClick={() =>
                                         navigate('/genres')
                                     }
-                                >View all <span>{icons.iconNext}</span></button>
+                                >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                             </div>
                             <div className="w-full grid mx-auto mt-5">
                                 <Carousel

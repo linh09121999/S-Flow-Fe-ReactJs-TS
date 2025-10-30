@@ -182,7 +182,7 @@ const UniversalDetail: React.FC = () => {
                                 src={resTitleDetail?.trailer_thumbnail || imgs.imgDefault}
                                 alt={resTitleDetail?.title}
                                 onError={handleImgError}
-                                className="w-full h-full object-cover brightness-75 lg:brightness-50 transition-all duration-500"
+                                className="w-full h-full object-cover brightness-75 lg:brightness-50 transition-all duration-300"
                             />
 
                             {/* Gradient overlay */}
@@ -289,12 +289,12 @@ const UniversalDetail: React.FC = () => {
         bg-gradient-to-br from-cyan-500/80 via-cyan-400/60 to-cyan-600/80
         backdrop-blur-xl border border-cyan-300/30
         shadow-lg shadow-cyan-400/20
-        transition-all duration-500 ease-in-out
+        transition-all duration-300 ease-in-out
         hover:-translate-y-2 hover:shadow-cyan-300/50 hover:scale-[1.03]
       "
                             >
                                 {/* Hiệu ứng sáng nhẹ */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-cyan-300/20 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-cyan-300/20 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
 
                                 {/* Giá trị */}
                                 <span className="lg:text-3xl text-2xl font-bold text-black drop-shadow-sm z-10">
@@ -313,10 +313,10 @@ const UniversalDetail: React.FC = () => {
                 <div className="grid lg:grid-cols-[1fr_300px] gap-6">
                     <section className="flex flex-col gap-6 self-start w-full">
                         {resTitleStreamingSource.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
+                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 {/* Header */}
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">
+                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">
                                         Streaming Sources
                                     </h3>
                                 </div>
@@ -335,7 +335,7 @@ const UniversalDetail: React.FC = () => {
                 `}
                                         >
                                             {/* Glow effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 rounded-xl transition-all duration-500"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 rounded-xl transition-all duration-300"></div>
 
                                             {/* Price / Type + Format */}
                                             <div className="flex gap-2 w-full mb-3 z-10">
@@ -366,9 +366,9 @@ const UniversalDetail: React.FC = () => {
 
                         }
                         {resTitleEpisodes.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
+                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">Episodes</h3>
+                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Episodes</h3>
                                 </div>
                                 <div className="text-lg text-white/70 mt-5 gap-6 flex flex-col">
 
@@ -426,7 +426,7 @@ const UniversalDetail: React.FC = () => {
                                                                 src={res.thumbnail_url}
                                                                 alt={res.name}
                                                                 onError={handleImgError}
-                                                                className="w-full h-full object-cover rounded-t-2xl transition-transform duration-500 group-hover:scale-110"
+                                                                className="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-110"
                                                             />
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80"></div>
                                                             <span className="absolute backdrop-blur-[10px] top-3 right-3 text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full">
@@ -459,7 +459,7 @@ const UniversalDetail: React.FC = () => {
                                                                 src={res.thumbnail_url}
                                                                 alt={res.name}
                                                                 onError={handleImgError}
-                                                                className=" object-cover rounded-l-2xl transition-transform duration-500 group-hover:scale-110"
+                                                                className=" object-cover rounded-l-2xl transition-transform duration-300 group-hover:scale-110"
                                                             />
                                                             <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
                                                             <span className="absolute backdrop-blur-[10px] bottom-3 right-3 text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full">
@@ -486,7 +486,7 @@ const UniversalDetail: React.FC = () => {
                                                         </div>
 
                                                         {/* Hover effect overlay cyan glow */}
-                                                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-300/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                                                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-300/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                                                     </div>
 
                                                     {/* ========== Sources hiển thị khi click ========== */}
@@ -554,10 +554,10 @@ const UniversalDetail: React.FC = () => {
                             </div>
                         }
                         {resTitleCast.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
+                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">Cast</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Cast</h3>
+                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide">View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                                 </div>
                                 <div className="w-full grid mx-auto mt-5">
                                     <Carousel
@@ -601,10 +601,10 @@ const UniversalDetail: React.FC = () => {
                             </div>
                         }
                         {resTitleCrew.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
+                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">Crew</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300">View all <span>{icons.iconNext}</span></button>
+                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Crew</h3>
+                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide">View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                                 </div>
                                 <div className="w-full grid mx-auto mt-5">
                                     <Carousel
@@ -658,8 +658,8 @@ const UniversalDetail: React.FC = () => {
                                 }}
                                 className="absolute text-white bottom-[10px] left-[10px] p-5 rounded-full bg-cyan-500 backdrop-blir-[10px] css-icon transition-all duration-300 ease opacity-0 group-hover:opacity-100">{icons.iconPlay}</button>
                         </div>
-                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
-                            <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">Information</h3>
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
+                            <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Information</h3>
                             <div className="text-lg text-white/70 gap-2 flex flex-col">
                                 <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                     <span>Type:</span>
@@ -690,8 +690,8 @@ const UniversalDetail: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-500 hover:shadow-cyan-400/30">
-                            <h3 className="text-2xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent tracking-wide">Statistical</h3>
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
+                            <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Statistical</h3>
                             <div className="text-lg text-white/70 gap-2 flex flex-col">
                                 <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                     <span>User Rating:</span>

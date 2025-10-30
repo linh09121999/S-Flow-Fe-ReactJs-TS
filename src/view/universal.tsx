@@ -26,7 +26,8 @@ const Universal: React.FC = () => {
             borderRadius: '10px',
             boxShadow: '0px 4px 12px rgba(0,0,0,0.15)',
             maxWidth: 'calc(100%)',
-            background: 'var(--color-gray-900)',
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            backdropFilter: 'blur(10px)',
             zIndex: 100,
         },
     }
@@ -37,7 +38,8 @@ const Universal: React.FC = () => {
         },
         '& .MuiOutlinedInput-root': {
             borderRadius: "10px",
-            background: "var(--color-gray-900)",
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            backdropFilter: 'blur(10px)',
             padding: '3px 8px !important',
             transition: 'all 0.3s',
             fontSize: 'var(--text-xl)',
@@ -78,7 +80,8 @@ const Universal: React.FC = () => {
         color: 'rgb(255,255,255,0.7)',
         zIndex: 100,
         '&:hover': {
-            backgroundColor: 'var(--color-gray-800) !important',
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            backdropFilter: 'blur(10px)',
             color: 'var(--color-cyan-300) !important',
             fontWeight: 600
         },
@@ -107,7 +110,7 @@ const Universal: React.FC = () => {
 
     const sxPaperPropsDrawer: SxProps<Theme> = {
         sx: {
-            background: 'color-mix(in oklab, var(--color-black) 20%, transparent)',
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
             color: 'var(--color-gray-200)',
             backdropFilter: 'blur(10px)'
         }
@@ -205,8 +208,8 @@ const Universal: React.FC = () => {
         // }
         // getApiGenres()
 
-        getApiSources()
-        getApiResStreamingRelease()
+        // getApiSources()
+        // getApiResStreamingRelease()
         setSelectNav(1)
         setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])
@@ -432,19 +435,19 @@ const Universal: React.FC = () => {
     return (
         <>
             <div className="max-w-[1535px] py-5 mx-auto grid lg:grid-cols-[300px_1fr] gap-6">
-                <aside className="grid h-fit max-lg:hidden lg:sticky lg:top-[105px] gap-4 overflow-y-auto scroll-y-all max-h-[88vh]">
+                <aside className="grid h-fit max-lg:hidden lg:sticky lg:top-[105px] gap-4 ">
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowContentType(!showContentType)
                                 }}
                             >
-                                <h3 className="text-xl ">Content Type</h3>
-                                <span>{showContentType ? icons.iconUp : icons.iconDown}</span>
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Content Type</h3>
+                                <span className="text-cyan-300">{showContentType ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showContentType && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 flex flex-col">
+                                <div className="text-lg mt-5 text-white/70 gap-4 flex flex-col transition-all duration-300 ease">
                                     <FormControlLabel control={
                                         <Checkbox
                                             indeterminate={isIndeterminateContentType}
@@ -478,17 +481,17 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     {/* <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowServiceType(!showServiceType)
                                 }}
                             >
-                                <h3 className="text-xl ">Service Types</h3>
-                                <span>{showServiceType ? icons.iconUp : icons.iconDown}</span>
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Service Types</h3>
+                                <span className="text-cyan-300">{showServiceType ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showServiceType && (
-                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
+                                <div className="text-lg mt-5 text-white/70 gap-4 overflow-y-auto scroll-y max-h-[21vh] flex flex-col transition-all duration-300 ease">
                                     <FormControlLabel control={
                                         <Checkbox
                                             indeterminate={isIndeterminateServiceType}
@@ -522,17 +525,17 @@ const Universal: React.FC = () => {
                         </div>
                     </div> */}
                     <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowStreaming(!showStreaming)
                                 }}
                             >
-                                <h3 className="text-xl ">Streaming Services</h3>
-                                <span>{showStreaming ? icons.iconUp : icons.iconDown}</span>
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Streaming Services</h3>
+                                <span className="text-cyan-300">{showStreaming ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showStreaming && (
-                                <div className="mt-5 flex flex-col gap-4">
+                                <div className="mt-5 flex flex-col gap-4 transition-all duration-300 ease">
                                     <TextField
                                         type="search"
                                         placeholder="Search of sources..."
@@ -576,14 +579,14 @@ const Universal: React.FC = () => {
                         </div>
                     </div>
                     {/* <div className="flex flex-col gap-4">
-                        <div className="items-center border-[1px] border-gray-800 p-5 rounded-[10px] bg-gray-900 shadow-lg transition-all duration-300 ease hover:shadow-lg hover:shadow-cyan-300/50 m-1">
+                        <div className="items-center border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                             <button className="flex justify-between text-white items-center w-full transition-all duration-300 ease"
                                 onClick={() => {
                                     setShowGenres(!showGenres)
                                 }}
                             >
-                                <h3 className="text-xl ">Genres</h3>
-                                <span>{showGenres ? icons.iconUp : icons.iconDown}</span>
+                                <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Genres</h3>
+                                <span className="text-cyan-300">{showGenres ? icons.iconUp : icons.iconDown}</span>
                             </button>
                             {showGenres && (
                                 <div className="text-lg mt-5 text-white/70 overflow-y-auto scroll-y max-h-[21vh] flex flex-col">
@@ -620,7 +623,7 @@ const Universal: React.FC = () => {
                         </div>
                     </div> */}
 
-                    <button className="text-white/70 border-[1px] border-gray-800 h-[40px] rounded-[10px] transition-all duration-300 ease hover:text-cyan-300 hover:shadow-lg hover:shadow-cyan-300/50 m-1"
+                    <button className="text-white/70 border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-2 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30 hover:text-white"
                         onClick={handleClearFilter}
                     >
                         Clear All Filters
@@ -630,9 +633,8 @@ const Universal: React.FC = () => {
                     <div className="lg:hidden grid grid-cols-2 gap-2">
                         <button className={`
                     flex justify-between items-center w-full sm:w-auto 
-                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
-                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
-                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                    px-3 py-2 md:px-4 md:py-2 h-[40px] 
+                    border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30
                 `}
                             onClick={toggleDrawerFilter(true)}>
                             <p className="text-white/70 text-lg w-full">Filter</p>
@@ -642,9 +644,8 @@ const Universal: React.FC = () => {
                         </button>
                         <button className={`
                     flex justify-between items-center w-full sm:w-auto 
-                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
-                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
-                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                    px-3 py-2 md:px-4 md:py-2 h-[40px] 
+                    border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30
                 `}
                             onClick={toggleDrawerSort(true)}>
                             <p className="text-white/70 text-lg w-full">Sort</p>
@@ -785,35 +786,35 @@ const Universal: React.FC = () => {
                             </Box>
                             <Divider sx={sxDivider} />
                             <List>
-                                <ListItem onClick={()=>{
+                                <ListItem onClick={() => {
                                     handleSortDefault()
                                     setOpenDrawerSort(false)
                                 }}
                                     sx={sxListItemDrawer}>
                                     Relevance
                                 </ListItem>
-                                <ListItem onClick={()=>{
+                                <ListItem onClick={() => {
                                     handleSortNewest()
                                     setOpenDrawerSort(false)
                                 }}
                                     sx={sxListItemDrawer}>
                                     Release Date (Newest)
                                 </ListItem>
-                                <ListItem onClick={()=>{
+                                <ListItem onClick={() => {
                                     handleSortOldest()
                                     setOpenDrawerSort(false)
                                 }}
                                     sx={sxListItemDrawer}>
                                     Release Date (Oldest)
                                 </ListItem>
-                                <ListItem onClick={()=>{
+                                <ListItem onClick={() => {
                                     handleSortAtoZ()
                                     setOpenDrawerSort(false)
                                 }}
                                     sx={sxListItemDrawer}>
                                     Title (A-Z)
                                 </ListItem>
-                                <ListItem onClick={()=>{
+                                <ListItem onClick={() => {
                                     handleSortZtoA()
                                     setOpenDrawerSort(false)
                                 }}
@@ -835,9 +836,9 @@ const Universal: React.FC = () => {
                                 className={`
                     ${openSortBy ? "shadow-xl border-cyan-300" : ""} 
                     flex justify-between items-center w-full sm:w-auto 
-                    px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 
-                    bg-gray-900 border border-gray-800 transition-all duration-300 ease 
-                    h-[40px] shadow-lg hover:shadow-lg hover:shadow-cyan-300/50
+                    px-3 py-2 md:px-4 md:py-2  md:rounded-[10px] 
+                     transition-all duration-300 ease 
+                    h-[40px] border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30
                 `}
                                 onClick={handleClickSortBy}
                             >
@@ -887,72 +888,69 @@ const Universal: React.FC = () => {
                     ) : (
                         <div className={`
             grid 
-            grid-cols-2
-            sm:grid-cols-3
-            md:grid-cols-5
-            lg:grid-cols-3 
-            xl:grid-cols-5 
+            grid-cols-1
+            sm:grid-cols-1
+            md:grid-cols-3
+            lg:grid-cols-2 
+            xl:grid-cols-4 
             gap-4 md:gap-6
         `}>
                             {(isFiltering ? filteredReleases : resStreamingRelease).map((res) => (
-                                <div key={res.id} className="group grid gap-2">
-                                    <button
-                                        className="flex flex-col gap-2 w-full text-start"
-                                        onClick={() => {
-                                            navigate(`/universal-detail/${res.id}`, { state: { idDetail: res.id } })
-                                        }}
-                                    >
-                                        {/* Image Container */}
-                                        <div className="relative overflow-hidden rounded-lg md:rounded-[10px]">
-                                            <img
-                                                src={res.poster_url}
-                                                alt={res.source_name}
-                                                onError={handleImgError}
-                                                className="w-full aspect-[3/4] object-cover transition-all duration-300 ease group-hover:scale-105 group-hover:opacity-70"
-                                            />
+                                <button
+                                    key={res.id}
+                                    onClick={() =>
+                                        navigate(`/universal-detail/${res.id}`, {
+                                            state: { idDetail: res.id },
+                                        })
+                                    }
+                                    className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-400/40 transition-all duration-300 ease-in-out"
+                                >
+                                    {/* Poster background */}
+                                    <img
+                                        src={res.poster_url}
+                                        alt={res.source_name}
+                                        onError={handleImgError}
+                                        className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-all duration-700 ease-in-out group-hover:scale-110 group-hover:brightness-60"
+                                    />
 
-                                            {/* Play Icon Overlay */}
-                                            <span className="absolute text-4xl md:text-5xl lg:text-6xl xl:text-7xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease text-cyan-300 opacity-0 group-hover:opacity-100">
-                                                {icons.iconPlayCircle}
-                                            </span>
+                                    {/* Overlay gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                                            {/* Original Badge */}
-                                            {res.is_original === 1 && (
-                                                <span className="absolute top-0 right-0 px-2 py-1 bg-cyan-300 text-cyan-950 font-bold text-xs transition-all duration-300 ease rounded-bl-lg group-hover:opacity-70">
-                                                    Original
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Content Info */}
-                                        <div className="space-y-1 md:space-y-2">
-                                            <h3 className="text-white/80 text-sm md:text-lg font-bold line-clamp-2 transition-all duration-300 ease group-hover:opacity-70">
-                                                {res.title}
-                                            </h3>
-                                            <div className="flex gap-1 text-white/70 text-xs md:text-sm transition-all duration-300 ease group-hover:opacity-70">
-                                                {res.type}
-                                                <span>•</span>
-                                                {getYear(res.source_release_date)}
-                                            </div>
-                                        </div>
-                                    </button>
-
-                                    {/* Source Button */}
-                                    <button
-                                        className={`
-                            flex gap-2 items-center px-2 py-1 md:px-2 md:py-1 
-                            h-[28px] md:h-[30px] w-fit rounded-lg md:rounded-[10px] 
-                            text-xs md:text-sm text-white text-start 
-                            transition-all duration-300 ease self-end
-                        `}
-                                        style={styleColor(res.source_id)}
-                                    >
-                                        {icons.iconPlay}
-                                        <span className="truncate max-w-[80px] md:max-w-none">
-                                            {res.source_name}
+                                    {/* Badge Original */}
+                                    {res.is_original === 1 && (
+                                        <span className="absolute top-3 right-3 px-3 py-1 bg-cyan-400 text-gray-900 font-bold text-sm rounded-md shadow-md backdrop-blur-sm">
+                                            Original
                                         </span>
-                                    </button>
-                                </div>
+                                    )}
+
+                                    {/* Play Icon Center */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
+                                        <span className="text-cyan-300 text-7xl drop-shadow-[0_0_10px_#22d3ee] animate-pulse">
+                                            {icons.iconPlayCircle}
+                                        </span>
+                                    </div>
+
+                                    {/* Info Section (bottom) */}
+                                    <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col gap-2 z-10">
+                                        <h3 className="text-white text-start font-bold text-lg leading-tight line-clamp-2 hover:text-cyan-300 transition-colors duration-300">
+                                            {res.title}
+                                        </h3>
+                                        <div className="flex gap-1 items-center text-sm text-gray-300">
+                                            <span className="opacity-80 text-white/80 text-start"><strong>{res.season_number ?? 0}</strong> sources</span>
+                                            <div className="w-[2px] h-[12px] bg-gray-500"></div>
+                                            <span className="opacity-80 text-white/80 text-start">{getYear(res.source_release_date)}</span>
+                                        </div>
+                                        <button
+                                            className="flex w-fit items-center gap-2 px-3 py-1.5 text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-lg hover:bg-white/20 transition-all duration-300"
+                                            style={styleColor(res.source_id)}
+                                        >
+                                            <span className=" text-base">{icons.iconPlay}</span>
+                                            <span className="truncate  " title={res.source_name}>
+                                                {res.source_name}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </button>
                             ))}
                         </div>
                     )}
