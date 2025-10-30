@@ -182,7 +182,7 @@ const Home: React.FC = () => {
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
 
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive}
                                     draggable //truot tren pc, laptop
@@ -241,7 +241,7 @@ const Home: React.FC = () => {
                                     onClick={handleViewAll}
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive}
                                     draggable //truot tren pc, laptop
@@ -300,7 +300,7 @@ const Home: React.FC = () => {
                                     onClick={handleViewAll}
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive}
                                     draggable //truot tren pc, laptop
@@ -359,7 +359,7 @@ const Home: React.FC = () => {
                                     onClick={handleViewAll}
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive}
                                     draggable //truot tren pc, laptop
@@ -418,7 +418,7 @@ const Home: React.FC = () => {
                                     onClick={handleViewAll}
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive}
                                     draggable //truot tren pc, laptop
@@ -479,7 +479,7 @@ const Home: React.FC = () => {
                                     }
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive1}
                                     draggable //truot tren pc, laptop
@@ -527,7 +527,7 @@ const Home: React.FC = () => {
                                     }
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive1}
                                     draggable //truot tren pc, laptop
@@ -571,7 +571,7 @@ const Home: React.FC = () => {
                                     }
                                 >View all <span>{icons.iconNext}</span></button>
                             </div>
-                            <div className="w-full mx-auto mt-5 xl:max-w-9xl">
+                            <div className="w-full grid mx-auto mt-5">
                                 <Carousel
                                     responsive={responsive1}
                                     draggable //truot tren pc, laptop

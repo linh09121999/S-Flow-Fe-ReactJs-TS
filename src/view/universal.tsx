@@ -205,8 +205,8 @@ const Universal: React.FC = () => {
         // }
         // getApiGenres()
 
-        // getApiSources()
-        // getApiResStreamingRelease()
+        getApiSources()
+        getApiResStreamingRelease()
         setSelectNav(1)
         setCheckedItemsContentType(contentType.map((type) => type.id))
     }, [])
@@ -551,7 +551,7 @@ const Universal: React.FC = () => {
                                             ),
                                         }}
                                     />
-                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[35vh] flex flex-col">
+                                    <div className="text-lg text-white/70 gap-4 overflow-y-auto scroll-y max-h-[20vh] flex flex-col">
                                         {filteredSources.length > 0 ? (
                                             filteredSources.map((res) => (
                                                 <button
@@ -627,7 +627,7 @@ const Universal: React.FC = () => {
                     </button>
                 </aside >
                 <section className="flex flex-col gap-4 md:gap-6">
-                    <div className="ld:hidden grid grid-cols-2 gap-2">
+                    <div className="lg:hidden grid grid-cols-2 gap-2">
                         <button className={`
                     flex justify-between items-center w-full sm:w-auto 
                     px-3 py-2 md:px-4 md:py-2 rounded-lg md:rounded-[10px] 

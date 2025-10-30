@@ -44,7 +44,7 @@ export const useResTitleDetailState = create<ResTitleDetailState>((set) => ({
     clearResTitleDetail: () => set({ resTitleDetail: undefined })
 }))
 
-interface Source {
+export interface Source {
     source_id: number;
     name: string;
     type: string;
@@ -128,7 +128,7 @@ export const useResTitleSeasonState = create<ResTitleSeasonState>((set) => ({
     clearResTitleSeason: () => set({ resTitleSeasons: [] })
 }))
 
-interface ResTitleEpisode {
+export interface ResTitleEpisode {
     id: number;
     name: string;
     episode_number: number;
