@@ -28,7 +28,8 @@ const Header: React.FC = () => {
         },
         '& .MuiOutlinedInput-root': {
             borderRadius: "10px",
-            background: "var(--color-gray-900)",
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            backdropFilter: 'blur(10px)',
             padding: '3px 8px !important',
             transition: 'all 0.3s',
             fontSize: 'var(--text-xl)',
@@ -71,7 +72,8 @@ const Header: React.FC = () => {
     const componentsProps: SxProps<Theme> = {
         paper: {
             sx: {
-                background: 'var(--color-gray-900)',
+                background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+                backdropFilter: 'blur(10px)',
                 zIndex: 100,
                 minHeight: '70px',
                 '& .MuiAutocomplete-noOptions': {
@@ -83,12 +85,14 @@ const Header: React.FC = () => {
                     color: 'rgb(255,255,255,0.7) !important',
                 },
                 '& .MuiAutocomplete-option:hover': {
-                    backgroundColor: 'var(--color-gray-800) !important',
+                    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+                    backdropFilter: 'blur(10px)',
                     color: 'var(--color-cyan-300) !important',
                     fontWeight: 600
                 },
                 '& .MuiAutocomplete-option[aria-selected="true"]': {
-                    backgroundColor: 'var(--color-gray-800) !important',
+                    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+                    backdropFilter: 'blur(10px)',
                     color: 'var(--color-cyan-300) !important',
                     fontWeight: 600
                 }

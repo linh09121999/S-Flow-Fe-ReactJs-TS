@@ -16,7 +16,8 @@ const Sources: React.FC = () => {
         width: '450px',
         '& .MuiOutlinedInput-root': {
             borderRadius: "10px",
-            background: "var(--color-gray-900)",
+            background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
+            backdropFilter: 'blur(10px)',
             padding: '3px 8px !important',
             transition: 'all 0.3s',
             fontSize: 'var(--text-xl)',
@@ -161,12 +162,12 @@ const Sources: React.FC = () => {
                                 key={index}
                                 onClick={() => setValue(index)}
                                 className={`
-                        border flex-shrink-0 transition-all duration-300 ease-in-out
+                        border flex-shrink-0 transition-all duration-300 ease-in-out hover:text-cyan-300
                         ${value === index
-                                        ? "text-cyan-300 border-cyan-300 bg-cyan-300/10"
-                                        : "border-gray-500 hover:text-cyan-300 hover:border-cyan-300"
+                                        ? " text-cyan-300 border-cyan-500"
+                                        : "  border-cyan-500/20"
                                     }
-                        h-[40px] px-3 rounded-lg text-lg
+                        h-[40px] px-3 rounded-lg text-lg shadow-2xl bg-gradient-to-br from-gray-900 via-gray-950 to-black
                     `}
                             >
                                 {tab.label}
@@ -243,9 +244,9 @@ const Sources: React.FC = () => {
                             group-hover:shadow-cyan-300/20 border border-gray-600
                         "
                                 />
-                                <div className="text-xs sm:text-sm text-center truncate px-1 group-hover:text-cyan-300 transition-colors">
+                                {/* <div className="text-xs sm:text-sm text-center truncate px-1 group-hover:text-cyan-300 transition-colors">
                                     {res.name}
-                                </div>
+                                </div> */}
                             </button>
                         ))}
                     </div>
