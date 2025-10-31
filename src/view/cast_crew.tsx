@@ -6,7 +6,8 @@ import { getTitleCast_Crew } from "../services/userService";
 import { toast, ToastContainer } from "react-toastify";
 import { useGlobal } from "../context/GlobalContext";
 import {
-    TextField, InputAdornment, IconButton
+    TextField, InputAdornment, IconButton,
+    Backdrop, CircularProgress
 } from '@mui/material'
 import type { SxProps, Theme } from "@mui/material/styles";
 
@@ -44,17 +45,20 @@ const CastCrew: React.FC = () => {
         },
     }
     const navigate = useNavigate()
+    const [loading, setLoading] = useState<boolean>(true);
 
     const { setSelectNav, setIsCastCrew, isCastCrew } = useStateGeneral()
     const { resTitleCast, resTitleCrew, setResTitleCastCrew } = useResTitleCast_CrewState()
 
     const getApiTitleCast_Crew = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleCast_Crew(titleId)
             setResTitleCastCrew(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleCast_Crew", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleCast_Crew")
+            toast.error(`Title Cast/Crew ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -64,7 +68,11 @@ const CastCrew: React.FC = () => {
     const { idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        getApiTitleCast_Crew(idDetail)
+        if (idDetail) {
+            getApiTitleCast_Crew(idDetail)
+        } else {
+            navigate(`/universal-detail/${idDetail}`)
+        }
     }, [])
 
     const [inputValueCast, setInputValueCast] = useState<string>("");
@@ -83,6 +91,17 @@ const CastCrew: React.FC = () => {
             r.full_name.toLowerCase().includes(inputValueCrew.toLowerCase())
         );
     }, [inputValueCrew, resTitleCrew]);
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>
@@ -193,8 +212,8 @@ const CastCrew: React.FC = () => {
 
                                 {/* Overlay đậm hơn giúp text rõ */}
                                 <div className="absolute inset-0 bg-gradient-to-t 
-                    from-black/90 via-black/60 to-black/20
-                    opacity-80 group-hover:opacity-100 
+                    from-black/90 via-black/60 to-black/30
+                    opacity-90 group-hover:opacity-100 
                     transition-opacity duration-300 ease-in-out">
                                 </div>
 

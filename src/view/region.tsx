@@ -24,8 +24,7 @@ const Region: React.FC = () => {
             const res = await getRegions()
             setResRegions(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getRegions", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getRegions")
+            toast.error(`Regions: `+ error.response?.data?.statusMessage)
         } finally {
             setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }

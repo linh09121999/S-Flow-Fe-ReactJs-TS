@@ -7,12 +7,13 @@ import { getPerson } from "../services/userService";
 import { useGlobal } from "../context/GlobalContext";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Backdrop, CircularProgress } from '@mui/material'
 
 const PersonDetail: React.FC = () => {
     const { setSelectNav, setIsCastCrew, isCastCrew } = useStateGeneral()
     const navigate = useNavigate()
     const { icons } = useGlobal()
-    
+
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 1024 },
@@ -36,33 +37,39 @@ const PersonDetail: React.FC = () => {
         }
     };
 
+    const [loading, setLoading] = useState<boolean>(true);
+
     const { resPerson, setResPerson, resPersonKnowFor, setResPersonKnowFor } = useResPersonState()
-    const [listPersonId, setListPersonId] = useState<number[]>([])
 
     const getApiPerson = async (personId: number) => {
         try {
+            setLoading(true);
             const res = await getPerson(personId)
             setResPerson(res.data)
-            setListPersonId(res.data.known_for)
-        } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleCast_Crew", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleCast_Crew")
-        }
-    }
+            const listPersonId = res.data.known_for || []
+            if (listPersonId.length > 0) {
+                const results = await Promise.all(
+                    listPersonId.map(async (id: number) => {
+                        try {
+                            const resKnownFor = await getPerson(id)
+                            return resKnownFor.data
+                        } catch (error: any) {
+                            toast.error(`Person ${id}: ` + error.response?.data?.statusMessage)
+                            return null // tránh vỡ Promise.all
+                        }
+                    })
+                )
 
-    const getApiPersonKnowFor = async (personIds: number[]): Promise<void> => {
-        try {
-            const results: ResPerson[] = await Promise.all(
-                personIds.map(async (id): Promise<ResPerson> => {
-                    const res = await getPerson(id)
-                    return res.data
-                })
-            )
-
-            setResPersonKnowFor(results)
+                // 4️⃣ Lọc bỏ null và lưu kết quả vào state
+                const validResults = results.filter(Boolean)
+                setResPersonKnowFor(validResults)
+            } else {
+                setResPersonKnowFor([])
+            }
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getPerson:", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getPerson")
+            toast.error(`Person ${personId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -70,10 +77,42 @@ const PersonDetail: React.FC = () => {
     const { idPersonDetail, idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        // getApiPerson(idPersonDetail)
-        // getApiPersonKnowFor(listPersonId)
-        // console.log(listPersonId)
-    }, [])
+        if (idPersonDetail) {
+            getApiPerson(idPersonDetail)
+        } else {
+            navigate(`/cast-crew/${idDetail}`)
+        }
+    }, [idPersonDetail])
+
+    const convertDate = (dateStr: string | undefined) => {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+
+        if (isNaN(date.getTime())) {
+            return ""; // Trả về rỗng nếu chuỗi không hợp lệ
+        }
+
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        const yyyy = date.getFullYear();
+
+        return `${mm}/${dd}/${yyyy}`;
+    };
+
+    const isGender = (gender: string) => {
+        return gender === 'm' ? 'Male' : 'Female'
+    }
+
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
 
     return (
         <>
@@ -131,10 +170,10 @@ const PersonDetail: React.FC = () => {
 
                         <div className="grid grid-cols-1 gap-4 text-sm text-gray-300">
                             {resPerson?.date_of_birth &&
-                                <p><span className="font-semibold text-cyan-400">Born: </span> {resPerson?.date_of_birth}</p>
+                                <p><span className="font-semibold text-cyan-400">Born: </span> {convertDate(resPerson?.date_of_birth)}</p>
                             }
                             {resPerson?.gender &&
-                                <p><span className="font-semibold text-cyan-400">Gender: </span> {resPerson?.gender}</p>
+                                <p><span className="font-semibold text-cyan-400">Gender: </span> {isGender(resPerson?.gender)}</p>
                             }
                             {resPerson?.place_of_birth &&
                                 <p><span className="font-semibold text-cyan-400">Place of Birth: </span>
@@ -145,91 +184,93 @@ const PersonDetail: React.FC = () => {
 
                         <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
                             <a href={`https://www.imdb.com/name/${resPerson?.imdb_id}`}
-                                className="px-6 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/30 transition-all duration-300">
+                                className="px-6 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/30 transition-all duration-300">
                                 View on IMDb
                             </a>
-                            <span className="px-6 py-2 rounded-full border border-gray-600 bg-gray-800/50 text-gray-300">
+                            <span className="px-6 py-2 rounded-xl border border-gray-600 bg-gray-800/50 text-gray-300">
                                 Relevance: {resPerson?.relevance_percentile}
                             </span>
                         </div>
                     </div>
                 </section>
-                <section>
-                    <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                        <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Known For</h3>
-                    </div>
-                    <div className="w-full grid mx-auto mt-5">
-                        <Carousel
-                            responsive={responsive}
-                            draggable //truot tren pc, laptop
-                            swipeable //vuot tren mobile
-                            arrows={true} //mui ten
-                            infinite //truot vo hang 2 huong
-                            minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                            itemClass="p-2 rounded-[10px]"
-                            containerClass="flex w-full relative overflow-hidden items-center"
-                            className="w-full"
-                            keyBoardControl //su dung phim de dieu huong
-                            showDots={false} //hiển cham o duoi
-                            renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                            focusOnSelect={false}
-                            centerMode={false}
-                            additionalTransfrom={0}
-                            shouldResetAutoplay
-                            rewind={false} //tua lai
-                            rewindWithAnimation={false} //
-                            rtl={false} //huong bang chuyen (r->l)
-                            renderButtonGroupOutside={false}
-                        >
-                            {resPersonKnowFor.map((res) => (
-                                <button
-                                    key={res.id}
-                                    onClick={() => {
-                                        navigate(`/person-detail/${res.id}`, {
-                                            state: { idPersonDetail: res.id },
-                                        });
-                                    }}
-                                    className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
+                {resPersonKnowFor.length > 0 &&
+                    <section>
+                        <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                            <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Known For</h3>
+                        </div>
+                        <div className="w-full grid mx-auto mt-5">
+                            <Carousel
+                                responsive={responsive}
+                                draggable //truot tren pc, laptop
+                                swipeable //vuot tren mobile
+                                arrows={true} //mui ten
+                                infinite //truot vo hang 2 huong
+                                minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                itemClass="p-2 rounded-[10px]"
+                                containerClass="flex w-full relative overflow-hidden items-center"
+                                className="w-full"
+                                keyBoardControl //su dung phim de dieu huong
+                                showDots={false} //hiển cham o duoi
+                                renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                focusOnSelect={false}
+                                centerMode={false}
+                                additionalTransfrom={0}
+                                shouldResetAutoplay
+                                rewind={false} //tua lai
+                                rewindWithAnimation={false} //
+                                rtl={false} //huong bang chuyen (r->l)
+                                renderButtonGroupOutside={false}
+                            >
+                                {resPersonKnowFor.map((res) => (
+                                    <button
+                                        key={res.id}
+                                        onClick={() => {
+                                            navigate(`/person-detail/${res.id}`, {
+                                                state: { idPersonDetail: res.id },
+                                            });
+                                        }}
+                                        className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
                border border-gray-700/50 bg-gray-900/40 
                hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
                transition-all duration-300 ease-in-out"
-                                >
-                                    {/* Ảnh */}
-                                    <img
-                                        src={res.headshot_url}
-                                        alt={res.full_name}
-                                        className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
+                                    >
+                                        {/* Ảnh */}
+                                        <img
+                                            src={res.headshot_url}
+                                            alt={res.full_name}
+                                            className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
                    group-hover:scale-110"
-                                    />
+                                        />
 
-                                    {/* Overlay đậm hơn giúp text rõ */}
-                                    <div className="absolute inset-0 bg-gradient-to-t 
+                                        {/* Overlay đậm hơn giúp text rõ */}
+                                        <div className="absolute inset-0 bg-gradient-to-t 
                     from-black/90 via-black/60 to-black/20
                     opacity-80 group-hover:opacity-100 
                     transition-opacity duration-300 ease-in-out">
-                                    </div>
+                                        </div>
 
-                                    {/* Thông tin */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
-                                        <h3 className="text-white font-semibold text-lg leading-tight 
+                                        {/* Thông tin */}
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                                            <h3 className="text-white font-semibold text-lg leading-tight 
                        drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] 
                        group-hover:text-cyan-300 transition-colors duration-300">
-                                            {res.full_name}
-                                        </h3>
-                                        
-                                    </div>
+                                                {res.full_name}
+                                            </h3>
 
-                                    {/* Badge thứ tự */}
-                                    <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
-                     px-2 py-[1px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-                                        #{res.relevance_percentile}
-                                    </span>
-                                </button>
-                            ))}
-                        </Carousel>
-                    </div>
+                                        </div>
 
-                </section>
+                                        {/* Badge thứ tự */}
+                                        <span className="absolute top-2 right-2 bg-cyan-500/90 text-white text-xs font-bold 
+                     px-2 py-[2px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                                            {res.relevance_percentile}
+                                        </span>
+                                    </button>
+                                ))}
+                            </Carousel>
+                        </div>
+
+                    </section>
+                }
             </div>
             <ToastContainer position="top-right" autoClose={3000} />
         </>

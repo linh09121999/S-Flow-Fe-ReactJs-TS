@@ -22,7 +22,7 @@ const Genres: React.FC = () => {
             setResGenres(res.data)
         } catch (error: any) {
             console.error("Lỗi khi gọi API getGenres", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
+            toast.error(`Genres: `+ error.response?.data?.statusMessage)
         } finally {
             setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }

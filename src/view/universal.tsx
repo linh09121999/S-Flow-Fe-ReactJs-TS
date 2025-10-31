@@ -163,8 +163,7 @@ const Universal: React.FC = () => {
     //         const res = await getGenres()
     //         setResGenres(res.data)
     //     } catch (error: any) {
-    //         console.error("Lỗi khi gọi API getGenres", error)
-    //         toast.error(error.response?.statusMessage || "Lỗi khi gọi API getGenres")
+    //         toast.error(`Genres: `+ error.response?.data?.statusMessage)
     //     }finally {
     //     setLoading(false); // 👈 tắt loading sau khi có dữ liệu
     // }
@@ -176,8 +175,7 @@ const Universal: React.FC = () => {
             const res = await getSources()
             setResSources(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getApiSources", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getApiSources")
+            toast.error(`Sources: `+ error.response?.data?.statusMessage)
         } finally {
             setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
@@ -189,8 +187,7 @@ const Universal: React.FC = () => {
             const res = await getStreamingReleases()
             setResStreamingRelease(res.data.releases)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getStreamingReleases", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getStreamingReleases")
+            toast.error(`Streaming Releases: `+ error.response?.data?.statusMessage)
         } finally {
             setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }

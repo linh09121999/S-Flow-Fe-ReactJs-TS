@@ -61,8 +61,7 @@ const Sources: React.FC = () => {
             const res = await getSources()
             setResSources(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getApiSources", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getApiSources")
+            toast.error(`Sources: `+ error.response?.data?.statusMessage)
         } finally {
             setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }

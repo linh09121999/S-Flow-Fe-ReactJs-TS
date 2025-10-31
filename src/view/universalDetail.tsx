@@ -22,7 +22,7 @@ import {
 } from '../state/useTitleState'
 import { useStateGeneral } from '../state/useStateGeneral'
 import { useGlobal } from "../context/GlobalContext";
-import { Dialog, DialogContent } from "@mui/material";
+import { Dialog, DialogContent, Backdrop, CircularProgress } from "@mui/material";
 
 const UniversalDetail: React.FC = () => {
     const { setSelectNav, setIsCastCrew } = useStateGeneral()
@@ -57,56 +57,70 @@ const UniversalDetail: React.FC = () => {
         }
     };
 
+    const [loading, setLoading] = useState<boolean>(true);
+
+
     const getApiTitleDetails = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleDetails(titleId)
             setResTitleDetail(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleDetails", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleDetails")
+            toast.error(`Title Details ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     const getApiTitleStreamingSources = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleStreamingSources(titleId)
             setResTitleStreamingSource(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleStreamingSources", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleStreamingSources")
+            toast.error(`Title Streaming Sources ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     const getApiTitleSeasons = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleSeasons(titleId)
-            if (res.data.lenght > 0) {
-                setResTitleSeasons(res.data)
+            setResTitleSeasons(res.data)
+
+            if (res.data.length > 0) {
                 setSelectSeasons(res.data[0].id)
             }
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleSeasons", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleSeasons")
+            toast.error(`Title Seasons ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     const getApiTitleEpisodes = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleEpisodes(titleId)
             setResTitleEpisode(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleEpisodes", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleEpisodes")
+            toast.error(`Title Episodes ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
     const getApiTitleCast_Crew = async (titleId: number) => {
         try {
+            setLoading(true);
             const res = await getTitleCast_Crew(titleId)
             setResTitleCastCrew(res.data)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getTitleCast_Crew", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getTitleCast_Crew")
+            toast.error(`Title Cast/Crew ${titleId}: ` + error.response?.data?.statusMessage)
+        } finally {
+            setLoading(false); // 👈 tắt loading sau khi có dữ liệu
         }
     }
 
@@ -114,14 +128,19 @@ const UniversalDetail: React.FC = () => {
     const { idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        getApiTitleDetails(idDetail)
-        getApiTitleStreamingSources(idDetail)
-        getApiTitleSeasons(idDetail)
-        getApiTitleEpisodes(idDetail)
-        getApiTitleCast_Crew(idDetail)
+        if (idDetail) {
+            // getApiTitleDetails(idDetail)
+            // getApiTitleStreamingSources(idDetail)
+            // getApiTitleSeasons(idDetail)
+            // getApiTitleEpisodes(idDetail)
+            // getApiTitleCast_Crew(idDetail)
+        } else {
+            navigate('/universal')
+        }
+
     }, [])
 
-    const { icons, imgs } = useGlobal()
+    const { icons, imgs, styleContent } = useGlobal()
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.onerror = null; // tránh vòng lặp vô hạn
@@ -162,6 +181,17 @@ const UniversalDetail: React.FC = () => {
         return `${mm}/${dd}/${yyyy}`;
     };
 
+    if (loading) return (
+        <>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
+    )
+
     return (
         <>
             <div className='w-full sticky z-[999] md:top-[80px] top-[73px] backdrop-blur-[10px]'>
@@ -171,7 +201,7 @@ const UniversalDetail: React.FC = () => {
                 </div>
             </div>
             <div className="max-w-[1535px] mx-auto flex flex-col lg:gap-20 gap-6 py-5">
-                <section className="relative bg-black max-lg:flex max-lg:flex-col max-lg:gap-6">
+                <section className="relative max-lg:flex max-lg:flex-col max-lg:gap-6">
                     <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl">
                         {/* Background Image */}
                         <div className="relative w-full aspect-[16/9]">
@@ -202,7 +232,7 @@ const UniversalDetail: React.FC = () => {
                                             <p>{resTitleDetail.us_rating}</p>
                                         </div>
                                     )}
-                                    <p className="uppercase">{resTitleDetail?.type}</p>
+                                    <p className="uppercase">{styleContent(resTitleDetail?.type!)}</p>
                                     <p>{resTitleDetail?.year}</p>
                                     <p className="capitalize">{resTitleDetail?.original_language}</p>
 
@@ -227,16 +257,16 @@ const UniversalDetail: React.FC = () => {
                                     {/* Trailer Button */}
                                     <button
                                         onClick={() => setModalOpen(true)}
-                                        className="flex items-center gap-3 px-7 py-2 bg-cyan-600 text-white font-bold text-lg rounded-xl shadow-md shadow-cyan-400/30 hover:shadow-cyan-400/60 hover:scale-[1.03] transition-all duration-300"
+                                        className="flex items-center backdrop-blur-[10px] gap-3 px-6 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/30 transition-all duration-300"
                                     >
                                         <span className="text-2xl">{icons.iconPlay}</span> Trailer
                                     </button>
 
                                     {/* Add to List Button */}
-                                    <button className="flex items-center gap-3 px-7 py-2 bg-white/20 backdrop-blur-md text-white font-semibold text-lg rounded-xl border border-white/30 hover:bg-white/30 hover:scale-[1.03] transition-all duration-300">
-                                        <span className="text-2xl">{icons.iconAdd}</span>
-                                        <p className="max-sm:hidden">Add to My List</p>
-                                    </button>
+                                    <a href={`https://www.imdb.com/title/${resTitleDetail?.imdb_id}`} className="flex backdrop-blur-[10px] items-center gap-2 px-6 py-2 rounded-xl border border-gray-600 bg-gray-800/50 text-gray-300">
+                                        <p className="max-sm:hidden">View on</p>
+                                        <p >IMDb</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -283,23 +313,20 @@ const UniversalDetail: React.FC = () => {
         relative flex flex-col justify-center items-center
         rounded-2xl p-4 w-[45%] sm:w-[30%] md:w-[18%] lg:w-auto
         text-center overflow-hidden
-        bg-gradient-to-br from-cyan-500/80 via-cyan-400/60 to-cyan-600/80
-        backdrop-blur-xl border border-cyan-300/30
-        shadow-lg shadow-cyan-400/20
+        bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/30
+        backdrop-blur-[10px] 
+        shadow-lg 
         transition-all duration-300 ease-in-out
         hover:-translate-y-2 hover:shadow-cyan-300/50 hover:scale-[1.03]
       "
                             >
-                                {/* Hiệu ứng sáng nhẹ */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-cyan-300/20 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-
                                 {/* Giá trị */}
-                                <span className="lg:text-3xl text-2xl font-bold text-black drop-shadow-sm z-10">
+                                <span className="lg:text-3xl text-2xl font-bold drop-shadow-sm z-10">
                                     {item.value}
                                 </span>
 
                                 {/* Nhãn */}
-                                <span className="font-semibold tracking-wide text-cyan-950/90 z-10">
+                                <span className="font-semibold tracking-wide text-cyan-300/50 z-10">
                                     {item.label}
                                 </span>
                             </div>
@@ -370,25 +397,21 @@ const UniversalDetail: React.FC = () => {
                                 <div className="text-lg text-white/70 mt-5 gap-6 flex flex-col">
 
                                     {resTitleSeasons.length > 0 &&
-                                        <div className="relative w-full">
+                                        <div className=" w-full">
                                             {/* Container cuộn ngang */}
                                             <div
-                                                className="
-      flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-2 py-3
-      snap-x snap-mandatory
-    "
+                                                className="flex gap-1 sm:gap-2 md:gap-3 overflow-x-auto scroll-x pb-2 sm:pb-0 scrollbar-hide"
                                             >
                                                 {resTitleSeasons.map((res) => (
                                                     <button
                                                         key={res.id}
                                                         onClick={() => setSelectSeasons(res.id)}
                                                         className={`
-          snap-start flex-shrink-0 px-6 py-2.5 text-base sm:text-lg font-semibold
-          rounded-xl border transition-all duration-300 ease-out
-          shadow-md hover:shadow-cyan-400/30
+          border flex-shrink-0 transition-all duration-300 ease-in-out hover:text-cyan-300
+                        h-[40px] px-3 rounded-lg text-lg shadow-2xl bg-gradient-to-br from-gray-900 via-gray-950 to-black
           ${selectSeasons === res.id
-                                                                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white border-cyan-400 shadow-cyan-500/40 scale-[1.05]"
-                                                                : "bg-gray-900/60 border-gray-700 text-white/70 hover:text-cyan-300 hover:border-cyan-400"
+                                                                ? "text-cyan-300 border-cyan-500"
+                                                                : "border-cyan-500/20"
                                                             }
         `}
                                                     >
@@ -438,11 +461,11 @@ const UniversalDetail: React.FC = () => {
                                                             <p className="text-sm text-white/70 line-clamp-2">{res.overview}</p>
                                                             <div className="flex flex-wrap gap-2 text-xs text-gray-300 mt-2">
                                                                 <span><strong>{res.sources.length} </strong>sources</span>
-                                                                <div className="w-[1px] h-full bg-gray-500"></div>
+                                                                <div className="w-[1px] h-[15px] bg-gray-500"></div>
                                                                 <span><strong>{res.season_number} </strong>seasons</span>
-                                                                <div className="w-[1px] h-full bg-gray-500"></div>
+                                                                <div className="w-[1px] h-[15px] bg-gray-500"></div>
                                                                 <span><strong>{res.episode_number} </strong>seasons</span>
-                                                                <div className="w-[1px] h-full bg-gray-500"></div>
+                                                                <div className="w-[1px] h-[15px] bg-gray-500"></div>
                                                                 <span>{convertDateEpisodes(res.release_date)}</span>
                                                             </div>
                                                         </div>
@@ -458,7 +481,7 @@ const UniversalDetail: React.FC = () => {
                                                                 onError={handleImgError}
                                                                 className=" object-cover rounded-l-2xl transition-transform duration-300 group-hover:scale-110"
                                                             />
-                                                            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/45 to-gray-950/90"></div>
                                                             <span className="absolute backdrop-blur-[10px] bottom-3 right-3 text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 px-3 py-1 rounded-full">
                                                                 {res.runtime_minutes ?? 0} m
                                                             </span>
@@ -491,15 +514,6 @@ const UniversalDetail: React.FC = () => {
                                                         <div className={`${res.sources.length === 0 ? 'hidden' : ''} absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col justify-center items-start p-6 gap-3`}>
                                                             <h4 className="text-cyan-300 font-semibold text-lg">Sources</h4>
                                                             <div className="flex flex-wrap gap-2">
-                                                                {/* {res.sources.map((sour) => (
-                                                                    <button
-                                                                        key={sour.name}
-                                                                        className="px-3 py-1 text-sm rounded-lg border border-cyan-300/40 bg-cyan-400/10 hover:bg-cyan-400/20 transition-all duration-300"
-                                                                        style={styleColor(res.id)}
-                                                                    >
-                                                                        {sour.name}
-                                                                    </button>
-                                                                ))} */}
                                                                 {Object.values(
                                                                     res.sources.reduce((acc: Record<number, Source & { regions: string[] }>, sour) => {
                                                                         if (acc[sour.source_id]) {
@@ -550,198 +564,109 @@ const UniversalDetail: React.FC = () => {
                                 </div>
                             </div>
                         }
-                        {resTitleCast.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
-                                <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Cast</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
-                                        onClick={() => {
-                                            navigate(`/cast-crew/${idDetail}`, { state: { idDetail: idDetail } })
-                                            setIsCastCrew(0)
-                                        }}
-                                    >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
-                                </div>
-                                <div className="w-full grid mx-auto mt-5">
-                                    <Carousel
-                                        responsive={responsive}
-                                        draggable //truot tren pc, laptop
-                                        swipeable //vuot tren mobile
-                                        arrows={true} //mui ten
-                                        infinite //truot vo hang 2 huong
-                                        minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                        itemClass="p-2 rounded-[10px]"
-                                        containerClass="flex w-full relative overflow-hidden items-center"
-                                        className="w-full"
-                                        keyBoardControl //su dung phim de dieu huong
-                                        showDots={false} //hiển cham o duoi
-                                        renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                        focusOnSelect={false}
-                                        centerMode={false}
-                                        additionalTransfrom={0}
-                                        shouldResetAutoplay
-                                        rewind={false} //tua lai
-                                        rewindWithAnimation={false} //
-                                        rtl={false} //huong bang chuyen (r->l)
-                                        renderButtonGroupOutside={false}
-                                    >
-                                        {resTitleCast.map((res) => (
-                                            <button
-                                                key={res.person_id}
-                                                onClick={() => {
-                                                    navigate(`/person-detail/${res.person_id}`, {
-                                                        state: {
-                                                            idPersonDetail: res.person_id,
-                                                            idDetail: idDetail
-                                                        },
-                                                    });
-                                                }}
-                                                className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
+
+                        {[
+                            { data: resTitleCast, title: 'Cast', select: 0 },
+                            { data: resTitleCrew, title: 'Crew', select: 1 },
+                        ].map(({ data, title, select }) => (
+                            data.length > 0 && (
+                                <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
+                                    <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
+                                        <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">{title}</h3>
+                                        <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
+                                            onClick={() => {
+                                                navigate(`/cast-crew/${idDetail}`, { state: { idDetail: idDetail } })
+                                                setIsCastCrew(select)
+                                            }}
+                                        >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
+                                    </div>
+                                    <div className="w-full grid mx-auto mt-5">
+                                        <Carousel
+                                            responsive={responsive}
+                                            draggable //truot tren pc, laptop
+                                            swipeable //vuot tren mobile
+                                            arrows={true} //mui ten
+                                            infinite //truot vo hang 2 huong
+                                            minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
+                                            itemClass="p-2 rounded-[10px]"
+                                            containerClass="flex w-full relative overflow-hidden items-center"
+                                            className="w-full"
+                                            keyBoardControl //su dung phim de dieu huong
+                                            showDots={false} //hiển cham o duoi
+                                            renderDotsOutside={true} // hien thi cham ngoai vung chua nd
+                                            focusOnSelect={false}
+                                            centerMode={false}
+                                            additionalTransfrom={0}
+                                            shouldResetAutoplay
+                                            rewind={false} //tua lai
+                                            rewindWithAnimation={false} //
+                                            rtl={false} //huong bang chuyen (r->l)
+                                            renderButtonGroupOutside={false}
+                                        >
+                                            {data.map((res) => (
+                                                <button
+                                                    key={res.person_id}
+                                                    onClick={() => {
+                                                        navigate(`/person-detail/${res.person_id}`, {
+                                                            state: {
+                                                                idPersonDetail: res.person_id,
+                                                                idDetail: idDetail
+                                                            },
+                                                        });
+                                                    }}
+                                                    className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
                border border-gray-700/50 bg-gray-900/40 
                hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
                transition-all duration-300 ease-in-out"
-                                            >
-                                                {/* Ảnh */}
-                                                <img
-                                                    src={res.headshot_url}
-                                                    alt={res.full_name}
-                                                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
+                                                >
+                                                    {/* Ảnh */}
+                                                    <img
+                                                        src={res.headshot_url}
+                                                        alt={res.full_name}
+                                                        className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
                    group-hover:scale-110"
-                                                />
+                                                    />
 
-                                                {/* Overlay đậm hơn giúp text rõ */}
-                                                <div className="absolute inset-0 bg-gradient-to-t 
-                    from-black/90 via-black/60 to-black/20
-                    opacity-80 group-hover:opacity-100 
+                                                    {/* Overlay đậm hơn giúp text rõ */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t 
+                    from-black/90 via-black/60 to-black/30
+                    opacity-90 group-hover:opacity-100 
                     transition-opacity duration-300 ease-in-out">
-                                                </div>
+                                                    </div>
 
-                                                {/* Thông tin */}
-                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
-                                                    <h3 className="text-white font-semibold text-lg leading-tight 
+                                                    {/* Thông tin */}
+                                                    <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                                                        <h3 className="text-white font-semibold text-lg leading-tight 
                        drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] 
                        group-hover:text-cyan-300 transition-colors duration-300">
-                                                        {res.full_name}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-300 group-hover:text-cyan-200/80 
+                                                            {res.full_name}
+                                                        </h3>
+                                                        <p className="text-sm text-gray-300 group-hover:text-cyan-200/80 
                       drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-                                                        {res.role}
-                                                    </p>
-                                                    {res.episode_count && (
-                                                        <span className="mt-1 inline-block text-xs text-white/80 
+                                                            {res.role}
+                                                        </p>
+                                                        {res.episode_count && (
+                                                            <span className="mt-1 inline-block text-xs text-white/80 
                              bg-cyan-500/30 px-2 py-[2px] rounded-full 
                              backdrop-blur-sm border border-cyan-400/30">
-                                                            {res.episode_count} Episodes
-                                                        </span>
-                                                    )}
-                                                </div>
+                                                                {res.episode_count} Episodes
+                                                            </span>
+                                                        )}
+                                                    </div>
 
-                                                {/* Badge thứ tự */}
-                                                <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
-                     px-2 py-[1px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-                                                    #{res.order}
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </Carousel>
+                                                    {/* Badge thứ tự */}
+                                                    <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
+                     px-2 py-[2px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                                                        #{res.order}
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </Carousel>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        {resTitleCrew.length > 0 &&
-                            <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
-                                <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
-                                    <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Crew</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
-                                        onClick={() => {
-                                            navigate(`/cast-crew/${idDetail}`, { state: { idDetail: idDetail } })
-                                            setIsCastCrew(1)
-                                        }}
-                                    >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
-                                </div>
-                                <div className="w-full grid mx-auto mt-5">
-                                    <Carousel
-                                        responsive={responsive}
-                                        draggable //truot tren pc, laptop
-                                        swipeable //vuot tren mobile
-                                        arrows={true} //mui ten
-                                        infinite //truot vo hang 2 huong
-                                        minimumTouchDrag={100} // kcach keo vuot cac trang tiep theo
-                                        itemClass="p-2 rounded-[10px]"
-                                        containerClass="flex w-full relative overflow-hidden items-center"
-                                        className="w-full"
-                                        keyBoardControl //su dung phim de dieu huong
-                                        showDots={false} //hiển cham o duoi
-                                        renderDotsOutside={true} // hien thi cham ngoai vung chua nd
-                                        focusOnSelect={false}
-                                        centerMode={false}
-                                        additionalTransfrom={0}
-                                        shouldResetAutoplay
-                                        rewind={false} //tua lai
-                                        rewindWithAnimation={false} //
-                                        rtl={false} //huong bang chuyen (r->l)
-                                        renderButtonGroupOutside={false}
-                                    >
-                                        {resTitleCrew.slice(0, 10).map((res) => (
-                                            <button
-                                                key={res.person_id}
-                                                onClick={() => {
-                                                    navigate(`/person-detail/${res.person_id}`, {
-                                                        state: {
-                                                            idPersonDetail: res.person_id,
-                                                            idDetail: idDetail
-                                                        },
-                                                    });
-                                                }}
-                                                className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
-               border border-gray-700/50 bg-gray-900/40 
-               hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
-               transition-all duration-300 ease-in-out"
-                                            >
-                                                {/* Ảnh */}
-                                                <img
-                                                    src={res.headshot_url}
-                                                    alt={res.full_name}
-                                                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
-                   group-hover:scale-110"
-                                                />
+                            )
+                        ))}
 
-                                                {/* Overlay đậm hơn giúp text rõ */}
-                                                <div className="absolute inset-0 bg-gradient-to-t 
-                    from-black/90 via-black/60 to-black/20
-                    opacity-80 group-hover:opacity-100 
-                    transition-opacity duration-300 ease-in-out">
-                                                </div>
-
-                                                {/* Thông tin */}
-                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
-                                                    <h3 className="text-white font-semibold text-lg leading-tight 
-                       drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] 
-                       group-hover:text-cyan-300 transition-colors duration-300">
-                                                        {res.full_name}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-300 group-hover:text-cyan-200/80 
-                      drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-                                                        {res.role}
-                                                    </p>
-                                                    {res.episode_count && (
-                                                        <span className="mt-1 inline-block text-xs text-white/80 
-                             bg-cyan-500/30 px-2 py-[2px] rounded-full 
-                             backdrop-blur-sm border border-cyan-400/30">
-                                                            {res.episode_count} Episodes
-                                                        </span>
-                                                    )}
-                                                </div>
-
-                                                {/* Badge thứ tự */}
-                                                <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
-                     px-2 py-[1px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-                                                    #{res.order}
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </Carousel>
-                                </div>
-                            </div>
-                        }
                     </section>
                     <aside className="flex flex-col gap-6 self-start max-lg:row-start-1">
                         <div className="relative group w-full max-lg:hidden">

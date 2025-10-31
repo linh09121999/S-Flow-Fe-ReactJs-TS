@@ -164,8 +164,7 @@ const Header: React.FC = () => {
             const res = await getAutocomplete(searchValue, searchType)
             setResAutocomplate(res.data.results)
         } catch (error: any) {
-            console.error("Lỗi khi gọi API getAutocomplete", error)
-            toast.error(error.response?.statusMessage || "Lỗi khi gọi API getAutocomplete")
+            toast.error(`Autocomplete ${searchValue}: ` + error.response?.data?.statusMessage)
         } finally {
             setLoading(false);        // 👉 tắt trạng thái loading
         }
