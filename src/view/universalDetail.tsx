@@ -129,11 +129,11 @@ const UniversalDetail: React.FC = () => {
     useEffect(() => {
         setSelectNav(1)
         if (idDetail) {
-            // getApiTitleDetails(idDetail)
-            // getApiTitleStreamingSources(idDetail)
-            // getApiTitleSeasons(idDetail)
-            // getApiTitleEpisodes(idDetail)
-            // getApiTitleCast_Crew(idDetail)
+            getApiTitleDetails(idDetail)
+            getApiTitleStreamingSources(idDetail)
+            getApiTitleSeasons(idDetail)
+            getApiTitleEpisodes(idDetail)
+            getApiTitleCast_Crew(idDetail)
         } else {
             navigate('/universal')
         }

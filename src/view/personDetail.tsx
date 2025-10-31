@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useStateGeneral } from "../state/useStateGeneral";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { useResPersonState, type ResPerson } from "../state/usePersonState";
+import { useResPersonState} from "../state/usePersonState";
 import { getPerson } from "../services/userService";
 import { useGlobal } from "../context/GlobalContext";
 import Carousel from "react-multi-carousel";
@@ -10,7 +10,7 @@ import "react-multi-carousel/lib/styles.css";
 import { Backdrop, CircularProgress } from '@mui/material'
 
 const PersonDetail: React.FC = () => {
-    const { setSelectNav, setIsCastCrew, isCastCrew } = useStateGeneral()
+    const { setSelectNav} = useStateGeneral()
     const navigate = useNavigate()
     const { icons } = useGlobal()
 

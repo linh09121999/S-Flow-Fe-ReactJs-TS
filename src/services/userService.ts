@@ -1,5 +1,5 @@
 import api from "./api";
-import axios, { type AxiosResponse } from "axios";
+// import axios, { type AxiosResponse } from "axios";
 
 const apiKey = "lGkuiGv3PZJv2QDWPDwq6FNvU9TL2TyrJdHuh2da"//"MeJ9yXbaCnQB8bwfrDDrUQW3bicFP4VcbPLWeVCH"
 
@@ -24,14 +24,14 @@ export const getAutocomplete = (
 
 export const getTitleDetails = (
     titleId: number,
-    appendToResponse?: string,
-    language?: string,
-    regions?: string
+    // appendToResponse?: string,
+    // language?: string,
+    // regions?: string
 ) => api.get(`/v1/title/${titleId}/details/?apiKey=${apiKey}`)
 
 export const getTitleStreamingSources = (
     titleId: number,
-    regions?: string
+    // regions?: string
 ) => api.get(`/v1/title/${titleId}/sources/?apiKey=${apiKey}`)
 
 export const getTitleSeasons = (
@@ -49,28 +49,28 @@ export const getTitleCast_Crew = (
 
 export const getListTitles = (
     types?: string,
-    regions?: string,
-    languages?: string[],
-    sourceTypes?: string,
+    // regions?: string,
+    // languages?: string[],
+    // sourceTypes?: string,
     sourceIds?: string,
-    genres?: string,
-    networkIds?: string,
+    // genres?: string,
+    // networkIds?: string,
     sortBy?: string,
-    releaseDateStart?: number,
-    releaseDateEnd?: number,
-    userRatingHigh?: number,
-    userRatingLow?: number,
-    criticScoreHigh?: number,
-    criticScoreLow?: number,
-    personId?: number,
-    page?: number,
-    limit?: number
+    // releaseDateStart?: number,
+    // releaseDateEnd?: number,
+    // userRatingHigh?: number,
+    // userRatingLow?: number,
+    // criticScoreHigh?: number,
+    // criticScoreLow?: number,
+    // personId?: number,
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/list-titles/?apiKey=${apiKey}&source_ids=${sourceIds}&types=${types}&sortBy=${sortBy}`)
 
 export const getStreamingReleases = (
-    startDate?: number,
-    endDate?: number,
-    limit?: number
+    // startDate?: number,
+    // endDate?: number,
+    // limit?: number
 ) => api.get(`/v1/releases/?apiKey=${apiKey}`)
 
 export const getPerson = (
@@ -78,40 +78,40 @@ export const getPerson = (
 ) => api.get(`/v1/person/${personId}?apiKey=${apiKey}`)
 
 export const getNewTitles = (
-    startDate?: number,
-    endDate?: number,
+    // startDate?: number,
+    // endDate?: number,
     types?: string,
-    page?: number,
-    limit?: number
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/changes/new_titles?apiKey=${apiKey}&types=${types}`)
 
 export const getNewPeople = (
-    startDate?: number,
-    endDate?: number,
-    page?: number,
-    limit?: number
+    // startDate?: number,
+    // endDate?: number,
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/changes/new_people/?apiKey=${apiKey}`)
 
 export const getTitlesWithChangedSources = (
-    startDate?: number,
-    endDate?: number,
+    // startDate?: number,
+    // endDate?: number,
     types?: string,
-    regions?: string,
-    page?: number,
-    limit?: number
+    // regions?: string,
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/changes/titles_sources_changed/?apiKey=${apiKey}&types=${types}`)
 
 export const getTitlesWithChangedDetails = (
-    startDate?: number,
-    endDate?: number,
+    // startDate?: number,
+    // endDate?: number,
     types?: string,
-    page?: number,
-    limit?: number
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/changes/titles_details_changed/?apiKey=${apiKey}&types=${types}`)
 
 export const getTitlesWithChangedEpisodes = (
-    startDate?: number,
-    endDate?: number,
-    page?: number,
-    limit?: number
+    // startDate?: number,
+    // endDate?: number,
+    // page?: number,
+    // limit?: number
 ) => api.get(`/v1/changes/titles_episodes_changed/?apiKey=${apiKey}`)
