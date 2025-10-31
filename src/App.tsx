@@ -1,5 +1,5 @@
-import React, { Suspense, useEffect } from 'react';
-import { HashRouter, Route, Routes, Navigate, Outlet, BrowserRouter } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { Route, Routes, Navigate, Outlet, BrowserRouter } from 'react-router-dom';
 
 import { Footer, Header, BackToTop } from './components';
 
@@ -9,6 +9,9 @@ const Region = React.lazy(() => import('./view/region'));
 const Genres = React.lazy(() => import('./view/genres'));
 const Universal = React.lazy(() => import('./view/universal'));
 const UniversalDetail = React.lazy(() => import('./view/universalDetail'));
+const CastCrew = React.lazy(() => import('./view/cast_crew'));
+const PersonDetail = React.lazy(() => import('./view/personDetail'));
+
 
 const ProtectedRoute: React.FC = () => {
   // const { isMobile } = useGlobalContext();
@@ -38,7 +41,9 @@ const App: React.FC = () => {
             <Route path='/sources' element={<Sources />} />
             <Route path='/genres' element={<Genres />} />
             <Route path='/region' element={<Region />} />
+            <Route path='/cast-crew/:id' element={<CastCrew />} />
             <Route path='/universal-detail/:id' element={<UniversalDetail />} />
+            <Route path='/person-detail/:id' element={<PersonDetail />} />
           </Route>
         </Routes>
       </Suspense>

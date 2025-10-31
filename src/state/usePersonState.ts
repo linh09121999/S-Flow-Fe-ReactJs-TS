@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-interface ResPerson {
+export interface ResPerson {
     id: number;
     full_name: string;
     first_name: string;
@@ -23,10 +23,14 @@ interface ResPersonState {
     resPerson: ResPerson | undefined;
     setResPerson: (data: ResPerson) => void;
     clearResPerson: () => void;
+    resPersonKnowFor: ResPerson[];
+    setResPersonKnowFor: (data: ResPerson[]) => void;
 }
 
 export const useResPersonState = create<ResPersonState>((set) => ({
     resPerson: undefined,
     setResPerson: (data) => set({ resPerson: data }),
-    clearResPerson: () => set({ resPerson: undefined })
+    clearResPerson: () => set({ resPerson: undefined }),
+    resPersonKnowFor: [],
+    setResPersonKnowFor: (data) => set({ resPersonKnowFor: data }),
 }))

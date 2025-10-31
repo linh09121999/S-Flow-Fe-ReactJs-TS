@@ -5,6 +5,8 @@ interface State {
     setSelectNav: (nav: number) => void;
     checkedSources: number[];
     setCheckedSources: React.Dispatch<React.SetStateAction<number[]>>;
+    isCastCrew: number;
+    setIsCastCrew: (isCastCrew: number) => void;
 }
 
 export const useStateGeneral = create<State>((set) => ({
@@ -18,4 +20,6 @@ export const useStateGeneral = create<State>((set) => ({
                     ? (value as (prev: number[]) => number[])(state.checkedSources)
                     : value,
         })),
+    isCastCrew: 0,
+    setIsCastCrew: (isCheck) => set({ isCastCrew: isCheck }),
 }))

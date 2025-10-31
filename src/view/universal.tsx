@@ -903,7 +903,7 @@ const Universal: React.FC = () => {
                                             state: { idDetail: res.id },
                                         })
                                     }
-                                    className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-400/40 transition-all duration-300 ease-in-out"
+                                    className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 ease-in-out"
                                 >
                                     {/* Poster background */}
                                     <img

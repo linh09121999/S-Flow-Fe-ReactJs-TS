@@ -25,7 +25,7 @@ import { useGlobal } from "../context/GlobalContext";
 import { Dialog, DialogContent } from "@mui/material";
 
 const UniversalDetail: React.FC = () => {
-    const { setSelectNav } = useStateGeneral()
+    const { setSelectNav, setIsCastCrew } = useStateGeneral()
     const navigate = useNavigate()
 
     const { resTitleDetail, setResTitleDetail } = useResTitleDetailState()
@@ -114,11 +114,11 @@ const UniversalDetail: React.FC = () => {
     const { idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        // getApiTitleDetails(idDetail)
-        // getApiTitleStreamingSources(idDetail)
-        // getApiTitleSeasons(idDetail)
-        // getApiTitleEpisodes(idDetail)
-        // getApiTitleCast_Crew(idDetail)
+        getApiTitleDetails(idDetail)
+        getApiTitleStreamingSources(idDetail)
+        getApiTitleSeasons(idDetail)
+        getApiTitleEpisodes(idDetail)
+        getApiTitleCast_Crew(idDetail)
     }, [])
 
     const { icons, imgs } = useGlobal()
@@ -166,9 +166,6 @@ const UniversalDetail: React.FC = () => {
         <>
             <div className='w-full sticky z-[999] md:top-[80px] top-[73px] backdrop-blur-[10px]'>
                 <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
-                    <div
-                        onClick={() => navigate("/universal")}
-                        className='transition duration-300 ease css-icon'>Universal</div>
                     <span>{icons.iconNext}</span>
                     <div className='transition duration-300 ease css-icon'>Detail</div>
                 </div>
@@ -557,7 +554,12 @@ const UniversalDetail: React.FC = () => {
                             <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                     <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Cast</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide">View all <span className="text-cyan-300">{icons.iconNext}</span></button>
+                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
+                                        onClick={() => {
+                                            navigate(`/cast-crew/${idDetail}`, { state: { idDetail: idDetail } })
+                                            setIsCastCrew(0)
+                                        }}
+                                    >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                                 </div>
                                 <div className="w-full grid mx-auto mt-5">
                                     <Carousel
@@ -583,18 +585,62 @@ const UniversalDetail: React.FC = () => {
                                         renderButtonGroupOutside={false}
                                     >
                                         {resTitleCast.map((res) => (
-                                            <div
+                                            <button
                                                 key={res.person_id}
-                                                className="flex flex-col items-center gap-2 group"
+                                                onClick={() => {
+                                                    navigate(`/person-detail/${res.person_id}`, {
+                                                        state: {
+                                                            idPersonDetail: res.person_id,
+                                                            idDetail: idDetail
+                                                        },
+                                                    });
+                                                }}
+                                                className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
+               border border-gray-700/50 bg-gray-900/40 
+               hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
+               transition-all duration-300 ease-in-out"
                                             >
+                                                {/* Ảnh */}
                                                 <img
                                                     src={res.headshot_url}
                                                     alt={res.full_name}
-                                                    className="w-full aspect-[3/4] object-cover rounded-[10px] transition-all duration-300 ease group-hover:scale-105"
+                                                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
+                   group-hover:scale-110"
                                                 />
-                                                <h3 className="text-lg text-white font-bold transition-all duration-300 ease group-hover:text-cyan-300">{res.full_name}</h3>
-                                                <p className="text-xs text-center text-white/70 transition-all duration-300 ease group-hover:text-cyan-300/70">{res.role}</p>
-                                            </div>
+
+                                                {/* Overlay đậm hơn giúp text rõ */}
+                                                <div className="absolute inset-0 bg-gradient-to-t 
+                    from-black/90 via-black/60 to-black/20
+                    opacity-80 group-hover:opacity-100 
+                    transition-opacity duration-300 ease-in-out">
+                                                </div>
+
+                                                {/* Thông tin */}
+                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                                                    <h3 className="text-white font-semibold text-lg leading-tight 
+                       drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] 
+                       group-hover:text-cyan-300 transition-colors duration-300">
+                                                        {res.full_name}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-300 group-hover:text-cyan-200/80 
+                      drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                                                        {res.role}
+                                                    </p>
+                                                    {res.episode_count && (
+                                                        <span className="mt-1 inline-block text-xs text-white/80 
+                             bg-cyan-500/30 px-2 py-[2px] rounded-full 
+                             backdrop-blur-sm border border-cyan-400/30">
+                                                            {res.episode_count} Episodes
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Badge thứ tự */}
+                                                <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
+                     px-2 py-[1px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                                                    #{res.order}
+                                                </span>
+                                            </button>
                                         ))}
                                     </Carousel>
                                 </div>
@@ -604,7 +650,12 @@ const UniversalDetail: React.FC = () => {
                             <div className="border border-cyan-500/20 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:shadow-cyan-400/30">
                                 <div className="flex justify-between text-white css-next items-center w-full transition-all duration-300 ease">
                                     <h3 className="text-xl font-semibold text-cyan-300 bg-clip-text tracking-wide">Crew</h3>
-                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide">View all <span className="text-cyan-300">{icons.iconNext}</span></button>
+                                    <button className="flex gap-1 items-center text-cyan-300 tracking-wide"
+                                        onClick={() => {
+                                            navigate(`/cast-crew/${idDetail}`, { state: { idDetail: idDetail } })
+                                            setIsCastCrew(1)
+                                        }}
+                                    >View all <span className="text-cyan-300">{icons.iconNext}</span></button>
                                 </div>
                                 <div className="w-full grid mx-auto mt-5">
                                     <Carousel
@@ -630,18 +681,62 @@ const UniversalDetail: React.FC = () => {
                                         renderButtonGroupOutside={false}
                                     >
                                         {resTitleCrew.slice(0, 10).map((res) => (
-                                            <div
+                                            <button
                                                 key={res.person_id}
-                                                className="flex flex-col items-center gap-2 group"
+                                                onClick={() => {
+                                                    navigate(`/person-detail/${res.person_id}`, {
+                                                        state: {
+                                                            idPersonDetail: res.person_id,
+                                                            idDetail: idDetail
+                                                        },
+                                                    });
+                                                }}
+                                                className="group relative w-full aspect-[3/4] overflow-hidden rounded-2xl 
+               border border-gray-700/50 bg-gray-900/40 
+               hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
+               transition-all duration-300 ease-in-out"
                                             >
+                                                {/* Ảnh */}
                                                 <img
                                                     src={res.headshot_url}
                                                     alt={res.full_name}
-                                                    className="w-full aspect-[3/4] object-cover rounded-[10px] transition-all duration-300 ease group-hover:scale-105"
+                                                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out 
+                   group-hover:scale-110"
                                                 />
-                                                <h3 className="text-lg text-white font-bold transition-all duration-300 ease group-hover:text-cyan-300">{res.full_name}</h3>
-                                                <p className="text-xs text-center text-white/70 transition-all duration-300 ease group-hover:text-cyan-300/70">{res.role}</p>
-                                            </div>
+
+                                                {/* Overlay đậm hơn giúp text rõ */}
+                                                <div className="absolute inset-0 bg-gradient-to-t 
+                    from-black/90 via-black/60 to-black/20
+                    opacity-80 group-hover:opacity-100 
+                    transition-opacity duration-300 ease-in-out">
+                                                </div>
+
+                                                {/* Thông tin */}
+                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                                                    <h3 className="text-white font-semibold text-lg leading-tight 
+                       drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] 
+                       group-hover:text-cyan-300 transition-colors duration-300">
+                                                        {res.full_name}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-300 group-hover:text-cyan-200/80 
+                      drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
+                                                        {res.role}
+                                                    </p>
+                                                    {res.episode_count && (
+                                                        <span className="mt-1 inline-block text-xs text-white/80 
+                             bg-cyan-500/30 px-2 py-[2px] rounded-full 
+                             backdrop-blur-sm border border-cyan-400/30">
+                                                            {res.episode_count} Episodes
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Badge thứ tự */}
+                                                <span className="absolute top-2 left-2 bg-cyan-500/90 text-white text-xs font-bold 
+                     px-2 py-[1px] rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                                                    #{res.order}
+                                                </span>
+                                            </button>
                                         ))}
                                     </Carousel>
                                 </div>

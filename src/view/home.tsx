@@ -220,7 +220,7 @@ const Home: React.FC = () => {
                                                         state: { idDetail: res.id },
                                                     })
                                                 }
-                                                className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-400/40 transition-all duration-300 ease-in-out"
+                                                className="relative group w-full aspect-[3/4] rounded-2xl overflow-hidden bg-gray-900 shadow-lg border border-gray-700/50 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 ease-in-out"
                                             >
                                                 {/* Poster background */}
                                                 <img
@@ -309,12 +309,12 @@ const Home: React.FC = () => {
                                 >
                                     {resSources.map((res) => (
                                         <div key={res.id} className="group grid gap-2">
-                                            <button className="flex flex-col gap-2"
+                                            <button className="flex flex-col gap-2 border shadow-lg hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30"
                                                 onClick={() => handleSelectSource(res.id)}
                                             >
                                                 <img src={res.logo_100px} alt={res.name} onError={handleImgError}
                                                     /* grayscale group-hover:grayscale-0 */
-                                                    className="w-[150px] aspect-[1/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
+                                                    className="w-[150px] aspect-[1/1] w-full rounded-[10px] transition-all duration-300 ease group-hover:scale-105" />
                                             </button>
                                         </div>
                                     ))}
@@ -356,7 +356,7 @@ const Home: React.FC = () => {
                                     renderButtonGroupOutside={false}
                                 >
                                     {resRegions.map((res, id) => (
-                                        <div key={id} className="group grid gap-2 relative bg-black">
+                                        <div key={id} className="group grid gap-2 relative bg-black border shadow-lg hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30">
                                             <img src={res.flag} alt={res.name} onError={handleImgError}
                                                 className="w-full aspect-[2/1] rounded-[10px] transition-all duration-300 ease group-hover:scale-105 opacity-40" />
                                             <h3 className="absolute w-full opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
@@ -400,7 +400,7 @@ const Home: React.FC = () => {
                                     renderButtonGroupOutside={false}
                                 >
                                     {resGenres.map((res) => (
-                                        <div key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all duration-300 ease rounded-[10px] hover:scale-105">
+                                        <div key={res.id} className="group justify-center items-center aspect-[2/1] grid bg-gray-900 transition-all border shadow-lg duration-300 ease rounded-[10px] hover:scale-105 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30">
                                             <h3 className="w-full px-2 py-2 opacity-100 text-white/70 font-bold transition-all duration-300 ease text-lg  text-center group-hover:text-xl group-hover:text-white">{res.name}</h3>
                                         </div>
                                     ))}

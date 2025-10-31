@@ -135,12 +135,6 @@ const Sources: React.FC = () => {
         <>
             <div className='w-full sticky z-[999]  md:top-[80px] top-[73px] backdrop-blur-[10px] bg-black/50'>
                 <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl md:text-lg sm:text-base'>
-                    <button
-                        onClick={() => navigate("/")}
-                        className='transition duration-300 ease hover:scale-110 cursor-pointer'
-                    >
-                        {icons.iconHome}
-                    </button>
                     <span className='text-sm'>{icons.iconNext}</span>
                     <div className='transition duration-300 ease'>Sources</div>
                 </div>
@@ -236,8 +230,7 @@ const Sources: React.FC = () => {
         group relative w-full aspect-[1/1] overflow-hidden rounded-2xl 
         border border-gray-700/60 
         bg-gray-900/80 backdrop-blur-[10px]
-        shadow-[0_0_15px_rgba(0,0,0,0.5)]
-        hover:border-cyan-400/60 hover:shadow-[0_0_25px_rgba(34,211,238,0.3)]
+        hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/30
         hover:scale-[1.04] active:scale-[0.97]
         transition-all duration-500 ease-in-out
     "
