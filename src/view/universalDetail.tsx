@@ -114,11 +114,11 @@ const UniversalDetail: React.FC = () => {
     const { idDetail } = location.state || {};
     useEffect(() => {
         setSelectNav(1)
-        getApiTitleDetails(idDetail)
-        getApiTitleStreamingSources(idDetail)
-        getApiTitleSeasons(idDetail)
-        getApiTitleEpisodes(idDetail)
-        getApiTitleCast_Crew(idDetail)
+        // getApiTitleDetails(idDetail)
+        // getApiTitleStreamingSources(idDetail)
+        // getApiTitleSeasons(idDetail)
+        // getApiTitleEpisodes(idDetail)
+        // getApiTitleCast_Crew(idDetail)
     }, [])
 
     const { icons, imgs } = useGlobal()
@@ -164,7 +164,7 @@ const UniversalDetail: React.FC = () => {
 
     return (
         <>
-            <div className='w-full sticky z-[999] top-[80px] backdrop-blur-[10px]'>
+            <div className='w-full sticky z-[999] md:top-[80px] top-[73px] backdrop-blur-[10px]'>
                 <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
                     <div
                         onClick={() => navigate("/universal")}
@@ -186,19 +186,19 @@ const UniversalDetail: React.FC = () => {
                             />
 
                             {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent max-lg:hidden"></div>
                         </div>
 
                         {/* Content overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center px-6 lg:px-12">
-                            <div className="flex flex-col gap-6 max-w-[1000px] text-white z-10">
+                        <div className="lg:absolute inset-0 flex items-center justify-center max-lg:mt-5 lg:px-12">
+                            <div className="flex flex-col xl:gap-6 gap-4 max-w-[1000px] text-white z-10">
                                 {/* Title */}
-                                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight drop-shadow-lg">
+                                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold leading-tight drop-shadow-lg">
                                     {resTitleDetail?.title}
                                 </h1>
 
                                 {/* Meta Info */}
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-white/80 text-base sm:text-lg">
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-white/80 text-xl sm:text-lg">
                                     {/* Rating */}
                                     {resTitleDetail?.us_rating && (
                                         <div className="flex items-center gap-2 h-[40px] px-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 shadow-inner">
@@ -230,13 +230,13 @@ const UniversalDetail: React.FC = () => {
                                     {/* Trailer Button */}
                                     <button
                                         onClick={() => setModalOpen(true)}
-                                        className="flex items-center gap-3 px-7 py-3 bg-cyan-600 text-white font-bold text-lg rounded-xl shadow-md shadow-cyan-400/30 hover:shadow-cyan-400/60 hover:scale-[1.03] transition-all duration-300"
+                                        className="flex items-center gap-3 px-7 py-2 bg-cyan-600 text-white font-bold text-lg rounded-xl shadow-md shadow-cyan-400/30 hover:shadow-cyan-400/60 hover:scale-[1.03] transition-all duration-300"
                                     >
                                         <span className="text-2xl">{icons.iconPlay}</span> Trailer
                                     </button>
 
                                     {/* Add to List Button */}
-                                    <button className="flex items-center gap-3 px-7 py-3 bg-white/20 backdrop-blur-md text-white font-semibold text-lg rounded-xl border border-white/30 hover:bg-white/30 hover:scale-[1.03] transition-all duration-300">
+                                    <button className="flex items-center gap-3 px-7 py-2 bg-white/20 backdrop-blur-md text-white font-semibold text-lg rounded-xl border border-white/30 hover:bg-white/30 hover:scale-[1.03] transition-all duration-300">
                                         <span className="text-2xl">{icons.iconAdd}</span>
                                         <p className="max-sm:hidden">Add to My List</p>
                                     </button>
@@ -284,7 +284,7 @@ const UniversalDetail: React.FC = () => {
                                 key={index}
                                 className="
         relative flex flex-col justify-center items-center
-        rounded-2xl p-6 w-[45%] sm:w-[30%] md:w-[18%] lg:w-auto
+        rounded-2xl p-4 w-[45%] sm:w-[30%] md:w-[18%] lg:w-auto
         text-center overflow-hidden
         bg-gradient-to-br from-cyan-500/80 via-cyan-400/60 to-cyan-600/80
         backdrop-blur-xl border border-cyan-300/30

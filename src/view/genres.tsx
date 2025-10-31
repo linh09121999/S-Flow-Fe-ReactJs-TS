@@ -50,7 +50,7 @@ const Genres: React.FC = () => {
 
     return (
         <>
-            <div className='w-full px-5 sticky z-[999] top-[80px] backdrop-blur-[10px]'>
+            <div className='w-full px-5 sticky z-[999] md:top-[80px] top-[73px] backdrop-blur-[10px]'>
                 <div className='flex gap-2 max-w-[1500px] mx-auto items-center text-cyan-300 py-[10px] text-xl max-md:text-lg '>
                     <div
                         onClick={() => navigate("/")}

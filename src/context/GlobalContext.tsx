@@ -22,7 +22,9 @@ import {
     FaRegCircle,
     FaMinusCircle,
     FaPlay,
-    FaPlayCircle
+    FaPlayCircle,
+    FaAppStoreIos,
+    FaAndroid
 } from "react-icons/fa";
 import { FaCalendarDays, FaCartShopping, FaArrowDownLong, FaArrowUpLong, FaSackDollar, FaStar } from "react-icons/fa6";
 import { CgMenu } from "react-icons/cg";
@@ -101,6 +103,8 @@ interface Icons {
     iconPlay: JSX.Element;
     iconPlayCircle: JSX.Element;
     iconStar: JSX.Element;
+    iconAppStore: JSX.Element;
+    iconAndroid: JSX.Element;
 }
 
 const defaultIcons: Icons = {
@@ -148,7 +152,9 @@ const defaultIcons: Icons = {
     iconMinus: <FaMinusCircle />,
     iconPlay: <FaPlay />,
     iconPlayCircle: <FaPlayCircle />,
-    iconStar: <FaStar />
+    iconStar: <FaStar />,
+    iconAppStore: <FaAppStoreIos />,
+    iconAndroid: <FaAndroid />
 }
 
 interface Pages {

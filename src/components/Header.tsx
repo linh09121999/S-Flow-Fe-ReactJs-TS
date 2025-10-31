@@ -23,11 +23,10 @@ import { useStateGeneral } from '../state/useStateGeneral';
 const Header: React.FC = () => {
     const navigate = useNavigate()
     const [clickSearch, setClickSearch] = useState<boolean>(false)
+    const { imgs, icons, pages, isMobile } = useGlobal()
 
     const sxTextField: SxProps<Theme> = {
-        width: {
-            md: '100%',
-        },
+        width: '100%',
         '& .MuiOutlinedInput-root': {
             borderRadius: "10px",
             background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.8), rgba(0, 0, 0, 0.8))',
@@ -67,7 +66,7 @@ const Header: React.FC = () => {
     }
 
     const sxFormControl = {
-        minWidth: 500,
+        minWidth: `${isMobile ? '50vw' : '400px'}`,
         margin: 0
     }
 
@@ -152,8 +151,7 @@ const Header: React.FC = () => {
 
     const [selectAutocomplateID, setSelectAutocomplateID] = useState<number>(0)
 
-    const { imgs, icons, pages } = useGlobal()
-    const { selectNav, setSelectNav } = useStateGeneral()
+    const { setSelectNav } = useStateGeneral()
 
 
     const { resAutocomplate, setResAutocomplate } = useResAutocomplateState()
@@ -236,14 +234,20 @@ const Header: React.FC = () => {
         e.currentTarget.src = imgs.imgDefault;//"https://placehold.co/600x400" // // ảnh mặc định (nên để trong public/images)
     };
 
+    useEffect(() => {
+        if (isMobile) {
+            setClickSearch(true);
+        }
+    }, [isMobile]);
+
     return (
         <>
-            <header className='top-0 sticky z-100 px-5 py-4 bg-black/10 backdrop-blur-[10px] border-b-[1px] border-b-gray-700'>
+            <header className='top-0 sticky z-100 px-5 py-4 bg-black/50 backdrop-blur-[10px] border-b-[1px] border-b-gray-700'>
                 <div className='max-w-[1535px] mx-auto flex justify-between items-center'>
                     <div className='flex gap-6 items-center'>
                         <div className='flex gap-2 items-center'>
-                            <img src={imgs.imgLogo} alt="logo" className='h-[47px]' onError={handleImgError} />
-                            <p className='text-cyan-300 text-4xl'>S-Flow</p>
+                            <img src={imgs.imgLogo} alt="logo" className='md:h-[47px]  h-[35px]' onError={handleImgError} />
+                            <p className='text-cyan-300 text-4xl max-md:hidden'>S-Flow</p>
                         </div>
                         <div className='max-lg:hidden'>
                             <Nav />
@@ -302,7 +306,7 @@ const Header: React.FC = () => {
                                                         <IconButton
                                                             sx={{ color: 'var(--color-cyan-300)' }}
                                                             onClick={() => {
-                                                                setClickSearch(false)
+                                                                { isMobile ? setClickSearch(true) : setClickSearch(false) }
                                                             }}>
                                                             {icons.iconSearch}
                                                         </IconButton>
@@ -315,13 +319,17 @@ const Header: React.FC = () => {
                                 />
                             </FormControl>
                             :
-                            <IconButton
-                                sx={sxButton}
-                                onClick={() => {
-                                    setClickSearch(true)
-                                }}>
-                                {icons.iconSearch}
-                            </IconButton>
+                            <>
+                                {isMobile === false &&
+                                    < IconButton
+                                        sx={sxButton}
+                                        onClick={() => {
+                                            setClickSearch(true)
+                                        }}>
+                                        {icons.iconSearch}
+                                    </IconButton>
+                                }
+                            </>
                         }
                         <button
                             onClick={toggleDrawer(true)}
@@ -366,7 +374,7 @@ const Header: React.FC = () => {
                         </Drawer>
                     </div>
                 </div>
-            </header>
+            </header >
             <ToastContainer position="top-right" autoClose={3000} />
         </>
     )
