@@ -144,7 +144,7 @@ const PersonDetail: React.FC = () => {
                         </div>
 
                         <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-                            <a href="https://www.imdb.com/name/nm0000093"
+                            <a href={`https://www.imdb.com/name/${resPerson?.imdb_id}`}
                                 className="px-6 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/30 transition-all duration-300">
                                 View on IMDb
                             </a>
