@@ -511,7 +511,7 @@ const UniversalDetail: React.FC = () => {
 
                                                     {/* ========== Sources hiển thị khi click ========== */}
                                                     {selectEpisodeSources === res.id && (
-                                                        <div className={`${res.sources.length === 0 ? 'hidden' : ''} absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col justify-center items-start p-6 gap-3`}>
+                                                        <div className={`${res.sources.length === 0 ? 'hidden' : ''} absolute inset-0 bg-black/85 backdrop-blur-md overflow-y-auto scroll-y flex flex-col justify-center items-start p-6 gap-3`}>
                                                             <h4 className="text-cyan-300 font-semibold text-lg">Sources</h4>
                                                             <div className="flex flex-wrap gap-2">
                                                                 {Object.values(
@@ -724,6 +724,10 @@ const UniversalDetail: React.FC = () => {
                                 <div className="flex justify-between py-3 border-b-[1px] border-b-gray-600">
                                     <span>Relevance Percentile:</span>
                                     <span className="text-white font-bold text-xl">{resTitleDetail?.relevance_percentile ?? 0}%</span>
+                                </div>
+                                <div className="flex justify-between py-3 ">
+                                    <span>Popularity Percentile:</span>
+                                    <span className="text-white font-bold text-xl">{resTitleDetail?.popularity_percentile ?? 0}%</span>
                                 </div>
                             </div>
                         </div>
